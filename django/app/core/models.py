@@ -17,10 +17,12 @@ class AbstractBaseModel(models.Model):
     class Meta:
         abstract = True
 
+
 class SupplierRegistry(AbstractBaseModel):
     """
     Registry of all suppliers
     """
+
     external_code = models.CharField(max_length=50, db_index=True, unique=True)
     company_name = models.CharField(max_length=250)
     vat_number = models.CharField(max_length=50, db_index=True)
@@ -36,13 +38,14 @@ class CustomerRegistry(AbstractBaseModel):
     """
     Registry of all suppliers
     """
+
     external_code = models.CharField(max_length=50, db_index=True, unique=True)
     company_name = models.CharField(max_length=250)
     vat_number = models.CharField(max_length=50, db_index=True)
 
     class Meta:
         unique_together = (("company_name"), ("vat_number"))
-        
+
     def __str__(self) -> str:
         return self.company_name + " - " + self.external_code
 
@@ -90,7 +93,14 @@ class DocumentCustomer(AbstractBaseModel):
     Registry of all documents to a customer
     """
 
-    customer = models.ForeignKey(CustomerRegistry, on_delete=models.CASCADE, blank=True, null=True, default=None, db_index=True)
+    customer = models.ForeignKey(
+        CustomerRegistry,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        default=None,
+        db_index=True,
+    )
     date = models.DateField(db_index=True)
     number = models.CharField(max_length=50, db_index=True)
 
@@ -114,8 +124,7 @@ class WarehouseItemsRegistry(AbstractBaseModel):
         max_length=50, null=True, blank=True, db_index=True
     )
     internal_code = models.CharField(max_length=50, db_index=True, unique=True)
-    
-    
+
     def __str__(self) -> str:
         return self.internal_code + " - " + self.description
 
@@ -131,25 +140,11 @@ class WarehouseItems(AbstractBaseModel):
         EMPTY = "E", "Empty"
         RETURNED = "R", "Returned"
 
-    status = models.CharField(
-        max_length=1,
-        choices=WarehouseItemsStatus.choices,
-        editable=False,
-        null=True,
-        blank=True,
-    )
-    
-    custom_status = models.CharField(
-        max_length=1,
-        choices=WarehouseItemsStatus.choices,
-        null=True,
-        blank=True,
-        default=None,
-    )
     empty_date = models.DateField(null=True, blank=True, db_index=True)
     batch_code = models.CharField(max_length=100, db_index=True)
-    
-    item_type = models.ForeignKey(WarehouseItemsRegistry, on_delete=models.CASCADE, related_name="items_type")
+    item_type = models.ForeignKey(
+        WarehouseItemsRegistry, on_delete=models.CASCADE, related_name="items_type"
+    )
 
     document_from_supplier = models.ForeignKey(
         DocumentFromSupplier,
@@ -176,8 +171,23 @@ class WarehouseItems(AbstractBaseModel):
         default=None,
     )
 
+    custom_status = models.CharField(
+        max_length=1,
+        choices=WarehouseItemsStatus.choices,
+        null=True,
+        blank=True,
+        default=None,
+    )
+
+    status = models.CharField(
+        max_length=1,
+        choices=WarehouseItemsStatus.choices,
+        editable=False,
+        null=True,
+        blank=True,
+    )
+
     def save(self, *args, **kwargs):
-        
         _status = None
         if self.custom_status:
             _status = self.custom_status
