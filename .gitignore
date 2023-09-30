@@ -3,3 +3,5 @@
 **/webpack-stats.json
 **/.vscode
 **/__pycache__/
+**/**/magazzino.csv
+**/**/.devcontainer

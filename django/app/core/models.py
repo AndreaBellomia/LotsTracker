@@ -1,4 +1,5 @@
 from enum import unique
+import re
 from tabnanny import verbose
 from django.db import models
 
@@ -13,12 +14,14 @@ class AbstractBaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        abstract = True
 
 class SupplierRegistry(AbstractBaseModel):
     """
     Registry of all suppliers
     """
-
+    external_code = models.CharField(max_length=50, db_index=True, unique=True)
     company_name = models.CharField(max_length=250)
     vat_number = models.CharField(max_length=50, db_index=True)
 
@@ -30,7 +33,7 @@ class CustomerRegistry(AbstractBaseModel):
     """
     Registry of all suppliers
     """
-
+    external_code = models.CharField(max_length=50, db_index=True, unique=True)
     company_name = models.CharField(max_length=250)
     vat_number = models.CharField(max_length=50, db_index=True)
 
@@ -81,8 +84,8 @@ class DocumentCustomer(AbstractBaseModel):
     Registry of all documents to a customer
     """
 
-    customer = models.ForeignKey(CustomerRegistry, on_delete=models.CASCADE)
-    date = models.DateField()
+    customer = models.ForeignKey(CustomerRegistry, on_delete=models.CASCADE, blank=True, null=True, default=None, db_index=True)
+    date = models.DateField(db_index=True)
     number = models.CharField(max_length=50, db_index=True)
 
     year = models.IntegerField(editable=False)
@@ -127,6 +130,8 @@ class WarehouseItems(AbstractBaseModel):
     )
     empty_date = models.DateField(null=True, blank=True, db_index=True)
     batch_code = models.CharField(max_length=100, db_index=True)
+    
+    item_type = models.ForeignKey(WarehouseItemsRegistry, on_delete=models.CASCADE, related_name="items_type")
 
     document_from_supplier = models.ForeignKey(
         DocumentFromSupplier,
