@@ -28,6 +28,9 @@ class SupplierRegistry(AbstractBaseModel):
     class Meta:
         unique_together = (("company_name"), ("vat_number"))
 
+    def __str__(self) -> str:
+        return self.company_name + " - " + self.external_code
+
 
 class CustomerRegistry(AbstractBaseModel):
     """
@@ -39,6 +42,9 @@ class CustomerRegistry(AbstractBaseModel):
 
     class Meta:
         unique_together = (("company_name"), ("vat_number"))
+        
+    def __str__(self) -> str:
+        return self.company_name + " - " + self.external_code
 
 
 class DocumentFromSupplier(AbstractBaseModel):
@@ -108,6 +114,10 @@ class WarehouseItemsRegistry(AbstractBaseModel):
         max_length=50, null=True, blank=True, db_index=True
     )
     internal_code = models.CharField(max_length=50, db_index=True, unique=True)
+    
+    
+    def __str__(self) -> str:
+        return self.internal_code + " - " + self.description
 
 
 class WarehouseItems(AbstractBaseModel):
@@ -122,6 +132,14 @@ class WarehouseItems(AbstractBaseModel):
         RETURNED = "R", "Returned"
 
     status = models.CharField(
+        max_length=1,
+        choices=WarehouseItemsStatus.choices,
+        editable=False,
+        null=True,
+        blank=True,
+    )
+    
+    custom_status = models.CharField(
         max_length=1,
         choices=WarehouseItemsStatus.choices,
         null=True,
@@ -158,15 +176,19 @@ class WarehouseItems(AbstractBaseModel):
         default=None,
     )
 
-    def get_status(self):
-        if self.status:
-            return self.status
+    def save(self, *args, **kwargs):
+        
+        _status = None
+        if self.custom_status:
+            _status = self.custom_status
         else:
             if self.document_to_supplier:
-                return self.WarehouseItemsStatus.RETURNED
+                _status = self.WarehouseItemsStatus.RETURNED
             elif self.empty_date:
-                return self.WarehouseItemsStatus.EMPTY
+                _status = self.WarehouseItemsStatus.EMPTY
             elif self.document_customer:
-                return self.WarehouseItemsStatus.BOOKED
+                _status = self.WarehouseItemsStatus.BOOKED
             elif self.document_from_supplier:
-                return self.WarehouseItemsStatus.AVAILABLE
+                _status = self.WarehouseItemsStatus.AVAILABLE
+        self.status = _status
+        super().save(*args, **kwargs)

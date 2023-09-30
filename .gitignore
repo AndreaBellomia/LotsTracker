@@ -4,4 +4,5 @@
 **/.vscode
 **/__pycache__/
 **/**/magazzino.csv
+**/**/erros_dump.csv
 **/**/.devcontainer
