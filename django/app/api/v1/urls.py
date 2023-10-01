@@ -1,7 +1,7 @@
 from django.urls import path, include
 
 
-from app.core.api_v1.views import (
+from app.api.v1.views import (
     CustomerRegistryApiView,
     CustomerRegistryDetailApiView,
     SupplierRegistryApiView,
@@ -28,7 +28,7 @@ urlpatterns = [
     path(
         "suppliers/detail/<int:pk>",
         SupplierRegistryDetailApiView.as_view(),
-        name="supplier-detail",
+        name="suppliers-detail",
     ),
     path(
         "suppliers/documents/from",
@@ -72,17 +72,17 @@ urlpatterns = [
     path(
         "customers/documents",
         DocumentCustomerListApiView.as_view(),
-        name="documents-customer",
+        name="customers-documents",
     ),
     path(
         "customers/documents/create",
         DocumentCustomerCreateApiView.as_view(),
-        name="documents-customer-create",
+        name="customers-documents-create",
     ),
     path(
         "customers/documents/detail/<int:pk>",
         DocumentCustomerDetailApiView.as_view(),
-        name="document-detail",
+        name="customers-documents-detail",
     ),
     
     # Warehouse

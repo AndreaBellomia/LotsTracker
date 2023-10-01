@@ -23,7 +23,7 @@ from app.frontend import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index),
-    path('api/', include('app.core.urls')),
+    path('api/v1/', include('app.api.v1.urls')),
 ]
 
 if settings.DEBUG:

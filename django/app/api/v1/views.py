@@ -9,11 +9,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Case, When, Value, CharField, Count, QuerySet, F
 
 
-from app.core.api_v1.serializers import (
+from app.api.v1.serializers import (
     CustomerRegistrySerializer,
     SupplierRegistrySerializer,
     DocumentCustomerSerializer,
-    DocumentCustomerDetailSerializer,
     WarehouseItemsSerializer,
     WarehouseItemsRegistrySerializer,
     DocumentFromSupplierSerializer,
@@ -21,7 +20,7 @@ from app.core.api_v1.serializers import (
     DocumentToSupplierSerializer,
     DocumentToSupplierDetailSerializer,
 )
-from app.core.api_v1.paginations import BasicPaginationController
+from app.api.v1.paginations import BasicPaginationController
 from app.core.models import (
     CustomerRegistry,
     SupplierRegistry,
@@ -31,6 +30,8 @@ from app.core.models import (
     DocumentFromSupplier,
     DocumentToSupplier,
 )
+
+
 
 
 class SupplierRegistryApiView(ListCreateAPIView):
@@ -66,7 +67,7 @@ class CustomerRegistryDetailApiView(RetrieveUpdateAPIView):
 
 
 class DocumentCustomerCreateApiView(CreateAPIView):
-    serializer_class = DocumentCustomerDetailSerializer
+    serializer_class = DocumentCustomerSerializer
 
     @staticmethod
     def base_queryset():
@@ -147,7 +148,7 @@ class DocumentCustomerListApiView(ListAPIView):
 
 
 class DocumentCustomerDetailApiView(RetrieveUpdateAPIView):
-    serializer_class = DocumentCustomerDetailSerializer
+    serializer_class = DocumentCustomerSerializer
     lookup_field = "pk"
 
     def get_queryset(self):
