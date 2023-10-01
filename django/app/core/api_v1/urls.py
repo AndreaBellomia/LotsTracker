@@ -13,6 +13,12 @@ from app.core.api_v1.views import (
     WarehouseItemsDetailApiView,
     WarehouseItemsRegistryApiView,
     WarehouseItemsRegistryDetailApiView,
+    DocumentFromSupplierCreateApiView,
+    DocumentFromSupplierListApiView,
+    DocumentFromSupplierDetailApiView,
+    DocumentToSupplierCreateApiView,
+    DocumentToSupplierListApiView,
+    DocumentToSupplierDetailApiView,
 )
 
 
@@ -24,6 +30,37 @@ urlpatterns = [
         SupplierRegistryDetailApiView.as_view(),
         name="supplier-detail",
     ),
+    path(
+        "suppliers/documents/from",
+        DocumentFromSupplierListApiView.as_view(),
+        name="suppliers-documents-from",
+    ),
+    path(
+        "suppliers/documents/from/create",
+        DocumentFromSupplierCreateApiView.as_view(),
+        name="suppliers-documents-from-create",
+    ),
+    path(
+        "suppliers/documents/from/detail/<int:pk>",
+        DocumentFromSupplierDetailApiView.as_view(),
+        name="suppliers-documents-from-detail",
+    ),
+    path(
+        "suppliers/documents/to",
+        DocumentToSupplierListApiView.as_view(),
+        name="suppliers-documents-to",
+    ),
+    path(
+        "suppliers/documents/to/create",
+        DocumentToSupplierCreateApiView.as_view(),
+        name="suppliers-documents-to-create",
+    ),
+    path(
+        "suppliers/documents/to/detail/<int:pk>",
+        DocumentToSupplierDetailApiView.as_view(),
+        name="suppliers-documents-to-detail",
+    ),
+
     
     # Customers
     path("customers", CustomerRegistryApiView.as_view(), name="customer-registry"),

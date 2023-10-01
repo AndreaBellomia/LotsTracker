@@ -16,6 +16,10 @@ from app.core.api_v1.serializers import (
     DocumentCustomerDetailSerializer,
     WarehouseItemsSerializer,
     WarehouseItemsRegistrySerializer,
+    DocumentFromSupplierSerializer,
+    DocumentFromSupplierDetailSerializer,
+    DocumentToSupplierSerializer,
+    DocumentToSupplierDetailSerializer,
 )
 from app.core.api_v1.paginations import BasicPaginationController
 from app.core.models import (
@@ -24,6 +28,8 @@ from app.core.models import (
     DocumentCustomer,
     WarehouseItems,
     WarehouseItemsRegistry,
+    DocumentFromSupplier,
+    DocumentToSupplier,
 )
 
 
@@ -130,6 +136,7 @@ class DocumentCustomerListApiView(ListAPIView):
         "number",
         "document_status",
         "customer__external_code",
+        "document_details",
     ]
 
     serializer_class = DocumentCustomerSerializer
@@ -221,3 +228,130 @@ class WarehouseItemsRegistryDetailApiView(RetrieveUpdateAPIView):
     serializer_class = WarehouseItemsRegistrySerializer
     queryset = WarehouseItemsRegistry.objects.all()
     lookup_field = "pk"
+
+
+class DocumentFromSupplierCreateApiView(CreateAPIView):
+    serializer_class = DocumentFromSupplierDetailSerializer
+
+    @staticmethod
+    def base_queryset():
+        base_queryset = (
+            DocumentFromSupplier.objects.select_related(
+                "supplier",
+            )
+            .prefetch_related("warehouse_items", "warehouse_items__item_type")
+            .annotate(
+                total_count=Count("warehouse_items__id", output_field=CharField()),
+            ).distinct()
+        )
+
+        base_queryset = base_queryset.annotate(
+            document_details=F("total_count"),
+        )
+        return base_queryset
+
+    def get_queryset(self):
+        queryset = self.base_queryset()
+        return queryset
+
+
+
+class DocumentFromSupplierListApiView(ListAPIView):
+    pagination_class = BasicPaginationController
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = [
+        "supplier__company_name",
+        "supplier__external_code",
+        "date",
+        "number",
+        "document_status",
+    ]
+    ordering_fields = [
+        "supplier__company_name",
+        "date",
+        "year",
+        "number",
+        "document_status",
+        "supplier__external_code",
+        "document_details",
+    ]
+
+    serializer_class = DocumentFromSupplierSerializer
+
+    def get_queryset(self):
+        queryset = DocumentFromSupplierCreateApiView.base_queryset()
+        return queryset
+    
+    
+class DocumentFromSupplierDetailApiView(RetrieveUpdateAPIView):
+    serializer_class = DocumentFromSupplierDetailSerializer
+    lookup_field = "pk"
+
+    def get_queryset(self):
+        queryset = DocumentFromSupplierCreateApiView.base_queryset()
+        return queryset
+    
+    
+    
+    
+    
+    
+    
+class DocumentToSupplierCreateApiView(CreateAPIView):
+    serializer_class = DocumentToSupplierDetailSerializer
+
+    @staticmethod
+    def base_queryset():
+        base_queryset = (
+            DocumentToSupplier.objects.select_related(
+                "supplier",
+            )
+            .prefetch_related("warehouse_items", "warehouse_items__item_type")
+            .annotate(
+                total_count=Count("warehouse_items__id", output_field=CharField()),
+            ).distinct()
+        )
+
+        base_queryset = base_queryset.annotate(
+            document_details=F("total_count"),
+        )
+        return base_queryset
+
+    def get_queryset(self):
+        queryset = self.base_queryset()
+        return queryset
+
+class DocumentToSupplierListApiView(ListAPIView):
+    pagination_class = BasicPaginationController
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = [
+        "supplier__company_name",
+        "supplier__external_code",
+        "date",
+        "number",
+        "document_status",
+    ]
+    ordering_fields = [
+        "supplier__company_name",
+        "date",
+        "year",
+        "number",
+        "document_status",
+        "supplier__external_code",
+        "document_details",
+    ]
+
+    serializer_class = DocumentToSupplierSerializer
+
+    def get_queryset(self):
+        queryset = DocumentToSupplierCreateApiView.base_queryset()
+        return queryset
+    
+    
+class DocumentToSupplierDetailApiView(RetrieveUpdateAPIView):
+    serializer_class = DocumentToSupplierDetailSerializer
+    lookup_field = "pk"
+
+    def get_queryset(self):
+        queryset = DocumentToSupplierCreateApiView.base_queryset()
+        return queryset
