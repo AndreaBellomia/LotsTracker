@@ -126,6 +126,7 @@ class WarehouseItemsQuery:
         )
         return base_queryset
     
+    @staticmethod
     def warehouse_items_detail(pk):
         base_queryset = WarehouseItems.objects.filter(pk=pk).select_related(
             "document_customer__customer",
@@ -171,6 +172,7 @@ class DocumentFromSupplierQuery:
         )
         return base_queryset
     
+
 class DocumentToSupplierQuery:
     
     @staticmethod
