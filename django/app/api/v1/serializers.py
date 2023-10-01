@@ -162,7 +162,7 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
 
 class SupplierRegistrySerializer(serializers.ModelSerializer):
     detail_url = serializers.HyperlinkedIdentityField(
-        view_name="supplier-detail", source="id"
+        view_name="suppliers-detail", source="id"
     )
 
     class Meta:

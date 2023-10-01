@@ -1,0 +1,882 @@
+{
+	"info": {
+		"_postman_id": "43b3728c-fbf5-485c-9b20-5384e630340f",
+		"name": "apiLottTracker",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26518632"
+	},
+	"item": [
+		{
+			"name": "supplier",
+			"item": [
+				{
+					"name": "suppliers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/suppliers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"suppliers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "suppliers",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"external_code\": \"F00001\",\n    \"company_name\": \"Nippon Gasses\",\n    \"vat_number\": \"F00001\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/suppliers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"suppliers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "suppliers/detail/<int:pk>",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/suppliers/detail/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"suppliers",
+								"detail",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "suppliers/detail/<int:pk>",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"external_code\": \"F00001\",\n    \"company_name\": \"Nippon Gasses sas\",\n    \"vat_number\": \"F00001\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/suppliers/detail/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"suppliers",
+								"detail",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "suppliers/documents/from",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/suppliers/documents/from",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"suppliers",
+								"documents",
+								"from"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "suppliers/documents/from/create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"body\": [\n        {\n            \"id\": 640,\n            \"batch_code\": \"112235\",\n            \"item_type\": 5\n        },\n        {\n            \"id\": 639,\n            \"batch_code\": \"112235\",\n            \"item_type\": 17\n        }\n    ],\n    \"supplier_id\": 1,\n    \"date\": \"2023-09-30\",\n    \"number\": \"8\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/suppliers/documents/from/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"suppliers",
+								"documents",
+								"from",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "suppliers/documents/from/detail/<int:pk>",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/suppliers/documents/from/detail/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"suppliers",
+								"documents",
+								"from",
+								"detail",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "suppliers/documents/from/detail/<int:pk>",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"body\": [\n        {\n            \"id\": 641,\n            \"empty_date\": \"2023-10-01\",\n            \"batch_code\": \"112235\",\n            \"item_type\": 17\n        },\n        {\n            \"id\": 642,\n            \"empty_date\": null,\n            \"batch_code\": \"1187\",\n            \"item_type\": 5\n        },\n        {\n            \"id\": 643,\n            \"empty_date\": null,\n            \"batch_code\": \"1187dfds\",\n            \"item_type\": 5\n        }\n    ],\n    \"supplier_id\": 1,\n    \"date\": \"2023-09-30\",\n    \"number\": \"1\",\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/suppliers/documents/from/detail/<int:pk>",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"suppliers",
+								"documents",
+								"from",
+								"detail",
+								"<int:pk>"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/suppliers/documents/to",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/suppliers/documents/to",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"suppliers",
+								"documents",
+								"to"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/suppliers/documents/to/create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"body\": [\n        {\n            \"id\": 629\n        }\n    ],\n    \"supplier_id\": 1,\n    \"date\": \"2023-09-30\",\n    \"number\": \"20\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/suppliers/documents/to/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"suppliers",
+								"documents",
+								"to",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "suppliers/documents/to/detail/<int:pk>",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/suppliers/documents/to/detail/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"suppliers",
+								"documents",
+								"to",
+								"detail",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "suppliers/documents/to/detail/<int:pk>",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"body\": [\n        {\n            \"id\": 628\n        }\n    ],\n    \"supplier_id\": 1,\n    \"date\": \"2023-09-30\",\n    \"number\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/suppliers/documents/to/detail/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"suppliers",
+								"documents",
+								"to",
+								"detail",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customers",
+			"item": [
+				{
+					"name": "customers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/customers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customers",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"external_code\": \"\",\n    \"company_name\": \"\",\n    \"vat_number\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/customers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customers/detail/<int:pk>",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/customers/detail/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"customers",
+								"detail",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customers/detail/<int:pk>",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"external_code\": \"C000001\",\n    \"company_name\": \".PROGRESSO SOC. COOP. AGRICOLA\",\n    \"vat_number\": \"C000001\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/customers/detail/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"customers",
+								"detail",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customers/documents",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/customers/documents",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"customers",
+								"documents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customers/documents/create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"body\": [\n        {\n            \"id\": 640\n        },\n        {\n            \"id\": 639\n        }\n    ],\n    \"supplier_id\": 1,\n    \"date\": \"2023-09-30\",\n    \"number\": \"8\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/customers/documents/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"customers",
+								"documents",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customers/documents/detail/<int:pk>",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/customers/documents/detail/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"customers",
+								"documents",
+								"detail",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customers/documents/detail/<int:pk>",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"body\": [\n        {\n            \"id\": 1,\n            \"empty_date\": \"2023-03-23\",\n            \"item_type\": 6\n        },\n        {\n            \"id\": 2,\n            \"empty_date\": null,\n            \"item_type\": 4\n        }\n    ],\n    \"customer_id\": 1,\n    \"date\": \"2022-11-10\",\n    \"number\": \"B00538\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/customers/documents/detail/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"customers",
+								"documents",
+								"detail",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Warehouse",
+			"item": [
+				{
+					"name": "warehouse/items",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/warehouse/items",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"warehouse",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "warehouse/items",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"empty_date\": null,\n    \"batch_code\": \"\",\n    \"custom_status\": null,\n    \"item_type\": null,\n    \"document_from_supplier\": null,\n    \"document_to_supplier\": null,\n    \"document_customer\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/warehouse/items",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"warehouse",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "warehouse/items/detail/<int:pk>",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/warehouse/items/detail/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"warehouse",
+								"items",
+								"detail",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "warehouse/items/detail/<int:pk>",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"item_type_description\": \" Ossigeno 14Lt\",\n    \"item_type_code\": \"2OX001HB\",\n    \"document_customer\": null,\n    \"document_from_supplier\": null,\n    \"document_to_supplier\": null,\n    \"item_type\": 1,\n    \"empty_date\": null,\n    \"batch_code\": \"94232108\",\n    \"custom_status\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/warehouse/items/detail/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"warehouse",
+								"items",
+								"detail",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "warehouse/registry",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/warehouse/registry",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"warehouse",
+								"registry"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "warehouse/registry",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"description\": \" Sanarc C18 Grande\",\n    \"external_code\": \"2MXC18BB\",\n    \"internal_code\": \"2MXC18BB\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/warehouse/registry",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"warehouse",
+								"registry"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "warehouse/registry/detail/<int:pk>",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/warehouse/registry/detail/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"warehouse",
+								"registry",
+								"detail",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "warehouse/registry/detail/<int:pk> Copy",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"description\": \" Sanarc C18 Grande\",\n    \"external_code\": \"2MXC18BB\",\n    \"internal_code\": \"2MXC18BB\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/warehouse/registry/detail/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"warehouse",
+								"registry",
+								"detail",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customers/register/entry/<int:counterpart>",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_list\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/customers/register/entry/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"customers",
+								"register",
+								"entry",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "warehouse/items/entry/<int:warehouse_item>",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/warehouse/items/entry/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"warehouse",
+								"items",
+								"entry",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customers/warehouse/list/<int:pk>",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/customers/warehouse/list/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"customers",
+								"warehouse",
+								"list",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "warehouse/items/list/batch/<str:batch_code>",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/warehouse/items/list/batch/IN",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"warehouse",
+								"items",
+								"list",
+								"batch",
+								"IN"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "admin",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "admin",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8000/api/v1",
+			"type": "string"
+		}
+	]
+}
