@@ -9,6 +9,7 @@ from app.core.api_v1.serializers import (
     SupplierRegistrySerializer,
     DocumentCustomerSerializer,
     WarehouseItemsSerializer,
+    WarehouseItemsRegistrySerializer,
 )
 from app.core.api_v1.paginations import BasicPaginationController
 from app.core.models import (
@@ -16,6 +17,7 @@ from app.core.models import (
     SupplierRegistry,
     DocumentCustomer,
     WarehouseItems,
+    WarehouseItemsRegistry,
 )
 
 
@@ -28,6 +30,11 @@ class SupplierRegistryApiView(ListCreateAPIView):
     serializer_class = SupplierRegistrySerializer
     queryset = SupplierRegistry.objects.all()
 
+class SupplierRegistryDetailApiView(RetrieveUpdateAPIView):
+    serializer_class = SupplierRegistrySerializer
+    queryset = SupplierRegistry.objects.all()
+    lookup_field = "pk"
+    
 
 class CustomerRegistryApiView(ListCreateAPIView):
     pagination_class = BasicPaginationController
@@ -163,3 +170,21 @@ class WarehouseItemsDetailApiView(RetrieveUpdateAPIView):
     def get_queryset(self):
         queryset = WarehouseItemsApiView.base_queryset()
         return queryset
+    
+class WarehouseItemsRegistryApiView(ListCreateAPIView):    
+    pagination_class = None
+    serializer_class = WarehouseItemsRegistrySerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = [
+        "description",
+        "external_code",
+        "internal_code",
+    ]
+    ordering_fields = ["description", "external_code", "internal_code"]
+    queryset = WarehouseItemsRegistry.objects.all()
+    
+
+class WarehouseItemsRegistryDetailApiView(RetrieveUpdateAPIView):    
+    serializer_class = WarehouseItemsRegistrySerializer
+    queryset = WarehouseItemsRegistry.objects.all()
+    lookup_field = "pk"

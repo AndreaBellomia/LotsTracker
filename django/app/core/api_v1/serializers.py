@@ -1,5 +1,3 @@
-from pyexpat import model
-from django.http import QueryDict
 from rest_framework import serializers
 from django.db import transaction
 
@@ -8,16 +6,23 @@ from app.core.models import (
     DocumentCustomer,
     SupplierRegistry,
     WarehouseItems,
+    WarehouseItemsRegistry,
 )
 
 
 class SupplierRegistrySerializer(serializers.ModelSerializer):
+    detail_url = serializers.HyperlinkedIdentityField(
+        view_name="supplier-detail", source="id"
+    )
     class Meta:
         model = SupplierRegistry
         fields = "__all__"
 
 
 class CustomerRegistrySerializer(serializers.ModelSerializer):
+    detail_url = serializers.HyperlinkedIdentityField(
+        view_name="customer-detail", source="id"
+    )
     class Meta:
         model = CustomerRegistry
         fields = "__all__"
@@ -190,3 +195,16 @@ class WarehouseItemsSerializer(serializers.ModelSerializer):
             "document_from_supplier": {"write_only": True},
             "document_to_supplier": {"write_only": True},
         }
+
+class WarehouseItemsRegistrySerializer(serializers.ModelSerializer):
+    
+    detail_url = serializers.HyperlinkedIdentityField(
+        view_name="warehouse-registry-detail", source="id"
+    )
+    
+    class Meta:
+        model = WarehouseItemsRegistry
+        exclude = [
+            "created_at",
+            "updated_at",
+        ]
