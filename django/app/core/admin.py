@@ -81,11 +81,11 @@ class DocumentToSupplierAdmin(admin.ModelAdmin):
 
 @admin.register(CustomerRegistry)
 class CustomerRegistryAdmin(admin.ModelAdmin):
-    list_display = ["company_name", "external_code", "vat_number"]
+    list_display = ["id", "company_name", "external_code", "vat_number"]
     search_fields = ["company_name", "external_code", "vat_number"]
 
 
 @admin.register(SupplierRegistry)
 class SupplierRegistryAdmin(admin.ModelAdmin):
-    list_display = ["company_name", "external_code", "vat_number"]
+    list_display = ["id", "company_name", "external_code", "vat_number"]
     search_fields = ["company_name", "external_code", "vat_number"]

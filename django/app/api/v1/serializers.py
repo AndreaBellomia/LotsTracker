@@ -1,3 +1,4 @@
+import select
 from django.db import transaction
 from rest_framework import serializers
 
@@ -38,7 +39,7 @@ class DocumentCustomerSerializer(serializers.ModelSerializer):
     )
 
     detail_url = serializers.HyperlinkedIdentityField(
-        view_name="customer-detail", source="id"
+        view_name="customers-documents-detail", source="id"
     )
 
     class Meta:
@@ -77,12 +78,12 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
         source="customer.company_name", read_only=True
     )
     customer_id = serializers.PrimaryKeyRelatedField(
-        queryset=CustomerRegistry.objects.all(), source="customer", write_only=True
+        queryset=CustomerRegistry.objects.all(), source="customer", write_only=False
     )
     
-    customer_url = serializers.HyperlinkedIdentityField(
-        view_name="customer.id", source="id"
-    )
+    # customer_url = serializers.HyperlinkedIdentityField(
+    #     view_name="customer-detail", source="customer.company_name"
+    # )
 
     def create(self, validated_data):
         body_items = validated_data.pop("warehouse_items")
@@ -448,3 +449,25 @@ class WarehouseItemsRegistrySerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+        
+
+class WarehouseItemsCustomerEntrySerializer(serializers.Serializer):
+    id_list = serializers.ListField(child=serializers.IntegerField())
+    
+    def validate(self, data):
+        customer_id = self.context.get('customer_id')
+        id_list = data.get('id_list', [])
+
+        try:
+            customer = CustomerRegistry.objects.get(pk=customer_id)
+        except CustomerRegistry.DoesNotExist:
+            raise serializers.ValidationError({"customer_id": "Customer does not exist."})
+
+        items = WarehouseItems.objects.filter(document_customer__customer_id=customer.id, id__in=id_list)
+        if items.count() != len(id_list):
+            raise serializers.ValidationError({"id_list": "One or more items do not exist or are not associated with the customer."})
+
+        data['items'] = items
+        data['customer'] = customer
+
+        return data

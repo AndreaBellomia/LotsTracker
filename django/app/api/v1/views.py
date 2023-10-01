@@ -4,21 +4,26 @@ from rest_framework.generics import (
     CreateAPIView,
     ListAPIView,
 )
-from rest_framework import filters
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import filters, status
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db import transaction
 from django.db.models import Case, When, Value, CharField, Count, QuerySet, F
-
+from django.utils import timezone as tz
 
 from app.api.v1.serializers import (
     CustomerRegistrySerializer,
     SupplierRegistrySerializer,
     DocumentCustomerSerializer,
+    DocumentCustomerDetailSerializer,
     WarehouseItemsSerializer,
     WarehouseItemsRegistrySerializer,
     DocumentFromSupplierSerializer,
     DocumentFromSupplierDetailSerializer,
     DocumentToSupplierSerializer,
     DocumentToSupplierDetailSerializer,
+    WarehouseItemsCustomerEntrySerializer,
 )
 from app.api.v1.paginations import BasicPaginationController
 from app.core.models import (
@@ -148,7 +153,7 @@ class DocumentCustomerListApiView(ListAPIView):
 
 
 class DocumentCustomerDetailApiView(RetrieveUpdateAPIView):
-    serializer_class = DocumentCustomerSerializer
+    serializer_class = DocumentCustomerDetailSerializer
     lookup_field = "pk"
 
     def get_queryset(self):
@@ -355,4 +360,93 @@ class DocumentToSupplierDetailApiView(RetrieveUpdateAPIView):
 
     def get_queryset(self):
         queryset = DocumentToSupplierCreateApiView.base_queryset()
+        return queryset
+    
+
+class WarehouseItemsCustomerEntryApiView(APIView):
+    serializer_class = WarehouseItemsCustomerEntrySerializer
+    
+    def post(self, request, *args, **kwargs):
+        customer_id = kwargs.pop("counterpart")
+        
+        serializer = self.serializer_class(data=request.data, context={"customer_id":customer_id})
+        if serializer.is_valid():
+            
+            with transaction.atomic():
+                for item in serializer.validated_data["items"]:
+                    try:
+                        item.empty_date = tz.localdate()
+                        item.save()
+                    except:
+                        return Response({"Error":"Error during save."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+class WarehouseItemsEntryApiView(APIView):
+    def post(self, request, *args, **kwargs):
+        warehouse_item = kwargs.pop("warehouse_item")
+        
+        try:
+            instance = WarehouseItems.objects.get(pk=warehouse_item)
+        except WarehouseItems.DoesNotExist:
+            return Response({"Error":"Item not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            instance.empty_date = tz.localdate()
+            instance.save()
+            return Response({"Success": "Update success."}, status=status.HTTP_200_OK)
+        except:
+            return Response({"Error":"Error during save."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CustomerWarehouseItemsApiView(ListAPIView):
+    pagination_class = BasicPaginationController
+    serializer_class = WarehouseItemsSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = [
+        "document_customer__customer__company_name",
+        "document_from_supplier__supplier__company_name",
+        "document_to_supplier__supplier__company_name",
+        "document_customer__date",
+        "document_from_supplier__date",
+        "document_to_supplier__date",
+        "empty_date",
+        "batch_code",
+        "item_type__description" "item_type__internal_code" "status",
+    ]
+    ordering_fields = ["empty_date", "batch_code", "item_type__internal_code", "status"]
+
+
+    def get_queryset(self):
+        customer_pk = self.kwargs["pk"]
+        queryset = WarehouseItemsApiView.base_queryset().filter(
+            document_customer__customer__pk=customer_pk
+        )
+        return queryset
+
+
+class WarehouseItemsBatchCodeApiView(ListAPIView):
+    pagination_class = BasicPaginationController
+    serializer_class = WarehouseItemsSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = [
+        "document_customer__customer__company_name",
+        "document_from_supplier__supplier__company_name",
+        "document_to_supplier__supplier__company_name",
+        "document_customer__date",
+        "document_from_supplier__date",
+        "document_to_supplier__date",
+        "empty_date",
+        "batch_code",
+        "item_type__description" "item_type__internal_code" "status",
+    ]
+    ordering_fields = ["empty_date", "batch_code", "item_type__internal_code", "status"]
+
+
+    def get_queryset(self):
+        batch_code = self.kwargs["batch_code"]
+        queryset = WarehouseItemsApiView.base_queryset().filter(
+            batch_code__contains=batch_code
+        )
         return queryset

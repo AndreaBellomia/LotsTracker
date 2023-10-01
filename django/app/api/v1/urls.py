@@ -19,6 +19,10 @@ from app.api.v1.views import (
     DocumentToSupplierCreateApiView,
     DocumentToSupplierListApiView,
     DocumentToSupplierDetailApiView,
+    WarehouseItemsCustomerEntryApiView,
+    WarehouseItemsEntryApiView,
+    CustomerWarehouseItemsApiView,
+    WarehouseItemsBatchCodeApiView
 )
 
 
@@ -98,4 +102,29 @@ urlpatterns = [
         WarehouseItemsRegistryDetailApiView.as_view(),
         name="warehouse-registry-detail",
     ),
+    
+    path(
+        "customers/register/entry/<int:counterpart>",
+        WarehouseItemsCustomerEntryApiView.as_view(),
+        name="customers-registry-entry",
+    ),
+    path(
+        "warehouse/items/entry/<int:warehouse_item>",
+        WarehouseItemsEntryApiView.as_view(),
+        name="warehouse-items-registry-entry",
+    ),
+    
+    path(
+        "customers/warehouse/list/<int:pk>",
+        CustomerWarehouseItemsApiView.as_view(),
+        name="customers-warehouse-list",
+    ),
+    
+    path(
+        "warehouse/items/list/batch/<str:batch_code>",
+        WarehouseItemsBatchCodeApiView.as_view(),
+        name="customers-warehouse-list-batch",
+    ),
+    
+    
 ]
