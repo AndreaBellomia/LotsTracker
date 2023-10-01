@@ -6,7 +6,8 @@ from app.core.api_v1.views import (
     CustomerRegistryDetailApiView,
     SupplierRegistryApiView,
     SupplierRegistryDetailApiView,
-    DocumentCustomerApiView,
+    DocumentCustomerListApiView,
+    DocumentCustomerCreateApiView,
     DocumentCustomerDetailApiView,
     WarehouseItemsApiView,
     WarehouseItemsDetailApiView,
@@ -33,8 +34,13 @@ urlpatterns = [
     ),
     path(
         "customers/documents",
-        DocumentCustomerApiView.as_view(),
+        DocumentCustomerListApiView.as_view(),
         name="documents-customer",
+    ),
+    path(
+        "customers/documents/create",
+        DocumentCustomerCreateApiView.as_view(),
+        name="documents-customer-create",
     ),
     path(
         "customers/documents/detail/<int:pk>",

@@ -14,6 +14,7 @@ class SupplierRegistrySerializer(serializers.ModelSerializer):
     detail_url = serializers.HyperlinkedIdentityField(
         view_name="supplier-detail", source="id"
     )
+
     class Meta:
         model = SupplierRegistry
         fields = "__all__"
@@ -23,6 +24,7 @@ class CustomerRegistrySerializer(serializers.ModelSerializer):
     detail_url = serializers.HyperlinkedIdentityField(
         view_name="customer-detail", source="id"
     )
+
     class Meta:
         model = CustomerRegistry
         fields = "__all__"
@@ -74,15 +76,33 @@ class WarehouseItemsDocumentCustomerSerializer(serializers.ModelSerializer):
 
 class DocumentCustomerSerializer(serializers.ModelSerializer):
     status = serializers.StringRelatedField(source="document_status", read_only=True)
-    body = WarehouseItemsDocumentCustomerSerializer(many=True, source="warehouse_items")
+    document_details = serializers.IntegerField(read_only=True)
 
-    customer = serializers.StringRelatedField(source="customer.company_name", read_only=True)
-    customer_id = serializers.PrimaryKeyRelatedField(
-        queryset=CustomerRegistry.objects.all(), source="customer", write_only=True
+    customer = serializers.StringRelatedField(
+        source="customer.company_name", read_only=True
+    )
+    customer_code = serializers.StringRelatedField(
+        source="customer.external_code", read_only=True
     )
 
     detail_url = serializers.HyperlinkedIdentityField(
         view_name="document-detail", source="id"
+    )
+
+    class Meta:
+        model = DocumentCustomer
+        exclude = ["created_at", "updated_at"]
+
+
+class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
+    status = serializers.StringRelatedField(source="document_status", read_only=True)
+    body = WarehouseItemsDocumentCustomerSerializer(many=True, source="warehouse_items")
+
+    customer = serializers.StringRelatedField(
+        source="customer.company_name", read_only=True
+    )
+    customer_id = serializers.PrimaryKeyRelatedField(
+        queryset=CustomerRegistry.objects.all(), source="customer", write_only=True
     )
 
     def create(self, validated_data):
@@ -196,12 +216,12 @@ class WarehouseItemsSerializer(serializers.ModelSerializer):
             "document_to_supplier": {"write_only": True},
         }
 
+
 class WarehouseItemsRegistrySerializer(serializers.ModelSerializer):
-    
     detail_url = serializers.HyperlinkedIdentityField(
         view_name="warehouse-registry-detail", source="id"
     )
-    
+
     class Meta:
         model = WarehouseItemsRegistry
         exclude = [
