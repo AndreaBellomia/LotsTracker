@@ -1,4 +1,3 @@
-import select
 from django.db import transaction
 from rest_framework import serializers
 
@@ -41,6 +40,13 @@ class DocumentCustomerSerializer(serializers.ModelSerializer):
     detail_url = serializers.HyperlinkedIdentityField(
         view_name="customers-documents-detail", source="id"
     )
+    
+    def create(self, validated_data):
+        try:
+            instance = super().create(validated_data)
+        except Exception as e:
+            raise serializers.ValidationError({"Detail": "Error creating document."})
+        return instance
 
     class Meta:
         model = DocumentCustomer

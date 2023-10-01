@@ -1,130 +1,115 @@
 from django.urls import path, include
 
-
-from app.api.v1.views import (
-    CustomerRegistryApiView,
-    CustomerRegistryDetailApiView,
-    SupplierRegistryApiView,
-    SupplierRegistryDetailApiView,
-    DocumentCustomerListApiView,
-    DocumentCustomerCreateApiView,
-    DocumentCustomerDetailApiView,
-    WarehouseItemsApiView,
-    WarehouseItemsDetailApiView,
-    WarehouseItemsRegistryApiView,
-    WarehouseItemsRegistryDetailApiView,
-    DocumentFromSupplierCreateApiView,
-    DocumentFromSupplierListApiView,
-    DocumentFromSupplierDetailApiView,
-    DocumentToSupplierCreateApiView,
-    DocumentToSupplierListApiView,
-    DocumentToSupplierDetailApiView,
-    WarehouseItemsCustomerEntryApiView,
-    WarehouseItemsEntryApiView,
-    CustomerWarehouseItemsApiView,
-    WarehouseItemsBatchCodeApiView
-)
+from app.api.v1 import views
 
 
 urlpatterns = [
     # Suppliers
-    path("suppliers", SupplierRegistryApiView.as_view(), name="supplier-registry"),
+    path(
+        "suppliers", 
+        views.SupplierRegistryApiView.as_view(), 
+        name="supplier-registry"
+    ),
     path(
         "suppliers/detail/<int:pk>",
-        SupplierRegistryDetailApiView.as_view(),
+        views.SupplierRegistryDetailApiView.as_view(),
         name="suppliers-detail",
     ),
     path(
         "suppliers/documents/from",
-        DocumentFromSupplierListApiView.as_view(),
+        views.DocumentFromSupplierListApiView.as_view(),
         name="suppliers-documents-from",
     ),
     path(
         "suppliers/documents/from/create",
-        DocumentFromSupplierCreateApiView.as_view(),
+        views.DocumentFromSupplierCreateApiView.as_view(),
         name="suppliers-documents-from-create",
     ),
     path(
         "suppliers/documents/from/detail/<int:pk>",
-        DocumentFromSupplierDetailApiView.as_view(),
+        views.DocumentFromSupplierDetailApiView.as_view(),
         name="suppliers-documents-from-detail",
     ),
     path(
         "suppliers/documents/to",
-        DocumentToSupplierListApiView.as_view(),
+        views.DocumentToSupplierListApiView.as_view(),
         name="suppliers-documents-to",
     ),
     path(
         "suppliers/documents/to/create",
-        DocumentToSupplierCreateApiView.as_view(),
+        views.DocumentToSupplierCreateApiView.as_view(),
         name="suppliers-documents-to-create",
     ),
     path(
         "suppliers/documents/to/detail/<int:pk>",
-        DocumentToSupplierDetailApiView.as_view(),
+        views.DocumentToSupplierDetailApiView.as_view(),
         name="suppliers-documents-to-detail",
     ),
-
-    
     # Customers
-    path("customers", CustomerRegistryApiView.as_view(), name="customer-registry"),
+    path(
+        "customers", 
+        views.CustomerRegistryApiView.as_view(), 
+        name="customer-registry"
+    ),
     path(
         "customers/detail/<int:pk>",
-        CustomerRegistryDetailApiView.as_view(),
+        views.CustomerRegistryDetailApiView.as_view(),
         name="customer-detail",
     ),
     path(
         "customers/documents",
-        DocumentCustomerListApiView.as_view(),
+        views.DocumentCustomerListApiView.as_view(),
         name="customers-documents",
     ),
     path(
         "customers/documents/create",
-        DocumentCustomerCreateApiView.as_view(),
+        views.DocumentCustomerCreateApiView.as_view(),
         name="customers-documents-create",
     ),
     path(
         "customers/documents/detail/<int:pk>",
-        DocumentCustomerDetailApiView.as_view(),
+        views.DocumentCustomerDetailApiView.as_view(),
         name="customers-documents-detail",
     ),
-    
     # Warehouse
-    path("warehouse/items", WarehouseItemsApiView.as_view(), name="warehouse-items"),
+    path(
+        "warehouse/items", 
+        views.WarehouseItemsApiView.as_view(), 
+        name="warehouse-items"
+    ),
     path(
         "warehouse/items/detail/<int:pk>",
-        WarehouseItemsDetailApiView.as_view(),
+        views.WarehouseItemsDetailApiView.as_view(),
         name="warehouse-items-detail",
     ),
-    path("warehouse/registry", WarehouseItemsRegistryApiView.as_view(), name="warehouse-registry"),
+    path(
+        "warehouse/registry",
+        views.WarehouseItemsRegistryApiView.as_view(),
+        name="warehouse-registry",
+    ),
     path(
         "warehouse/registry/detail/<int:pk>",
-        WarehouseItemsRegistryDetailApiView.as_view(),
+        views.WarehouseItemsRegistryDetailApiView.as_view(),
         name="warehouse-registry-detail",
     ),
-    
     path(
         "customers/register/entry/<int:counterpart>",
-        WarehouseItemsCustomerEntryApiView.as_view(),
+        views.WarehouseItemsCustomerEntryApiView.as_view(),
         name="customers-registry-entry",
     ),
     path(
         "warehouse/items/entry/<int:warehouse_item>",
-        WarehouseItemsEntryApiView.as_view(),
+        views.WarehouseItemsEntryApiView.as_view(),
         name="warehouse-items-registry-entry",
     ),
-    
     path(
         "customers/warehouse/list/<int:pk>",
-        CustomerWarehouseItemsApiView.as_view(),
+        views.CustomerWarehouseItemsApiView.as_view(),
         name="customers-warehouse-list",
     ),
-    
     path(
         "warehouse/items/list/batch/<str:batch_code>",
-        WarehouseItemsBatchCodeApiView.as_view(),
+        views.WarehouseItemsBatchCodeApiView.as_view(),
         name="customers-warehouse-list-batch",
     ),
-    
-    
 ]
