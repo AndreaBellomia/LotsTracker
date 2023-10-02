@@ -41,6 +41,9 @@ class Command(BaseCommand):
         mysql_connection = connector.connect(
             host=host, user="root", password="", database=database
         )
+        
+        document_errors = []
+
 
         log.debug("Connected to mysql database")
 
@@ -52,9 +55,24 @@ class Command(BaseCommand):
         stat_time = tz.now()
         log.debug("Starting generate customers...")
         for row in rows:
-            _, create = CustomerRegistry.objects.get_or_create(
-                id=row[0], external_code=row[1], company_name=row[2], vat_number=row[3]
-            )
+            try:
+                _, create = CustomerRegistry.objects.get_or_create(
+                    id=row[0], external_code=row[1], company_name=row[2], vat_number=row[3]
+                )
+            except Exception as e:
+                log.warning("duplicate customer: %s, %s, %s", row[0], row[1], row[2])
+                document_errors.append(
+                    {
+                        "Type": "DuplicateKeyCounterpart",
+                        "DocumentId": "",
+                        "DocumentCode": "",
+                        "DocumentData": "",
+                        "DocumentSupplierId":"",
+                        "TextError": f"duplicate customer: {row[0]}, {row[1]}, {row[2]}",
+                        "AticleCode": "",
+                        "DocumentDetails": ""
+                    }
+                )
         
         end_time = (tz.now() - stat_time )
         _cursor.execute("SELECT COUNT(id) FROM clienti")
