@@ -1,8 +1,6 @@
-import Dashboard from "./Dasboard/Dashboard.js";
-import Layout from "./Layout";
+import Dashboard from "./Dasboard/Dashboard.jsx";
 
 
 export {
-    Dashboard,
-    Layout
+    Dashboard
 }
