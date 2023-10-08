@@ -19,10 +19,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from app.frontend import views
+from django.urls import re_path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index),
+    re_path(r".*", views.index),
     path('api/v1/', include('app.api.v1.urls')),
 ]
 
