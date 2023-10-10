@@ -6,7 +6,8 @@ import {
     Grid,
     Button,
     Box,
-    Stack
+    Stack,
+    Chip
 } from "@mui/material";
 
 import FetchApi from "../../libs/axios"
@@ -39,7 +40,7 @@ export default function Dashboard() {
     ]
   
     const bodis = new TableRowsMixin(tableData, {
-      detail_url: (value) => <Link href={value} variant="body2"><EditRoundedIcon /></Link>  
+      detail_url: (value) => <Chip label="Modifica" color="primary" variant="outlined" onClick={() => console.log("cioa")} />
     })
   
     return (
@@ -53,14 +54,14 @@ export default function Dashboard() {
           <Grid item xs={5} md={4} lg={4}>
             <Box sx={{ display: 'flex', justifyContent:"end" }}>
             <Stack spacing={2} direction="row">
-                <Button variant="contained">Aggiungi</Button>
-                <Button variant="contained">esporta</Button>
+                <Button variant="contained" size="medium" color="secondary">Aggiungi</Button>
+                <Button variant="contained" size="medium" color="secondary">esporta</Button>
             </Stack>
       
             </Box> 
           </Grid>
           <Grid item xs={12}>
-            <Paper>
+            <Paper elevation={5}>
               <Tables headers={headers} bodis={bodis} orderBy={[orderBy, setOrderBy]}></Tables>
             </Paper>
           </Grid>

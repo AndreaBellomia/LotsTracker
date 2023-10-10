@@ -84,6 +84,7 @@ export default function TablesMixin({
           <TableCell key={header.key} align={header.align}>
             {header.orderable && ordering && orderingKey !== null ? (
               <TableSortLabel
+                sx={{ width: "100%" }}
                 active={orderingKey === header.key}
                 direction={ordering}
                 IconComponent={KeyboardArrowDownIcon}

@@ -3,13 +3,12 @@ import { styled, alpha } from "@mui/material/styles";
 import { InputBase } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
-
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  backgroundColor: alpha(theme.palette.grey[200], 0.5),
   "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: alpha(theme.palette.grey[200], 0.5),
   },
   marginRight: theme.spacing(0),
   marginLeft: 0,
@@ -28,11 +27,11 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  color: "white",
+  color: theme.palette.text.secondary,
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "white",
+  color: theme.palette.text.primary,
   width: "100%",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
@@ -46,6 +45,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function InputSearch({ setterValue, placeholder = "Search…" }) {
+  const [debouncedInput, setDebouncedInput] = useState("");
+
+  useEffect(() => {
+    const debounceTimer = setTimeout(() => {
+      setterValue(debouncedInput);
+    }, 300);
+
+    return () => {
+      clearTimeout(debounceTimer);
+    };
+  }, [debouncedInput]);
+
   return (
     <Search>
       <SearchIconWrapper>
@@ -54,9 +65,7 @@ export default function InputSearch({ setterValue, placeholder = "Search…" }) 
       <StyledInputBase
         placeholder={placeholder}
         inputProps={{ "aria-label": "search" }}
-        onChange={(value) => {
-          setterValue(value.target.value);
-        }}
+        onInput={(value) => setDebouncedInput(value.target.value)}
       />
     </Search>
   );
