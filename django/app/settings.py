@@ -26,6 +26,9 @@ SECRET_KEY = '0e15e027cdacea2946206f86725e53de9f283c01c8a0bb2a15a6f6548aab17718b
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",
+]
 
 
 # Application definition
@@ -75,8 +78,8 @@ WEBPACK_LOADER = {
 ROOT_URLCONF = 'app.urls'
 
 if DEBUG:
-    INSTALLED_APPS.append("debug_toolbar")
-    MIDDLEWARE.insert(9, "debug_toolbar.middleware.DebugToolbarMiddleware")
+    # INSTALLED_APPS.append("debug_toolbar")
+    # MIDDLEWARE.insert(9, "debug_toolbar.middleware.DebugToolbarMiddleware")
     INTERNAL_IPS = [
         '127.0.0.1',
     ]
@@ -103,7 +106,7 @@ TEMPLATES = [
 # Rest framework 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],

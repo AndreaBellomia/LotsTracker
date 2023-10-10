@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, NavLink } from "react-router-dom";
 
 import { styled } from "@mui/material/styles";
 import {
@@ -109,6 +109,18 @@ const CustomChevronIcon = styled(ChevronRight, { shouldForwardProp: (prop) => pr
   })
 )
 
+const CustomListItem = styled(ListItem, { shouldForwardProp: (prop) => prop!== 'active' })(
+  ({ theme, active }) => ({
+    display: 'block', 
+    borderRadius: ".5rem", 
+    marginBottom: 5, 
+
+    ... (active && {
+      backgroundColor: "rgba(255, 255, 255, 0.04)"
+    })
+  })
+)
+
 export default function AsideNavbar() {
   const [open, setOpen] = useState(false);
 
@@ -133,13 +145,10 @@ export default function AsideNavbar() {
           </IconButton>
         </DrawerHeader>
         <List>
+          {/* <NavLink to="/contact" activeClassName="active">Contact</NavLink> */}
+          
           {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding 
-              sx={{ 
-                display: 'block', 
-                borderRadius: ".5rem", 
-                marginBottom: 1, 
-                backgroundColor: "rgba(255, 255, 255, 0.04)" }}>
+            <CustomListItem key={text} disablePadding  href="ciao">
               
               <ListItemButton
                 sx={{
@@ -160,7 +169,7 @@ export default function AsideNavbar() {
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0}} />
               </ListItemButton>
-            </ListItem>
+            </CustomListItem>
           ))}
         </List>
       </CustomDrawer>

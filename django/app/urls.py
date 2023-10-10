@@ -23,8 +23,8 @@ from django.urls import re_path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path(r".*", views.index),
     path('api/v1/', include('app.api.v1.urls')),
+    re_path(r'.*', views.index),
 ]
 
 if settings.DEBUG:
