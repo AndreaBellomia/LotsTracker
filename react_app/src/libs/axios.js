@@ -34,9 +34,56 @@ class FetchApi {
         dataResponse = response.data;
       })
       .catch((error) => {
+        console.log(error)
         throw new Error("Error during request: ", error);
       });
     return dataResponse;
+  }
+
+  async postWarehouseItems(description, external_code, internal_code) {
+    return await this.client
+      .post("warehouse/registry", {
+        description: description,
+        external_code: external_code,
+        internal_code: internal_code
+      })
+  }
+
+  async getWarehouseItemDetail(id) {
+    return await this.client
+      .get(`warehouse/registry/detail/${id}?format=json`)
+  }
+
+  async getWarehouseItemDetail(page=1, search = "", order_by = "") {
+    return await this.client
+      .get(
+        FetchApi.buildFilteredUrl(`warehouse/items?format=json&page=${page}`, {
+          search: search,
+          ordering: order_by,
+        })
+      )
+  }
+
+
+  // Customers API methods
+  async getCustomer(page=1, search = "", order_by = "") {
+    return await this.client
+      .get(
+        FetchApi.buildFilteredUrl(`customers?format=json&page=${page}`, {
+          search: search,
+          ordering: order_by,
+        })
+      )
+  }
+
+  async getCustomerDocuments(page=1, search = "", order_by = "") {
+    return await this.client
+      .get(
+        FetchApi.buildFilteredUrl(`customers/documents?format=json&page=${page}`, {
+          search: search,
+          ordering: order_by,
+        })
+      )
   }
 }
 

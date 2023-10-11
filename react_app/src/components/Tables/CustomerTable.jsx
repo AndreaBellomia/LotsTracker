@@ -6,7 +6,8 @@ import {
     Button,
     Box,
     Stack,
-    Chip
+    Chip,
+    Pagination
 } from "@mui/material";
 
 import FetchApi from "../../libs/axios"
@@ -14,32 +15,41 @@ import InputSearch from "../InputSearch.jsx"
 import Tables, { TableHeaderMixin, TableRowsMixin } from "../Tables.jsx"
 
 
-
 export default function TableComponent({ addModalOpen }) {
 
     const [tableData, setTableData] = useState([]);
     const [orderBy, setOrderBy] = useState("")
     const [search, setSearch] = useState("")
+    const [pageSelected, setPageSelected] = useState(1);
+
+    const [pages, setPages] = useState("") 
   
   
     useEffect(() => {
       try {
-        new FetchApi().getWarehouseItems(search, orderBy).then(res => setTableData(res))
+        new FetchApi().getCustomer(pageSelected, search, orderBy).then(response => {
+            console.log(response.data)
+            setTableData(response.data.results)
+            setPages(response.data.num_pages)
+        })
+        
       } catch (error) { 
         console.log("error")
       }
-    }, [orderBy, search]);
+    }, [pageSelected, orderBy, search]);
+
 
   
     const headers = [
-      new TableHeaderMixin({key:"internal_code", label:"Codice", orderable:true}),
-      new TableHeaderMixin({key:"description", label:"Descrizione", orderable:true, align:"right"}),
-      new TableHeaderMixin({key:"external_code", label:"Codice Esterno", orderable:true, align:"right"}),
-      new TableHeaderMixin({key:"detail_url", label:"", orderable:false, align:"center"}),
+      new TableHeaderMixin({key:"external_code", label:"Codice", orderable:true}),
+      new TableHeaderMixin({key:"company_name", label:"Anagrafica", align:"right", orderable:true}),
+      new TableHeaderMixin({key:"vat_number", label:"P.IVA", align:"right", orderable:true}),
+      new TableHeaderMixin({key:"vat_number_due", label:"P.IVA", align:"right", orderable:true, accessor:"vat_number"}),
+      new TableHeaderMixin({key:"detail_url", label:"", align:"right"}),
     ]
   
     const bodis = new TableRowsMixin(tableData, {
-      detail_url: (value) => <Chip label="Modifica" color="primary" variant="outlined" onClick={() => console.log("cioa")} />
+        detail_url: (value, render) => <Chip label="Modifica" color="primary" variant="outlined" onClick={() => console.log(value, render)} />,
     })
   
     return (
@@ -62,6 +72,11 @@ export default function TableComponent({ addModalOpen }) {
             <Paper elevation={5}>
               <Tables headers={headers} bodis={bodis} orderBy={[orderBy, setOrderBy]}></Tables>
             </Paper>
+          </Grid>
+          <Grid item xs={12}>
+            <Box mt="2" />
+
+            <Pagination count={Number(pages)} color="primary" onChange={(e, page) => {setPageSelected(page)}} />
           </Grid>
         </Grid>
       </>

@@ -34,12 +34,16 @@ function toggleOrderBy(orderKey, currentOrder) {
 }
 
 export class TableHeaderMixin {
-  constructor({ key, label, align = "left", orderable = false }) {
+  constructor({ key, label, align = "left", orderable = false, accessor = null, sx={}, sxTh="auto"}) {
+    this.accessor = accessor ? accessor : key;
     return {
       key: key,
       label: label,
       align: align,
       orderable: orderable,
+      accessor: this.accessor,
+      style:sx,
+      sxTh
     };
   }
 }
@@ -80,20 +84,20 @@ export default function TablesMixin({
   function renderTableHeader() {
     return (
       <TableRow>
-        {headers.map((header) => (
-          <TableCell key={header.key} align={header.align}>
+        {headers.map((header, index) => (
+          <TableCell key={`${header.key}-${index}`} align={header.align} sx={{ ...header.sxTh }}>
             {header.orderable && ordering && orderingKey !== null ? (
               <TableSortLabel
-                sx={{ width: "100%" }}
-                active={orderingKey === header.key}
+                sx={{ width: "100%", ...header.style }}
+                active={orderingKey === header.accessor}
                 direction={ordering}
                 IconComponent={KeyboardArrowDownIcon}
-                onClick={() => setOrderBy(toggleOrderBy(header.key, orderBy))}
+                onClick={() => setOrderBy(toggleOrderBy(header.accessor, orderBy))}
               >
                 {header.label}
               </TableSortLabel>
             ) : (
-              <Box sx={{ p: 0.25 }}>{header.label}</Box>
+              <Box sx={{ p: 0.25, ...header.style  }}>{header.label}</Box>
             )}
           </TableCell>
         ))}
@@ -107,11 +111,11 @@ export default function TablesMixin({
         key={index}
         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
       >
-        {headers.map((header) => {
-          const { key, align } = header;
+        {headers.map((header, rowIndex) => {
+          const { key, accessor, align } = header;
           const content = renderFunctions[key]
-            ? renderFunctions[key](body[key])
-            : body[key];
+            ? renderFunctions[key](body[accessor], body)
+            : body[accessor];
           return (
             <TableCell component="th" scope="row" key={key} align={align}>
               {content}

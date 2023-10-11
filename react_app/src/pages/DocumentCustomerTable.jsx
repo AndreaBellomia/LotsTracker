@@ -9,7 +9,7 @@ import {
   Grid
 } from "@mui/material";
 
-import TableComponent from "../components/StorageList/TableComponent.jsx";
+import DocumentCustomer from "../components/Tables/DocumentCustomer.jsx";
 
 
 import FetchApi from "../libs/axios.js"
@@ -87,7 +87,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <TableComponent addModalOpen={handleOpen} key={open} />
+      <DocumentCustomer addModalOpen={handleOpen} key={open} />
       
         <Modal
           open={open}

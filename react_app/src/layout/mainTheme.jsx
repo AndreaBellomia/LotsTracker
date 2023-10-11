@@ -67,6 +67,16 @@ const theme = createTheme({
       secondary: "#637381",
       disabled: "#919EAB",
     },
+    variants: {
+      shadow: {
+        primary: 'rgba(25, 118, 210, 0.3)',
+        secondary: 'rgba(245, 0, 87, 0.3)',
+        success: 'rgba(76, 175, 80, 0.3)',
+        warning: 'rgba(255, 152, 0, 0.3)',
+        info: 'rgba(33, 150, 243, 0.3)',
+        error: 'rgba(244, 67, 54, 0.3)',
+      },
+    },
   },
 
   components: {
@@ -124,7 +134,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: ".5rem",
-          color: "white",
+          color: "#212B36",
           border: "1px solid rgba(0, 0, 0,.125)",
         },
       },
@@ -144,7 +154,9 @@ const theme = createTheme({
           border: "1px dotted #F4F6F8"
         },
       },
-    }
+    },
+    MuiChip: {
+    },
   },
 });
 

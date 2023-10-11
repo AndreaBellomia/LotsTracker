@@ -121,7 +121,7 @@ class WarehouseItemsApiView(ListCreateAPIView):
         "document_to_supplier__date",
         "empty_date",
         "batch_code",
-        "item_type__description" "item_type__internal_code" "status",
+        "item_type__description", "item_type__internal_code", "status",
     ]
     ordering_fields = ["empty_date", "batch_code", "item_type__internal_code", "status"]
 

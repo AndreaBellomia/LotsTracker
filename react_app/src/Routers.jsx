@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import AsideNavbar from "./layout/components/AsideNavbar.jsx";
 
-import { Dashboard, FromSupplierDocument, StorageList } from "./pages";
+import { Dashboard, FromSupplierDocument, StorageList, StorageItemsList, DocumentCustomerTable, CustomerList } from "./pages";
 
 
 export default function Router() {
@@ -14,6 +14,10 @@ export default function Router() {
             <Route index element={<Dashboard />} />
             <Route path="document" element={<FromSupplierDocument />} />
             <Route path="magazzino" element={<StorageList />} />
+            <Route path="magazzinoo" element={<StorageItemsList />} />
+            <Route path="documenti" element={<DocumentCustomerTable />} />
+            <Route path="clienti" element={<CustomerList />} />
+
           </Route>
         </Routes>
       </BrowserRouter>
