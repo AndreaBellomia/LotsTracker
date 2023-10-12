@@ -1,27 +1,20 @@
 import React, { useEffect, useState } from "react";
+import FetchApi from "../../libs/axios.js";
 import {
   Button,
+  IconButton,
   Box,
   Modal,
   TextField,
   FormControl,
   FormLabel,
   Grid,
+  Typography,
 } from "@mui/material";
+import ModalBox from "../../layout/components/ModalBox.jsx";
 
-import FetchApi from "../../libs/axios.js";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 800,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from "@mui/icons-material/Add";
 
 function manageFetchError(error, formError, setFormError) {
   const newErrors = {};
@@ -38,7 +31,7 @@ function manageFetchError(error, formError, setFormError) {
   });
 }
 
-export default function addModal({
+export default function StorageArticleModal({
   modalStatus: modalStatus,
   fetchId: fetchId,
 }) {
@@ -143,43 +136,109 @@ export default function addModal({
   return (
     <>
       <Modal
+        keepMounted
         open={open}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
-          <Button onClick={handleClose}>Ciudi</Button>
+        <ModalBox>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="h6" fontWeight={600} color="text.primary">
+              {id
+                ? `Modifica articolo ${formValue.internal_code}`
+                : "Crea nuovo articolo"}
+            </Typography>
+            <IconButton onClick={handleClose} color="error">
+              <CloseIcon />
+            </IconButton>
+          </Box>
+
+          <Box my={2} />
+
           <FormControl sx={{ width: "100%" }}>
-            <FormLabel>Descrizione</FormLabel>
-            <TextField
-              name="description"
-              value={formValue.description}
-              onChange={handleInputChange}
-              helperText={formErrors.description}
-              error={Boolean(formErrors.description)}
-            ></TextField>
+            <Grid container spacing={2}>
+              <Grid
+                item
+                xs={12}
+                lg={8}
+                sx={{ display: "flex", flexDirection: "column" }}
+              >
+                <FormLabel>Descrizione</FormLabel>
+                <TextField
+                  name="description"
+                  value={formValue.description}
+                  onChange={handleInputChange}
+                  helperText={formErrors.description}
+                  error={Boolean(formErrors.description)}
+                ></TextField>
+              </Grid>
+            </Grid>
 
-            <FormLabel>Codice</FormLabel>
-            <TextField
-              name="external_code"
-              value={formValue.external_code}
-              onChange={handleInputChange}
-              helperText={formErrors.external_code}
-              error={Boolean(formErrors.external_code)}
-            ></TextField>
+            <Box mt={3} />
 
-            <FormLabel>Codice</FormLabel>
-            <TextField
-              name="internal_code"
-              value={formValue.internal_code}
-              onChange={handleInputChange}
-              helperText={formErrors.internal_code}
-              error={Boolean(formErrors.internal_code)}
-            ></TextField>
+            <Grid container spacing={3}>
+              <Grid
+                item
+                xs={12}
+                md={6}
+                sx={{ display: "flex", flexDirection: "column" }}
+              >
+                <FormLabel>Codice</FormLabel>
+                <TextField
+                  name="internal_code"
+                  value={formValue.internal_code}
+                  onChange={handleInputChange}
+                  helperText={formErrors.internal_code}
+                  error={Boolean(formErrors.internal_code)}
+                ></TextField>
+              </Grid>
 
-            <Button onClick={() => saveCommitForm()}>Open modal</Button>
+              <Grid
+                item
+                xs={12}
+                md={6}
+                sx={{ display: "flex", flexDirection: "column" }}
+              >
+                <FormLabel>Codice Esterno</FormLabel>
+                <TextField
+                  name="external_code"
+                  value={formValue.external_code}
+                  onChange={handleInputChange}
+                  helperText={formErrors.external_code}
+                  error={Boolean(formErrors.external_code)}
+                ></TextField>
+              </Grid>
+            </Grid>
+
+            <Box my={2} />
+
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Button
+                onClick={() => handleClose()}
+                variant="outlined"
+                color="error"
+              >
+                Annulla
+              </Button>
+
+              <Button
+                onClick={() => saveCommitForm()}
+                variant="contained"
+                color="grey"
+              >
+                {id ? (
+                  <>salva</>
+                ) : (
+                  <>
+                    <AddIcon />
+                    <Box mr={1} />
+                    Aggiungi
+                  </>
+                )}
+              </Button>
+            </Box>
           </FormControl>
-        </Box>
+        </ModalBox>
       </Modal>
     </>
   );

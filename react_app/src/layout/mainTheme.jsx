@@ -128,6 +128,14 @@ const theme = createTheme({
             px: "1rem",
           },
         },
+        {
+          props: { color: "grey" },
+          style: {
+            backgroundColor: "#212B36",
+            color: "white",
+            boxShadow: "none",
+          },
+        },
       ],
     },
     MuiInputBase: {
