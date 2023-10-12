@@ -40,14 +40,7 @@ class FetchApi {
     return dataResponse;
   }
 
-  async postWarehouseItems(description, external_code, internal_code) {
-    return await this.client
-      .post("warehouse/registry", {
-        description: description,
-        external_code: external_code,
-        internal_code: internal_code
-      })
-  }
+
 
   async getWarehouseItemDetail(id) {
     return await this.client
@@ -62,6 +55,20 @@ class FetchApi {
           ordering: order_by,
         })
       )
+  }
+
+  // Warehouse
+  async getWarehouseRegistryDetail(id) {
+    return await this.client
+      .get(`warehouse/registry/detail/${id}?format=json`)
+  }
+  async postWarehouseItems(body) {
+    return await this.client
+      .post("warehouse/registry", {...body})
+  }
+  async putWarehouseItems(id, body) {
+    return await this.client
+      .put(`warehouse/registry/detail/${id}`, {...body})
   }
 
 

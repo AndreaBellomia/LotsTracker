@@ -14,10 +14,9 @@ export default function Router() {
             <Route index element={<Dashboard />} />
             <Route path="document" element={<FromSupplierDocument />} />
             <Route path="magazzino" element={<StorageList />} />
-            <Route path="magazzinoo" element={<StorageItemsList />} />
+            <Route path="lotti" element={<StorageItemsList />} />
             <Route path="documenti" element={<DocumentCustomerTable />} />
             <Route path="clienti" element={<CustomerList />} />
-
           </Route>
         </Routes>
       </BrowserRouter>

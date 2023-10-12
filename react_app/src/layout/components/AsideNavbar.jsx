@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, Link } from "react-router-dom";
 
 import { styled } from "@mui/material/styles";
 import {
@@ -171,6 +171,31 @@ export default function AsideNavbar() {
               </ListItemButton>
             </CustomListItem>
           ))}
+
+          <CustomListItem disablePadding to="/magazzino">
+              <ListItemButton
+                sx={{
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2,
+                  py: 0.5
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 2 : 'auto',
+                    justifyContent: 'center',
+                    color: "white"
+                  }}
+                >
+                  <MoveToInbox />
+                </ListItemIcon>
+                <ListItemText primary={"asd"} sx={{ opacity: open ? 1 : 0}} />
+              </ListItemButton>
+            </CustomListItem>
+
+            <Link to="/magazzino">Magazzino</Link>
+            <Link to="/lotti">Lotti</Link>
         </List>
       </CustomDrawer>
       <Box

@@ -15,7 +15,7 @@ import Tables, { TableHeaderMixin, TableRowsMixin } from "../Tables.jsx"
 
 
 
-export default function TableComponent({ addModalOpen }) {
+export default function TableComponent({ addModalOpen, addModalId }) {
 
     const [tableData, setTableData] = useState([]);
     const [orderBy, setOrderBy] = useState("")
@@ -35,11 +35,11 @@ export default function TableComponent({ addModalOpen }) {
       new TableHeaderMixin({key:"internal_code", label:"Codice", orderable:true}),
       new TableHeaderMixin({key:"description", label:"Descrizione", orderable:true, align:"right"}),
       new TableHeaderMixin({key:"external_code", label:"Codice Esterno", orderable:true, align:"right"}),
-      new TableHeaderMixin({key:"detail_url", label:"", orderable:false, align:"center"}),
+      new TableHeaderMixin({key:"id", label:"", orderable:false, align:"center"}),
     ]
   
     const bodis = new TableRowsMixin(tableData, {
-      detail_url: (value) => <Chip label="Modifica" color="primary" variant="outlined" onClick={() => console.log("cioa")} />
+      id: (value) => <Chip label="Modifica" color="primary" variant="outlined" onClick={() => {addModalId(value); addModalOpen()}} />
     })
   
     return (

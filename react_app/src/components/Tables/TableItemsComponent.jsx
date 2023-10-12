@@ -68,7 +68,7 @@ export default function TableComponent({ addModalOpen }) {
       new TableHeaderMixin({key:"item_type_code", label:"Articolo"}),
       new TableHeaderMixin({key:"customer_company_name", label:"Cliente", align:"right"}),
       new TableHeaderMixin({key:"status", label:"Stato", orderable:true, align:"right", sxTh:{width:"10%"}}),
-      new TableHeaderMixin({key:"detail_url", label:"", align:"center", sxTh:{width:"3rem"}}),
+      new TableHeaderMixin({key:"id", label:"", align:"center", sxTh:{width:"3rem"}}),
     ]
   
     const bodis = new TableRowsMixin(tableData, {
@@ -76,7 +76,7 @@ export default function TableComponent({ addModalOpen }) {
         status: (value) => renderStatus(value),
         item_type_code: (value, render) => renderItemType(value, render),
         customer_company_name: (value, render) => renderCustomer(value, render),
-        detail_url: (value) => <Link href={undefined} onClick={() => console.log("cioa")}><BlurCircularIcon/></Link>
+        id: (value) => <Button onClick={(value) => console.log(value)}><BlurCircularIcon/></Button>
     })
   
   

@@ -425,9 +425,10 @@ class WarehouseItemsSerializer(serializers.ModelSerializer):
     document_to_supplier_name = serializers.CharField(read_only=True)
     document_to_supplier_code = serializers.CharField(read_only=True)
 
-    detail_url = serializers.HyperlinkedIdentityField(
-        view_name="warehouse-items-detail", source="id"
-    )
+    id = serializers.IntegerField(read_only=True)
+    # detail_url = serializers.HyperlinkedIdentityField(
+    #     view_name="warehouse-items-detail", source="id"
+    # )
 
     class Meta:
         model = WarehouseItems
@@ -445,9 +446,9 @@ class WarehouseItemsSerializer(serializers.ModelSerializer):
 
 
 class WarehouseItemsRegistrySerializer(serializers.ModelSerializer):
-    detail_url = serializers.HyperlinkedIdentityField(
-        view_name="warehouse-registry-detail", source="id"
-    )
+    # detail_url = serializers.HyperlinkedIdentityField(
+    #     view_name="warehouse-registry-detail", source="id"
+    # )
 
     class Meta:
         model = WarehouseItemsRegistry

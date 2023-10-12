@@ -139,6 +139,22 @@ const theme = createTheme({
         },
       },
     },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: ".5rem",
+          color: "#212B36",
+          border: 0,
+        },
+        input: {
+          padding: ".75rem 1rem",
+        },
+        notchedOutline: {
+          border: "1px solid #919EAB",
+        }
+      },
+    },
+
     MuiTableCell: {
       styleOverrides: {
         root: {
