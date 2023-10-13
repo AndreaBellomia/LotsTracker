@@ -9,7 +9,7 @@ import {
   TableBody,
   TableSortLabel,
   Box,
-  Typography
+  Typography,
 } from "@mui/material";
 
 function getOrdering(currentOrder) {
@@ -34,7 +34,15 @@ function toggleOrderBy(orderKey, currentOrder) {
 }
 
 export class TableHeaderMixin {
-  constructor({ key, label, align = "left", orderable = false, accessor = null, sx={}, sxTh="auto"}) {
+  constructor({
+    key,
+    label,
+    align = "left",
+    orderable = false,
+    accessor = null,
+    sx = {},
+    sxTh = "auto",
+  }) {
     this.accessor = accessor ? accessor : key;
     return {
       key: key,
@@ -42,8 +50,8 @@ export class TableHeaderMixin {
       align: align,
       orderable: orderable,
       accessor: this.accessor,
-      style:sx,
-      sxTh
+      style: sx,
+      sxTh,
     };
   }
 }
@@ -85,19 +93,25 @@ export default function TablesMixin({
     return (
       <TableRow>
         {headers.map((header, index) => (
-          <TableCell key={`${header.key}-${index}`} align={header.align} sx={{ ...header.sxTh }}>
+          <TableCell
+            key={`${header.key}-${index}`}
+            align={header.align}
+            sx={{ ...header.sxTh }}
+          >
             {header.orderable && ordering && orderingKey !== null ? (
               <TableSortLabel
                 sx={{ width: "100%", ...header.style }}
                 active={orderingKey === header.accessor}
                 direction={ordering}
                 IconComponent={KeyboardArrowDownIcon}
-                onClick={() => setOrderBy(toggleOrderBy(header.accessor, orderBy))}
+                onClick={() =>
+                  setOrderBy(toggleOrderBy(header.accessor, orderBy))
+                }
               >
                 {header.label}
               </TableSortLabel>
             ) : (
-              <Box sx={{ p: 0.25, ...header.style  }}>{header.label}</Box>
+              <Box sx={{ p: 1, ...header.style }}>{header.label}</Box>
             )}
           </TableCell>
         ))}
@@ -132,19 +146,24 @@ export default function TablesMixin({
         <Table sx={{ minWidth: 650 }}>
           <TableHead>{renderTableHeader()}</TableHead>
           <TableBody>
-            {bodies.length ? 
-              bodies.map((body, index) => renderTableBody(body, index)) 
-              : 
+            {bodies.length ? (
+              bodies.map((body, index) => renderTableBody(body, index))
+            ) : (
               <TableRow
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell component="th" scope="row" align="center" colSpan={headers.length}>
-                  <Typography variant="h6" >
+                <TableCell
+                  component="th"
+                  scope="row"
+                  align="center"
+                  colSpan={headers.length}
+                >
+                  <Typography variant="h6">
                     Nessun elemento da visualizzare
                   </Typography>
                 </TableCell>
               </TableRow>
-            }
+            )}
           </TableBody>
         </Table>
       </TableContainer>

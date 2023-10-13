@@ -1,4 +1,4 @@
-from django.db.models import Case, When, Value, CharField, Count, F
+from django.db.models import Case, When, Value, CharField, Count, F, Sum, IntegerField
 
 from app.core.models import (
     CustomerRegistry,
@@ -190,5 +190,20 @@ class DocumentToSupplierQuery:
 
         base_queryset = base_queryset.annotate(
             document_details=F("total_count"),
+        )
+        return base_queryset
+    
+    
+class WarehouseItemsRegistryQuery:
+    @staticmethod
+    def document_to_supplier_list():
+        base_queryset = WarehouseItemsRegistry.objects.all().annotate(
+            available_count=Sum(
+                Case(
+                    When(warehouse_items__status="A", then=Value(1)),
+                    default=Value(0),
+                    output_field=IntegerField()
+                )
+            )
         )
         return base_queryset

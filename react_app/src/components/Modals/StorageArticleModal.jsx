@@ -230,9 +230,7 @@ export default function StorageArticleModal({
                   <>salva</>
                 ) : (
                   <>
-                    <AddIcon />
-                    <Box mr={1} />
-                    Aggiungi
+                    conferma
                   </>
                 )}
               </Button>

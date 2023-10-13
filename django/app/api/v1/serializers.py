@@ -449,6 +449,8 @@ class WarehouseItemsRegistrySerializer(serializers.ModelSerializer):
     # detail_url = serializers.HyperlinkedIdentityField(
     #     view_name="warehouse-registry-detail", source="id"
     # )
+    
+    available_count = serializers.ReadOnlyField()
 
     class Meta:
         model = WarehouseItemsRegistry

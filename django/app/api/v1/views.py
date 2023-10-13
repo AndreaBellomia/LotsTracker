@@ -30,7 +30,7 @@ from app.core.models import (
     DocumentToSupplier,
 )
 
-from app.api.v1.querys import DocumentCustomerQuery, WarehouseItemsQuery, DocumentFromSupplierQuery, DocumentToSupplierQuery
+from app.api.v1.querys import DocumentCustomerQuery, WarehouseItemsQuery, DocumentFromSupplierQuery, DocumentToSupplierQuery, WarehouseItemsRegistryQuery
 
 
 class SupplierRegistryApiView(ListCreateAPIView):
@@ -148,8 +148,11 @@ class WarehouseItemsRegistryApiView(ListCreateAPIView):
         "external_code",
         "internal_code",
     ]
-    ordering_fields = ["description", "external_code", "internal_code"]
-    queryset = WarehouseItemsRegistry.objects.all()
+    ordering_fields = ["description", "external_code", "internal_code", "available_count"]
+
+    def get_queryset(self):
+        queryset = WarehouseItemsRegistryQuery.document_to_supplier_list()
+        return queryset
 
 
 class WarehouseItemsRegistryDetailApiView(RetrieveUpdateAPIView):

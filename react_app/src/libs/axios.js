@@ -22,22 +22,13 @@ class FetchApi {
   }
 
   async getWarehouseItems(search = "", order_by = "") {
-    let dataResponse = undefined;
-    await this.client
+    return await this.client
       .get(
         FetchApi.buildFilteredUrl("warehouse/registry?format=json", {
           search: search,
           ordering: order_by,
         })
       )
-      .then((response) => {
-        dataResponse = response.data;
-      })
-      .catch((error) => {
-        console.log(error)
-        throw new Error("Error during request: ", error);
-      });
-    return dataResponse;
   }
 
 
