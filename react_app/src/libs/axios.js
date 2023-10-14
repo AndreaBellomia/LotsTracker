@@ -62,6 +62,11 @@ class FetchApi {
       .put(`warehouse/registry/detail/${id}`, {...body})
   }
 
+  async postWarehouseItemsLott(body) {
+    return await this.client
+      .post("/warehouse/items", {...body})
+  }
+
 
   // Customers API methods
   async getCustomer(page=1, search = "", order_by = "") {

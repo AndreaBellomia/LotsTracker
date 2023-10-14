@@ -6,7 +6,7 @@ import {
 
 
 
-const ModalBox = styled(Box)(({ theme }) => ({
+const ModalBox = styled(Box)(({ theme, sx }) => ({
   position: 'absolute',
   top: '25%',
   left: '50%',
@@ -18,13 +18,16 @@ const ModalBox = styled(Box)(({ theme }) => ({
   padding: "1.5rem",
   borderRadius: "1rem",
 
-
+  
   [theme.breakpoints.up('md')]: {
     width: "75%",
   },
   [theme.breakpoints.up('xl')]: {
     width: "50%",
   },
+
+  ...sx,
+  
   
 }));
 

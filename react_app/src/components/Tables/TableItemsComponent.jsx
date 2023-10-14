@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
-    Link,
     Paper,
     Grid,
     Button,
@@ -8,35 +8,38 @@ import {
     Stack,
     Chip,
     Pagination,
-    Typography
+    Typography,
+    IconButton
 } from "@mui/material";
 
-import BlurCircularIcon from '@mui/icons-material/BlurCircular';
+import EditIcon from '@mui/icons-material/Edit';
 
 import FetchApi from "../../libs/axios"
 import InputSearch from "../InputSearch.jsx"
 import Tables, { TableHeaderMixin, TableRowsMixin } from "../Tables.jsx"
+import AddIcon from "@mui/icons-material/Add";
+
 
 
 function renderStatus(status) {
     switch (status) {
         case "A":
-            return <Chip label="Disponibile" color="success"/>;
+            return <Chip label="Disponibile" color="success" sx={{ width: "100%" }}/>;
         case "B":
-            return <Chip label="Venduta" color="warning"/>;
+            return <Chip label="Venduta" color="warning" sx={{ width: "100%" }}/>;
         case "E":
-            return <Chip label="Vuoto" color="info" />;
+            return <Chip label="Vuoto" color="info" sx={{ width: "100%" }}/>;
         case "R":
-            return <Chip label="Restituito" color="secondary" />;
+            return <Chip label="Restituito" color="secondary" sx={{ width: "100%" }}/>;
         default:
-            return <Chip label="Error" color="error" />;
+            return <Chip label="Error" color="error" sx={{ width: "100%" }}/>;
     }
 }
 
 function renderItemType(value, render) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <Typography variant="subtitle1" sx={{ mb:.5 }}>{value}</Typography>
+      <Typography variant="subtitle1" sx={{ mb:.3 }}>{value}</Typography>
       <Typography variant="subtitle2" color="text.disabled" fontWeight="600">{render.item_type_description}</Typography>
     </Box>
   )
@@ -45,7 +48,7 @@ function renderItemType(value, render) {
 function renderCustomer(value, render) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <Typography variant="subtitle1" sx={{ mb:.5 }}>{value}</Typography>
+      <Typography variant="subtitle1" sx={{ mb:.3 }}>{value}</Typography>
       <Typography variant="subtitle2" color="text.disabled" fontWeight="600">{render.customer_company_code}</Typography>
     </Box>
   )
@@ -76,7 +79,7 @@ export default function TableComponent({ addModalOpen }) {
         status: (value) => renderStatus(value),
         item_type_code: (value, render) => renderItemType(value, render),
         customer_company_name: (value, render) => renderCustomer(value, render),
-        id: (value) => <Button onClick={(value) => console.log(value)}><BlurCircularIcon/></Button>
+        id: (value) => <IconButton onClick={() => console.log(value)} color="primary"><EditIcon /></IconButton>
     })
   
   
@@ -97,28 +100,44 @@ export default function TableComponent({ addModalOpen }) {
     return (
       <>                        
         <Grid container spacing={3}>
-          <Grid item xs={6} md={4} lg={4}>
-            <InputSearch setterValue={setSearch} />
+          <Grid item xs={6} md={6} lg={6}>
           </Grid>
-          <Grid item xs={1} md={4} lg={4}>
-          </Grid>
-          <Grid item xs={5} md={4} lg={4}>
+          <Grid item xs={5} md={6} lg={6}>
             <Box sx={{ display: 'flex', justifyContent:"end" }}>
-            <Stack spacing={2} direction="row">
-                <Button variant="contained" size="medium" color="secondary" onClick={() => addModalOpen()}>Aggiungi</Button>
-            </Stack>
+              <Link to="/lotti/crea">
+                <Button
+                    variant="contained"
+                    size="medium"
+                    color="grey"
+                    onClick={() => addModalOpen()}
+                  >
+                    <AddIcon />
+                    <Box mr={1} />
+                    Aggiungi
+                </Button>
+              </Link>
       
             </Box> 
           </Grid>
           <Grid item xs={12}>
             <Paper elevation={5}>
+            <Grid container>
+                <Grid item xs={6} md={4} lg={4} >
+                  <Box sx={{ p:"1rem" }}>
+                    <InputSearch setterValue={setSearch} />
+                  </Box>
+                </Grid>
+              </Grid>
               <Tables headers={headers} bodis={bodis} orderBy={[orderBy, setOrderBy]}></Tables>
+
+              <Box sx={{ p:"1rem", display: "flex", justifyContent: "end" }}>
+                <Pagination count={Number(pages)} color="grey" shape="rounded" onChange={(e, page) => {setPageSelected(page)}} />
+              </Box>
             </Paper>
           </Grid>
           <Grid item xs={12}>
-            <Box mt="2" />
 
-            <Pagination count={Number(pages)} color="primary" onChange={(e, page) => {setPageSelected(page)}} />
+            
           </Grid>
         </Grid>
       </>

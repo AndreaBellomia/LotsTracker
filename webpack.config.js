@@ -8,8 +8,8 @@ module.exports = {
   },
   output: {
     path: path.resolve("./django/app/frontend/static/frontend/"),
-    filename: "[name]-[fullhash].js",
-    publicPath: "static/frontend/",
+    filename: "[name]-react.js",
+    publicPath: "/static/frontend/",
   },
   plugins: [
     new CleanWebpackPlugin(),

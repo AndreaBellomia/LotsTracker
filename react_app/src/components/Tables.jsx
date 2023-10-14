@@ -111,7 +111,7 @@ export default function TablesMixin({
                 {header.label}
               </TableSortLabel>
             ) : (
-              <Box sx={{ p: 1, ...header.style }}>{header.label}</Box>
+              <Box sx={{ ...header.style }}>{header.label}</Box>
             )}
           </TableCell>
         ))}
@@ -123,7 +123,6 @@ export default function TablesMixin({
     return (
       <TableRow
         key={index}
-        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
       >
         {headers.map((header, rowIndex) => {
           const { key, accessor, align } = header;
@@ -149,9 +148,7 @@ export default function TablesMixin({
             {bodies.length ? (
               bodies.map((body, index) => renderTableBody(body, index))
             ) : (
-              <TableRow
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
+              <TableRow>
                 <TableCell
                   component="th"
                   scope="row"
