@@ -424,6 +424,7 @@ class WarehouseItemsSerializer(serializers.ModelSerializer):
     supplier_from_company_code = serializers.CharField(read_only=True)
     document_to_supplier_name = serializers.CharField(read_only=True)
     document_to_supplier_code = serializers.CharField(read_only=True)
+    empty_date = serializers.DateField(required=False, allow_null=True)
 
     id = serializers.IntegerField(read_only=True)
     # detail_url = serializers.HyperlinkedIdentityField(

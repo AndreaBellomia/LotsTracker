@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
 import {
   FormControl,
   Grid,
@@ -15,7 +11,7 @@ import {
   Divider,
   Paper,
   IconButton,
-  MenuItem
+  MenuItem,
 } from "@mui/material";
 
 import {
@@ -25,92 +21,84 @@ import {
   Output,
 } from "@mui/icons-material";
 
-import FetchApi from "../../libs/axios.js";
+import FetchApi, { manageFetchError } from "../../libs/axios.js";
+import { DatePicker, ButtonDocumentBig } from "../../layout/components";
 
-import ButtonDocumentBig from "../../layout/components/ButtonDocumentBig.jsx";
-
-
-function manageFetchError(error, formError, setFormError) {
-  const newErrors = {};
-
-  if (error.response.data) {
-    Object.keys(error.response.data).forEach((key) => {
-      newErrors[key] = error.response.data[key];
-    });
-  }
-
-  setFormError({
-    ...formError,
-    ...newErrors,
-  });
-}
-
-
-export default function CreateLottForm({articleListModal: articleListModal, articleChoice: articleChoice}) {
+export default function CreateLottForm({
+  articleListModal: articleListModal,
+  articleChoice: articleChoice,
+}) {
+  const navigate = useNavigate();
   const statusChoices = [
-    {label: "--", value: ""},
-    {label: "Disponibile", value: "A"},
-    {label: "Venduto", value: "B"},
-    {label: "Vuoto", value: "E"},
-    {label: "Ritornato F.", value: "R"},
-  ]
+    { label: "--", value: "" },
+    { label: "Disponibile", value: "A" },
+    { label: "Venduto", value: "B" },
+    { label: "Vuoto", value: "E" },
+    { label: "Ritornato F.", value: "R" },
+  ];
 
-  const modalFormStructure = {
-    "empty_date": "",
-    "batch_code": "",
-    "custom_status": "",
-    "item_type": "",
-    "document_from_supplier": "",
-    "document_to_supplier": "",
-    "document_customer": ""
-  };
-  const [formValue, setFormValue] = useState(modalFormStructure);
-  const [formErrors, setFormErrors] = useState(modalFormStructure);
+  // Form variables
+  const [formErrors, setFormErrors] = useState({});
+  const [formValue, setFormValue] = useState({
+    empty_date: undefined,
+    batch_code: "",
+    custom_status: "",
+    item_type: "",
+    document_from_supplier: "",
+    document_to_supplier: "",
+    document_customer: "",
+  });
 
+  // Article state
   useEffect(() => {
     setFormValue({
       ...formValue,
-      item_type: articleChoice.id
-    })
-  }, [articleChoice])
-
-  const POSTapi = () => {
-    console.log(formValue)
-    try {
-      new FetchApi().postWarehouseItemsLott(formValue)
-        .then((res) => {
-          useNavigate("/lotti");
-        })
-        .catch((error) => {
-          if (!error.status === 400) {
-            throw new Error("Error during request: " + error);
-          }
-  
-          // Spostare la gestione degli errori qui
-          manageFetchError(error, formErrors, setFormErrors);
-  
-          console.log(formErrors)
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
+      item_type: articleChoice.id,
+    });
+    setFormErrors({});
+  }, [articleChoice]);
 
   /* Form Methods  */
   const handleInputChange = (e) => {
-    console.log(formErrors)
     const { name, value } = e.target;
     setFormValue({
       ...formValue,
       [name]: value,
     });
 
-    setFormErrors(modalFormStructure);
-
-    
+    setFormErrors({});
   };
 
+  const handleInputDatepickerChange = (e) => {
+    const date = e.$d;
+    setFormValue({
+      ...formValue,
+      empty_date: `${date.getFullYear()}-${
+        date.getMonth() + 1
+      }-${date.getDate()}`,
+    });
+    setFormErrors({});
+  };
+
+  // Apis support
+  const POSTapi = () => {
+    console.log(formValue);
+    try {
+      new FetchApi()
+        .postWarehouseItemsLott(formValue)
+        .then((res) => {
+          navigate("/lotti");
+        })
+        .catch((error) => {
+          if (!error.status === 400) {
+            throw new Error("Error during request: " + error);
+          }
+          manageFetchError(error, formErrors, setFormErrors);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -119,11 +107,20 @@ export default function CreateLottForm({articleListModal: articleListModal, arti
       <FormControl sx={{ width: "100%" }}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={8} lg={6}>
-            <Paper elevation={5} direction="row" sx={{ p: 2 }}>
+            <Paper
+              elevation={5}
+              direction="row"
+              sx={{
+                p: 2,
+                border: formErrors.item_type ? "1px solid #FF5630" : "none",
+              }}
+            >
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Typography variant="h5">Articolo</Typography>
                 <IconButton
-                  onClick={() => {articleListModal(true)}}
+                  onClick={() => {
+                    articleListModal(true);
+                  }}
                   color="primary"
                 >
                   <Edit />
@@ -135,10 +132,10 @@ export default function CreateLottForm({articleListModal: articleListModal, arti
               </Typography>
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Typography variant="body2" color="text.secondary">
-                {articleChoice.internal_code || "--"}
+                  {articleChoice.internal_code || "--"}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                {articleChoice.external_code || "--"}
+                  {articleChoice.external_code || "--"}
                 </Typography>
               </Box>
             </Paper>
@@ -146,12 +143,7 @@ export default function CreateLottForm({articleListModal: articleListModal, arti
         </Grid>
         <Divider sx={{ my: 2 }} />
         <Paper elevation={5} direction="row" sx={{ p: 2 }}>
-          <Grid
-            item
-            xs={12}
-            sx={{ display: "flex", flexDirection: "column" }}
-
-          >
+          <Grid item xs={12} sx={{ display: "flex", flexDirection: "column" }}>
             <Typography variant="h5" gutterBottom>
               Dettaglio
             </Typography>
@@ -162,13 +154,11 @@ export default function CreateLottForm({articleListModal: articleListModal, arti
                 sx={{ display: "flex", flexDirection: "column" }}
               >
                 <FormLabel>Data di restituzione</FormLabel>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  name="empty_date"
-                  error={true}
-                  helperText={formErrors.empty_date[0]}
+                  onChange={(target) => handleInputDatepickerChange(target)}
+                  error={Boolean(formErrors.empty_date)}
+                  helperText={formErrors.empty_date}
                 />
-                </LocalizationProvider>
               </Grid>
               <Grid
                 item
@@ -177,11 +167,11 @@ export default function CreateLottForm({articleListModal: articleListModal, arti
               >
                 <FormLabel>Numero Lotto</FormLabel>
                 <TextField
-                onChange={(target) => handleInputChange(target)}
-                name="batch_code"
-                value={formValue.batch_code}
-                helperText={formErrors.batch_code}
-                error={Boolean(formErrors.batch_code)}
+                  onChange={(target) => handleInputChange(target)}
+                  name="batch_code"
+                  value={formValue.batch_code}
+                  helperText={formErrors.batch_code}
+                  error={Boolean(formErrors.batch_code)}
                 ></TextField>
               </Grid>
               <Grid
@@ -191,17 +181,17 @@ export default function CreateLottForm({articleListModal: articleListModal, arti
               >
                 <FormLabel>Stato manuale</FormLabel>
                 <TextField
-                    id="outlined-select-currency"
-                    select
-                    defaultValue=""
-                    helperText="Questo campo viene aggiornato automaticamente"
-                    >
-                    {statusChoices.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                        </MenuItem>
-                    ))}
-                    </TextField>
+                  id="outlined-select-currency"
+                  select
+                  defaultValue=""
+                  helperText="Questo campo viene aggiornato automaticamente"
+                >
+                  {statusChoices.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Grid>
             </Grid>
           </Grid>
@@ -210,11 +200,7 @@ export default function CreateLottForm({articleListModal: articleListModal, arti
         <Box mt={3} />
 
         <Grid container spacing={2}>
-          <Grid
-            item
-            xs={12}
-            sx={{ display: "flex", flexDirection: "column" }}
-          >
+          <Grid item xs={12} sx={{ display: "flex", flexDirection: "column" }}>
             <Grid container spacing={2}>
               <Grid
                 item
@@ -267,7 +253,9 @@ export default function CreateLottForm({articleListModal: articleListModal, arti
           </Link>
 
           <Button
-            onClick={() => {POSTapi()}}
+            onClick={() => {
+              POSTapi();
+            }}
             variant="contained"
             color="grey"
           >

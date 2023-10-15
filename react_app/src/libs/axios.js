@@ -61,7 +61,6 @@ class FetchApi {
     return await this.client
       .put(`warehouse/registry/detail/${id}`, {...body})
   }
-
   async postWarehouseItemsLott(body) {
     return await this.client
       .post("/warehouse/items", {...body})
@@ -91,3 +90,18 @@ class FetchApi {
 }
 
 export default FetchApi;
+
+export function manageFetchError(error, formError, setFormError) {
+  const newErrors = {};
+
+  if (error.response.data) {
+    Object.keys(error.response.data).forEach((key) => {
+      newErrors[key] = error.response.data[key];
+    });
+  }
+
+  setFormError({
+    ...formError,
+    ...newErrors,
+  });
+}

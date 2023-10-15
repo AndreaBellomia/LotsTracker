@@ -202,7 +202,7 @@ const components = {
 
     variants: [
     ]
-  },
+  }
 
   
 };

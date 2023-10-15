@@ -4,9 +4,12 @@ import { styled } from "@mui/material/styles";
 import { Box, Typography } from "@mui/material";
 
 const IconPaperContainer = styled(Box)(({ theme }) => ({
-  p: 2,
+  p: 4,
   borderRadius: "100000rem",
   aspectRatio: "1/1",
+  position: "relative",
+  left: "50%",
+  transform: "translate(-50%, 0%)",
   border: `4px dashed ${theme.palette.grey[400]}`,
   display: "flex",
   justifyContent: "center",
@@ -14,6 +17,7 @@ const IconPaperContainer = styled(Box)(({ theme }) => ({
   width: "100%",
   backgroundColor: "white",
   cursor: "pointer",
+  maxWidth: "5rem",
   transition:
     "background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
 
@@ -48,8 +52,8 @@ export default function ButtonDocumentBig({
       <IconPaperContainer my={1} sx={{}}>
         <div
           style={{
-            width: "100%",
-            height: "100%",
+            width: "80%",
+            height: "80%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
