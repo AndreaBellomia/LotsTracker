@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import dayjs, { Dayjs } from 'dayjs';
 import { Link, useNavigate } from "react-router-dom";
 import {
   FormControl,
@@ -27,6 +28,7 @@ import { DatePicker, ButtonDocumentBig } from "../../layout/components";
 export default function CreateLottForm({
   articleListModal: articleListModal,
   articleChoice: articleChoice,
+  fetchId: fetchId,
 }) {
   const navigate = useNavigate();
   const statusChoices = [
@@ -38,25 +40,36 @@ export default function CreateLottForm({
   ];
 
   // Form variables
+  const id = fetchId
+
+  const [article, setArticle] = useState(articleChoice)
   const [formErrors, setFormErrors] = useState({});
   const [formValue, setFormValue] = useState({
-    empty_date: undefined,
+    empty_date: "",
     batch_code: "",
     custom_status: "",
     item_type: "",
     document_from_supplier: "",
     document_to_supplier: "",
     document_customer: "",
+    status: ""
   });
 
   // Article state
   useEffect(() => {
     setFormValue({
       ...formValue,
-      item_type: articleChoice.id,
+      item_type: article.id,
     });
     setFormErrors({});
-  }, [articleChoice]);
+  }, [article]);
+
+  useEffect(() => {
+    if (id) {
+      GETapi(id);
+    }
+  }, [id]);
+  
 
   /* Form Methods  */
   const handleInputChange = (e) => {
@@ -81,8 +94,30 @@ export default function CreateLottForm({
   };
 
   // Apis support
+  const GETapi = (id) => {
+    try {
+      new FetchApi().getWarehouseItemsLott(id).then((res) => {
+        setFormValue({
+          empty_date: res.data.empty_date,
+          batch_code: res.data.batch_code,
+          custom_status: res.data.custom_status,
+          item_type: res.data.item_type.id,
+          document_from_supplier: "",
+          document_to_supplier: "",
+          document_customer: "",
+          status: res.data.status
+        });
+
+        setArticle(res.data.item_type)
+
+        console.log(res.data.item_type)
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const POSTapi = () => {
-    console.log(formValue);
     try {
       new FetchApi()
         .postWarehouseItemsLott(formValue)
@@ -99,6 +134,33 @@ export default function CreateLottForm({
       console.error(error);
     }
   };
+
+  const PUTapi = () => {
+    try {
+      new FetchApi()
+        .putWarehouseItemsLott(id, formValue)
+        .then((res) => {
+          navigate("/lotti");
+        })
+        .catch((error) => {
+          if (!error.status === 400) {
+            throw new Error("Error during request: " + error);
+          }
+          manageFetchError(error, formErrors, setFormErrors);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const saveCommitForm = () => {
+    if (id) {
+      PUTapi();
+    } else {
+      POSTapi();
+    }
+  };
+
 
   return (
     <>
@@ -128,14 +190,14 @@ export default function CreateLottForm({
               </Box>
 
               <Typography variant="p" color="text.secondary">
-                {articleChoice.description || "--"}
+                {article.description || "--"}
               </Typography>
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Typography variant="body2" color="text.secondary">
-                  {articleChoice.internal_code || "--"}
+                  {article.internal_code || "--"}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {articleChoice.external_code || "--"}
+                  {article.external_code || "--"}
                 </Typography>
               </Box>
             </Paper>
@@ -158,6 +220,7 @@ export default function CreateLottForm({
                   onChange={(target) => handleInputDatepickerChange(target)}
                   error={Boolean(formErrors.empty_date)}
                   helperText={formErrors.empty_date}
+                  value={dayjs(formValue.empty_date)}
                 />
               </Grid>
               <Grid
@@ -183,11 +246,11 @@ export default function CreateLottForm({
                 <TextField
                   id="outlined-select-currency"
                   select
-                  defaultValue=""
+                  value={formValue.status || ""}
                   helperText="Questo campo viene aggiornato automaticamente"
                 >
                   {statusChoices.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
+                    <MenuItem key={option.value} value={option.value} onClick={() => setFormValue({...formValue, status:option.value})}>
                       {option.label}
                     </MenuItem>
                   ))}
@@ -244,7 +307,6 @@ export default function CreateLottForm({
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Link to="/lotti">
             <Button
-              onClick={() => handleClose()}
               variant="outlined"
               color="error"
             >
@@ -254,7 +316,7 @@ export default function CreateLottForm({
 
           <Button
             onClick={() => {
-              POSTapi();
+              saveCommitForm();
             }}
             variant="contained"
             color="grey"

@@ -22,6 +22,7 @@ export default function Router() {
 
             <Route path="lotti" element={<Outlet />}>
               <Route path="crea" element={<CreateLott />} />
+              <Route path="modifica/:id" element={<CreateLott />} />
               <Route index element={<StorageItemsList />} />
             </Route>
 

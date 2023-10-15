@@ -26,6 +26,7 @@ export default function CustomDatePicker ( props ) {
             helperText: otherProps.helperText,
           }
         }}
+        value={otherProps.value}
       />
     </LocalizationProvider>
   );

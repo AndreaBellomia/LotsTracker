@@ -415,36 +415,6 @@ class DocumentToSupplierDetailSerializer(serializers.ModelSerializer):
 # Warehouse
 #### 
 
-class WarehouseItemsSerializer(serializers.ModelSerializer):
-    item_type_description = serializers.CharField(read_only=True)
-    item_type_code = serializers.CharField(read_only=True)
-    customer_company_name = serializers.CharField(read_only=True)
-    customer_company_code = serializers.CharField(read_only=True)
-    supplier_from_company_name = serializers.CharField(read_only=True)
-    supplier_from_company_code = serializers.CharField(read_only=True)
-    document_to_supplier_name = serializers.CharField(read_only=True)
-    document_to_supplier_code = serializers.CharField(read_only=True)
-    empty_date = serializers.DateField(required=False, allow_null=True)
-
-    id = serializers.IntegerField(read_only=True)
-    # detail_url = serializers.HyperlinkedIdentityField(
-    #     view_name="warehouse-items-detail", source="id"
-    # )
-
-    class Meta:
-        model = WarehouseItems
-        exclude = [
-            "created_at",
-            "updated_at",
-        ]
-
-        extra_kwargs = {
-            "item_type": {"write_only": True},
-            "document_customer": {"write_only": True},
-            "document_from_supplier": {"write_only": True},
-            "document_to_supplier": {"write_only": True},
-        }
-
 
 class WarehouseItemsRegistrySerializer(serializers.ModelSerializer):
     # detail_url = serializers.HyperlinkedIdentityField(
@@ -481,3 +451,33 @@ class WarehouseItemsCustomerEntrySerializer(serializers.Serializer):
         data['customer'] = customer
 
         return data
+   
+ 
+class WarehouseItemsSerializer(serializers.ModelSerializer):
+    item_type = WarehouseItemsRegistrySerializer()
+    
+    customer_company_name = serializers.CharField(read_only=True)
+    customer_company_code = serializers.CharField(read_only=True)
+    supplier_from_company_name = serializers.CharField(read_only=True)
+    supplier_from_company_code = serializers.CharField(read_only=True)
+    document_to_supplier_name = serializers.CharField(read_only=True)
+    document_to_supplier_code = serializers.CharField(read_only=True)
+    empty_date = serializers.DateField(required=False, allow_null=True)
+
+    id = serializers.IntegerField(read_only=True)
+    # detail_url = serializers.HyperlinkedIdentityField(
+    #     view_name="warehouse-items-detail", source="id"
+    # )
+
+    class Meta:
+        model = WarehouseItems
+        exclude = [
+            "created_at",
+            "updated_at",
+        ]
+
+        extra_kwargs = {
+            "document_customer": {"write_only": True},
+            "document_from_supplier": {"write_only": True},
+            "document_to_supplier": {"write_only": True},
+        }

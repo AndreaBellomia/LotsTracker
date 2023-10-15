@@ -61,9 +61,17 @@ class FetchApi {
     return await this.client
       .put(`warehouse/registry/detail/${id}`, {...body})
   }
+  async getWarehouseItemsLott(id) {
+    return await this.client
+      .get(`/warehouse/items/detail/${id}`)
+  }
   async postWarehouseItemsLott(body) {
     return await this.client
       .post("/warehouse/items", {...body})
+  }
+  async putWarehouseItemsLott(id, body) {
+    return await this.client
+      .put(`/warehouse/items/detail/${id}`, {...body})
   }
 
 

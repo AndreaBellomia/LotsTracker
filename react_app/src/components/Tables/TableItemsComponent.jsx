@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
     Paper,
     Grid,
@@ -57,7 +57,8 @@ function renderCustomer(value, render) {
 
 
 
-export default function TableComponent({ addModalOpen }) {
+export default function TableComponent() {
+    const navigate = useNavigate();
 
     const [tableData, setTableData] = useState([]);
     const [orderBy, setOrderBy] = useState("")
@@ -79,7 +80,7 @@ export default function TableComponent({ addModalOpen }) {
         status: (value) => renderStatus(value),
         item_type_code: (value, render) => renderItemType(value, render),
         customer_company_name: (value, render) => renderCustomer(value, render),
-        id: (value) => <IconButton onClick={() => console.log(value)} color="primary"><EditIcon /></IconButton>
+        id: (value) => <IconButton onClick={() => {navigate(`modifica/${value}`)}} color="primary"><EditIcon /></IconButton>
     })
   
   
@@ -109,7 +110,6 @@ export default function TableComponent({ addModalOpen }) {
                     variant="contained"
                     size="medium"
                     color="grey"
-                    onClick={() => addModalOpen()}
                   >
                     <AddIcon />
                     <Box mr={1} />

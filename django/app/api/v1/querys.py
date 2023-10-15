@@ -136,6 +136,8 @@ class WarehouseItemsQuery:
         ).annotate(
             customer_company_name=F("document_customer__customer__company_name"),
             customer_company_code=F("document_customer__customer__external_code"),
+            document_customer_code=F("document_customer__number"),
+            document_customer_date=F("document_customer__date"),
             supplier_from_company_name=F(
                 "document_from_supplier__supplier__company_name"
             ),
@@ -147,7 +149,8 @@ class WarehouseItemsQuery:
                 "document_to_supplier__supplier__external_code"
             ),
             item_type_description=F("item_type__description"),
-            item_type_code=F("item_type__internal_code"),
+            item_type_internal_code=F("item_type__internal_code"),
+            item_type_external_code=F("item_type__external_code"),
         )
         return base_queryset
     
