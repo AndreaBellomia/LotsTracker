@@ -28,6 +28,15 @@ export default function CreateLott() {
 
   const [listModal, setListModal] = useState(false)
   const [articleChoice, setArticleChoice] = useState({})
+  const [customerDocument, setCustomerDocument] = useState({
+    number: undefined,
+    date: undefined,
+    id: undefined,
+  })
+  const [additionalInfo, setAdditionalInfo] = useState({
+    customerName: "",
+    customerCode: ""
+  })
 
   useEffect(() => {
     if (id) {
@@ -46,6 +55,7 @@ export default function CreateLott() {
   const GETapi = (id) => {
     try {
       new FetchApi().getWarehouseItemsLott(id).then((res) => {
+        console.log(res.data)
         setFormValue({
           empty_date: res.data.empty_date,
           batch_code: res.data.batch_code,
@@ -58,6 +68,15 @@ export default function CreateLott() {
         });
 
         setArticleChoice(res.data.item_type)
+
+        setCustomerDocument({
+          ...customerDocument,
+          ...res.data.document_customer
+        })
+        setAdditionalInfo({
+          customerName : res.data.customer_company_name,
+          customerCode : res.data.customer_company_code,
+        })
       });
     } catch (error) {
       console.error(error);
@@ -116,7 +135,9 @@ export default function CreateLott() {
         <CreateLottForm 
           fields={[formValue, setFormValue]} 
           errors={[formErrors, setFormErrors]} 
-          article={[articleChoice, setListModal]} 
+          article={[articleChoice, setListModal]}
+          customerDocument={[customerDocument, undefined]}
+          additionalInfo={additionalInfo}
           submit={saveCommitForm}  
           />
       </Container>

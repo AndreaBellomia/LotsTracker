@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import dayjs from 'dayjs';
-import { Link, useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+import { Link, useParams } from "react-router-dom";
 import {
   FormControl,
   Grid,
@@ -22,7 +22,6 @@ import {
   Output,
 } from "@mui/icons-material";
 
-
 import { DatePicker, ButtonDocumentBig } from "../../layout/components";
 
 const statusChoices = [
@@ -33,19 +32,21 @@ const statusChoices = [
   { label: "Ritornato F.", value: "R" },
 ];
 
-
 export default function CreateLottForm({
-  fields : fields,
+  fields: fields,
   errors: errors,
-  article : article,
+  article: article,
+  customerDocument: customerDocument,
+  additionalInfo: additionalInfo,
   submit: submit,
 }) {
-  const [formValue, setFormValue] = fields
-  const [formErrors, setFormErrors] = errors
-  const [articleChoice, articleModal] = article
-  const submitForm = submit
+  const { id } = useParams();
 
-  console.log(formValue)
+  const [formValue, setFormValue] = fields;
+  const [formErrors, setFormErrors] = errors;
+  const [articleChoice, articleModal] = article;
+  const [customerDocumentChoice, customerDocumentModal] = customerDocument;
+  const submitForm = submit;
 
   /* Form Methods  */
   const handleInputChange = (e) => {
@@ -71,7 +72,7 @@ export default function CreateLottForm({
 
   return (
     <>
-      <Typography variant="h3">Crea un Lotto</Typography>
+      <Typography variant="h3">{id ? "Modifica Lotto" : "Crea un Lotto"}</Typography>
       <Divider sx={{ my: 3 }} />
       <FormControl sx={{ width: "100%" }}>
         <Grid container spacing={2}>
@@ -82,6 +83,10 @@ export default function CreateLottForm({
               sx={{
                 p: 2,
                 border: formErrors.item_type ? "1px solid #FF5630" : "none",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
               }}
             >
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -96,19 +101,47 @@ export default function CreateLottForm({
                 </IconButton>
               </Box>
 
-              <Typography variant="p" color="text.secondary">
-                {articleChoice.description || "--"}
-              </Typography>
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography variant="body2" color="text.secondary">
-                  {articleChoice.internal_code || "--"}
+              <Box>
+                <Typography variant="p" color="text.secondary">
+                  {articleChoice.description || "--"}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {articleChoice.external_code || "--"}
-                </Typography>
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Typography variant="body2" color="text.secondary">
+                    {articleChoice.internal_code || "--"}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {articleChoice.external_code || "--"}
+                  </Typography>
+                </Box>
               </Box>
             </Paper>
           </Grid>
+          {id ? (
+            <Grid item xs={12} md={8} lg={6}>
+              <Paper
+                elevation={5}
+                direction="row"
+                sx={{
+                  p: 2,
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography variant="h5">Cliente</Typography>
+
+                <Typography variant="p" color="text.secondary">
+                  {additionalInfo.customerName || "--"}
+                </Typography>
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Typography variant="body2" color="text.secondary">
+                    {additionalInfo.customerCode || "--"}
+                  </Typography>
+                </Box>
+              </Paper>
+            </Grid>
+          ) : <></>}
         </Grid>
         <Divider sx={{ my: 2 }} />
         <Paper elevation={5} direction="row" sx={{ p: 2 }}>
@@ -157,7 +190,13 @@ export default function CreateLottForm({
                   helperText="Questo campo viene aggiornato automaticamente"
                 >
                   {statusChoices.map((option) => (
-                    <MenuItem key={option.value} value={option.value} onClick={() => setFormValue({...formValue, status:option.value})}>
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                      onClick={() =>
+                        setFormValue({ ...formValue, status: option.value })
+                      }
+                    >
                       {option.label}
                     </MenuItem>
                   ))}
@@ -168,55 +207,57 @@ export default function CreateLottForm({
         </Paper>
 
         <Box mt={3} />
-
-        <Grid container spacing={2}>
-          <Grid item xs={12} sx={{ display: "flex", flexDirection: "column" }}>
+        { id ? (
             <Grid container spacing={2}>
-              <Grid
-                item
-                xs={4}
-                sx={{ display: "flex", flexDirection: "column" }}
-              >
-                <ButtonDocumentBig
-                  icon={AssignmentReturnedOutlined}
-                  description="xxx del xx/xx/xxxx"
-                  title="documento d'ingresso"
-                />
-              </Grid>
-              <Grid
-                item
-                xs={4}
-                sx={{ display: "flex", flexDirection: "column" }}
-              >
-                <ButtonDocumentBig
-                  icon={Sell}
-                  description="xxx del xx/xx/xxxx"
-                  title="Documento di vendita"
-                />
-              </Grid>
-              <Grid
-                item
-                xs={4}
-                sx={{ display: "flex", flexDirection: "column" }}
-              >
-                <ButtonDocumentBig
-                  icon={Output}
-                  description="xxx del xx/xx/xxxx"
-                  title="documento d'uscita"
-                />
+              <Grid item xs={12} sx={{ display: "flex", flexDirection: "column" }}>
+              <Grid container spacing={2}>
+                <Grid
+                  item
+                  xs={4}
+                  sx={{ display: "flex", flexDirection: "column" }}
+                >
+                  <ButtonDocumentBig
+                    icon={AssignmentReturnedOutlined}
+                    description="-- del --"
+                    title="documento d'ingresso"
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={4}
+                  sx={{ display: "flex", flexDirection: "column" }}
+                >
+                  <ButtonDocumentBig
+                    icon={Sell}
+                    description={`${customerDocumentChoice.number ?? "--"} del ${customerDocumentChoice.date ?? "--"}`}
+                    onClick={() => {
+                      console.log(customerDocumentChoice.id ?? "--");
+                    }}
+                    title="Documento di vendita"
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={4}
+                  sx={{ display: "flex", flexDirection: "column" }}
+                >
+                  <ButtonDocumentBig
+                    icon={Output}
+                    description="-- del --"
+                    title="documento d'uscita"
+                  />
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Grid>
+            </Grid>
+        ) : <></>}
+       
 
         <Box my={2} />
 
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Link to="/lotti">
-            <Button
-              variant="outlined"
-              color="error"
-            >
+            <Button variant="outlined" color="error">
               Annulla
             </Button>
           </Link>

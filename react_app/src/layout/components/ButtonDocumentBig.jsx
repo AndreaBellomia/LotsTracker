@@ -37,6 +37,7 @@ export default function ButtonDocumentBig({
   icon: IconComponent,
   description: description,
   title: title,
+  onClick: onClick,
 }) {
   const IconStyledComponent = styled(IconComponent)(({ theme }) => ({
     fontSize: "5rem",
@@ -58,6 +59,7 @@ export default function ButtonDocumentBig({
             justifyContent: "center",
             alignItems: "center",
           }}
+          onClick={onClick}
         >
           <IconStyledComponent />
         </div>
