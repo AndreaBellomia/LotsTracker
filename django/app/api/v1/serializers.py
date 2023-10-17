@@ -451,13 +451,16 @@ class WarehouseItemsCustomerEntrySerializer(serializers.Serializer):
         data['customer'] = customer
 
         return data
-   
- 
+
+
 class WarehouseItemsSerializer(serializers.ModelSerializer):
-    item_type = WarehouseItemsRegistrySerializer()
+    item_type = WarehouseItemsRegistrySerializer(read_only=True)
+    item_type_id = serializers.IntegerField(write_only=True)
     
     customer_company_name = serializers.CharField(read_only=True)
     customer_company_code = serializers.CharField(read_only=True)
+    document_customer_code = serializers.CharField(read_only=True)
+    document_customer_date = serializers.CharField(read_only=True)
     supplier_from_company_name = serializers.CharField(read_only=True)
     supplier_from_company_code = serializers.CharField(read_only=True)
     document_to_supplier_name = serializers.CharField(read_only=True)
@@ -481,3 +484,4 @@ class WarehouseItemsSerializer(serializers.ModelSerializer):
             "document_from_supplier": {"write_only": True},
             "document_to_supplier": {"write_only": True},
         }
+

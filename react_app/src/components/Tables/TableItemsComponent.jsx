@@ -39,8 +39,8 @@ function renderStatus(status) {
 function renderItemType(value, render) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <Typography variant="subtitle1" sx={{ mb:.3 }}>{value}</Typography>
-      <Typography variant="subtitle2" color="text.disabled" fontWeight="600">{render.item_type_description}</Typography>
+      <Typography variant="subtitle1" sx={{ mb:.3 }}>{value.description}</Typography>
+      <Typography variant="subtitle2" color="text.disabled" fontWeight="600">{value.internal_code}</Typography>
     </Box>
   )
 }
@@ -69,7 +69,7 @@ export default function TableComponent() {
 
     const headers = [
       new TableHeaderMixin({key:"batch_code", label:"Lotto", orderable:true, sxTh:{maxWidth: "5rem" }}),
-      new TableHeaderMixin({key:"item_type_code", label:"Articolo"}),
+      new TableHeaderMixin({key:"item_type", label:"Articolo"}),
       new TableHeaderMixin({key:"customer_company_name", label:"Cliente", align:"right"}),
       new TableHeaderMixin({key:"status", label:"Stato", orderable:true, align:"right", sxTh:{width:"10%"}}),
       new TableHeaderMixin({key:"id", label:"", align:"center", sxTh:{width:"3rem"}}),
@@ -78,7 +78,7 @@ export default function TableComponent() {
     const bodis = new TableRowsMixin(tableData, {
       batch_code: (value) => <Typography variant="subtitle1" fontWeight="600">{value}</Typography>,
         status: (value) => renderStatus(value),
-        item_type_code: (value, render) => renderItemType(value, render),
+        item_type: (value, render) => renderItemType(value, render),
         customer_company_name: (value, render) => renderCustomer(value, render),
         id: (value) => <IconButton onClick={() => {navigate(`modifica/${value}`)}} color="primary"><EditIcon /></IconButton>
     })

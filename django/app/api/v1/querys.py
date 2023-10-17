@@ -147,10 +147,7 @@ class WarehouseItemsQuery:
             document_to_supplier_name=F("document_to_supplier__supplier__company_name"),
             document_to_supplier_code=F(
                 "document_to_supplier__supplier__external_code"
-            ),
-            item_type_description=F("item_type__description"),
-            item_type_internal_code=F("item_type__internal_code"),
-            item_type_external_code=F("item_type__external_code"),
+            )
         )
         return base_queryset
     

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { Link, useNavigate } from "react-router-dom";
 import {
   FormControl,
@@ -22,54 +22,30 @@ import {
   Output,
 } from "@mui/icons-material";
 
-import FetchApi, { manageFetchError } from "../../libs/axios.js";
+
 import { DatePicker, ButtonDocumentBig } from "../../layout/components";
 
+const statusChoices = [
+  { label: "--", value: "" },
+  { label: "Disponibile", value: "A" },
+  { label: "Venduto", value: "B" },
+  { label: "Vuoto", value: "E" },
+  { label: "Ritornato F.", value: "R" },
+];
+
+
 export default function CreateLottForm({
-  articleListModal: articleListModal,
-  articleChoice: articleChoice,
-  fetchId: fetchId,
+  fields : fields,
+  errors: errors,
+  article : article,
+  submit: submit,
 }) {
-  const navigate = useNavigate();
-  const statusChoices = [
-    { label: "--", value: "" },
-    { label: "Disponibile", value: "A" },
-    { label: "Venduto", value: "B" },
-    { label: "Vuoto", value: "E" },
-    { label: "Ritornato F.", value: "R" },
-  ];
+  const [formValue, setFormValue] = fields
+  const [formErrors, setFormErrors] = errors
+  const [articleChoice, articleModal] = article
+  const submitForm = submit
 
-  // Form variables
-  const id = fetchId
-
-  const [article, setArticle] = useState(articleChoice)
-  const [formErrors, setFormErrors] = useState({});
-  const [formValue, setFormValue] = useState({
-    empty_date: "",
-    batch_code: "",
-    custom_status: "",
-    item_type: "",
-    document_from_supplier: "",
-    document_to_supplier: "",
-    document_customer: "",
-    status: ""
-  });
-
-  // Article state
-  useEffect(() => {
-    setFormValue({
-      ...formValue,
-      item_type: article.id,
-    });
-    setFormErrors({});
-  }, [article]);
-
-  useEffect(() => {
-    if (id) {
-      GETapi(id);
-    }
-  }, [id]);
-  
+  console.log(formValue)
 
   /* Form Methods  */
   const handleInputChange = (e) => {
@@ -93,75 +69,6 @@ export default function CreateLottForm({
     setFormErrors({});
   };
 
-  // Apis support
-  const GETapi = (id) => {
-    try {
-      new FetchApi().getWarehouseItemsLott(id).then((res) => {
-        setFormValue({
-          empty_date: res.data.empty_date,
-          batch_code: res.data.batch_code,
-          custom_status: res.data.custom_status,
-          item_type: res.data.item_type.id,
-          document_from_supplier: "",
-          document_to_supplier: "",
-          document_customer: "",
-          status: res.data.status
-        });
-
-        setArticle(res.data.item_type)
-
-        console.log(res.data.item_type)
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const POSTapi = () => {
-    try {
-      new FetchApi()
-        .postWarehouseItemsLott(formValue)
-        .then((res) => {
-          navigate("/lotti");
-        })
-        .catch((error) => {
-          if (!error.status === 400) {
-            throw new Error("Error during request: " + error);
-          }
-          manageFetchError(error, formErrors, setFormErrors);
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const PUTapi = () => {
-    try {
-      new FetchApi()
-        .putWarehouseItemsLott(id, formValue)
-        .then((res) => {
-          navigate("/lotti");
-        })
-        .catch((error) => {
-          if (!error.status === 400) {
-            throw new Error("Error during request: " + error);
-          }
-          manageFetchError(error, formErrors, setFormErrors);
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const saveCommitForm = () => {
-    if (id) {
-      PUTapi();
-    } else {
-      POSTapi();
-    }
-  };
-
-
   return (
     <>
       <Typography variant="h3">Crea un Lotto</Typography>
@@ -181,7 +88,7 @@ export default function CreateLottForm({
                 <Typography variant="h5">Articolo</Typography>
                 <IconButton
                   onClick={() => {
-                    articleListModal(true);
+                    articleModal(true);
                   }}
                   color="primary"
                 >
@@ -190,14 +97,14 @@ export default function CreateLottForm({
               </Box>
 
               <Typography variant="p" color="text.secondary">
-                {article.description || "--"}
+                {articleChoice.description || "--"}
               </Typography>
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Typography variant="body2" color="text.secondary">
-                  {article.internal_code || "--"}
+                  {articleChoice.internal_code || "--"}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {article.external_code || "--"}
+                  {articleChoice.external_code || "--"}
                 </Typography>
               </Box>
             </Paper>
@@ -316,7 +223,7 @@ export default function CreateLottForm({
 
           <Button
             onClick={() => {
-              saveCommitForm();
+              submitForm();
             }}
             variant="contained"
             color="grey"
