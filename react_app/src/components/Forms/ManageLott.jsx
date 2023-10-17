@@ -82,7 +82,7 @@ export default function CreateLottForm({
               direction="row"
               sx={{
                 p: 2,
-                border: formErrors.item_type ? "1px solid #FF5630" : "none",
+                border: formErrors.item_type_id ? "1px solid #FF5630" : "none",
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",

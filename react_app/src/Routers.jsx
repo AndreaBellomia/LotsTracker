@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 
 import AsideNavbar from "./layout/components/AsideNavbar.jsx";
 
-import { Dashboard, FromSupplierDocument, StorageList, StorageItemsList, DocumentCustomerTable, CustomerList, CreateLott } from "./pages";
+import { Dashboard, FromSupplierDocument, StorageList, StorageItemsList, DocumentCustomerTable, CustomerList, ManageLott } from "./pages";
 
 
 
@@ -21,8 +21,8 @@ export default function Router() {
 
 
             <Route path="lotti" element={<Outlet />}>
-              <Route path="crea" element={<CreateLott />} />
-              <Route path="modifica/:id" element={<CreateLott />} />
+              <Route path="crea" element={<ManageLott />} />
+              <Route path="modifica/:id" element={<ManageLott />} />
               <Route index element={<StorageItemsList />} />
             </Route>
 

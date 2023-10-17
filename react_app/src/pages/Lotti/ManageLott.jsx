@@ -6,11 +6,11 @@ import {
 
 import FetchApi, { manageFetchError } from "../../libs/axios.js";
 
-import CreateLottForm from "../../components/Forms/CreateLott.jsx"
+import ManageLottForm from "../../components/Forms/ManageLott.jsx"
 import SelectArticleList from "../../components/Modals/SelectArticleList.jsx"
 
 
-export default function CreateLott() {
+export default function ManageLott() {
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -55,11 +55,11 @@ export default function CreateLott() {
   const GETapi = (id) => {
     try {
       new FetchApi().getWarehouseItemsLott(id).then((res) => {
-        console.log(res.data)
         setFormValue({
           empty_date: res.data.empty_date,
           batch_code: res.data.batch_code,
           custom_status: res.data.custom_status,
+          item_type_id: res.data.item_type.id,
           item_type_id: res.data.item_type.id,
           document_from_supplier: "",
           document_to_supplier: "",
@@ -132,7 +132,7 @@ export default function CreateLott() {
   return (
     <>
       <Container maxWidth="md">
-        <CreateLottForm 
+        <ManageLottForm 
           fields={[formValue, setFormValue]} 
           errors={[formErrors, setFormErrors]} 
           article={[articleChoice, setListModal]}

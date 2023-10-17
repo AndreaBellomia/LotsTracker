@@ -458,7 +458,7 @@ class WarehouseItemsSerializer(serializers.ModelSerializer):
     item_type_id = serializers.IntegerField(write_only=True)
     
     document_customer = DocumentCustomerSerializer(read_only=True)
-    document_customer_id = serializers.IntegerField(write_only=True)
+    document_customer_id = serializers.IntegerField(write_only=True, required=False)
     
     
     
@@ -485,7 +485,6 @@ class WarehouseItemsSerializer(serializers.ModelSerializer):
         ]
 
         extra_kwargs = {
-            "document_customer": {"write_only": True},
             "document_from_supplier": {"write_only": True},
             "document_to_supplier": {"write_only": True},
         }

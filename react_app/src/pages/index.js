@@ -4,7 +4,7 @@ import StorageList from "./StorageList.jsx"
 import StorageItemsList from "./StorageItemsList.jsx"
 import DocumentCustomerTable from "./DocumentCustomerTable.jsx"
 import CustomerList from "./CustomerList.jsx"
-import CreateLott from "./Lotti/CreateLott.jsx"
+import ManageLott from "./Lotti/ManageLott.jsx"
 
 
 export {
@@ -14,5 +14,5 @@ export {
     StorageItemsList,
     DocumentCustomerTable,
     CustomerList,
-    CreateLott
+    ManageLott
 }
