@@ -15,11 +15,11 @@ export default function Router() {
           <Route path="/" element={<AsideNavbar />}>
             <Route index element={<Dashboard />} />
             <Route path="document" element={<FromSupplierDocument />} />
-            <Route path="magazzino" element={<StorageList />} />
-            <Route path="documenti" element={<DocumentCustomerTable />} />
             <Route path="clienti" element={<CustomerList />} />
 
+            <Route path="documenti" element={<DocumentCustomerTable />} />
 
+            <Route path="magazzino" element={<StorageList />} />
             <Route path="lotti" element={<Outlet />}>
               <Route path="crea" element={<ManageLott />} />
               <Route path="modifica/:id" element={<ManageLott />} />

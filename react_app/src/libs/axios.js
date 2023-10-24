@@ -86,6 +86,11 @@ class FetchApi {
       )
   }
 
+  async postCustomer(body) {
+    return await this.client
+      .post("/customers", {...body})
+  }
+
   async getCustomerDocuments(page=1, search = "", order_by = "") {
     return await this.client
       .get(

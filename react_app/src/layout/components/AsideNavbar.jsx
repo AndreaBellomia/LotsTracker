@@ -18,7 +18,10 @@ import {
 } from "@mui/material";
 import Box from "@mui/material/Box";
 
-import { MoveToInbox, Mail, ChevronRight }  from '@mui/icons-material';
+import { ChevronRight, QrCodeScanner, Person, Inventory, DocumentScanner }  from '@mui/icons-material';
+
+
+
 
 const drawerWidth = 240;
 const drawerClosedWidth = 60;
@@ -138,57 +141,81 @@ export default function AsideNavbar() {
           </IconButton>
         </DrawerHeader>
         <List>
-          {/* <NavLink to="/contact" activeClassName="active">Contact</NavLink> */}
-          
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <CustomListItem key={text} disablePadding  href="ciao">
-              
-              <ListItemButton
-                sx={{
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2,
-                  py: 0.5
-                }}
-              >
-                <ListItemIcon
+            <Link to="/lotti">
+              <CustomListItem disablePadding sx={{ color: "white" }}>
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 2 : 'auto',
-                    justifyContent: 'center',
-                    color: "white"
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2,
+                    py: 0.5
                   }}
                 >
-                  {index % 2 === 0 ? <MoveToInbox /> : <Mail />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0}} />
-              </ListItemButton>
-            </CustomListItem>
-          ))}
-
-          <CustomListItem disablePadding to="/magazzino">
-              <ListItemButton
-                sx={{
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2,
-                  py: 0.5
-                }}
-              >
-                <ListItemIcon
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 2 : 'auto',
+                      justifyContent: 'center',
+                      color: "white"
+                    }}
+                  >
+                    <QrCodeScanner />
+                  </ListItemIcon>
+                  <ListItemText primary={"Lotti"} sx={{ opacity: open ? 1 : 0}} />
+                </ListItemButton>
+              </CustomListItem>
+            </Link>
+            <Link to="magazzino">
+              <CustomListItem disablePadding sx={{ color: "white" }}>
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 2 : 'auto',
-                    justifyContent: 'center',
-                    color: "white"
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2,
+                    py: 0.5
                   }}
                 >
-                  <MoveToInbox />
-                </ListItemIcon>
-                <ListItemText primary={"asd"} sx={{ opacity: open ? 1 : 0}} />
-              </ListItemButton>
-            </CustomListItem>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 2 : 'auto',
+                      justifyContent: 'center',
+                      color: "white"
+                    }}
+                  >
+                    <Inventory />
+                  </ListItemIcon>
+                  <ListItemText primary={"Magazzino"} sx={{ opacity: open ? 1 : 0}} />
+                </ListItemButton>
+              </CustomListItem>
+            </Link>
 
-            <Link to="/magazzino">Magazzino</Link>
-            <Link to="/lotti">Lotti</Link>
+            <Link to="documenti">
+              <CustomListItem disablePadding sx={{ color: "white" }}>
+                <ListItemButton
+                  sx={{
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2,
+                    py: 0.5
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 2 : 'auto',
+                      justifyContent: 'center',
+                      color: "white"
+                    }}
+                  >
+                    <DocumentScanner />
+                  </ListItemIcon>
+                  <ListItemText primary={"Doc. di consegna"} sx={{ opacity: open ? 1 : 0}} />
+                </ListItemButton>
+              </CustomListItem>
+            </Link>
+
+
+
+
+
         </List>
       </CustomDrawer>
       <Box

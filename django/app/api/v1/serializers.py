@@ -1,5 +1,7 @@
 from django.db import transaction
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
+from django.db import IntegrityError
 
 from app.api.v1.mixins import WarehouseItemsDocumentSerializerMixin, DocumentSupplierSerializerMixin
 from app.core.models import (
@@ -24,6 +26,15 @@ class CustomerRegistrySerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerRegistry
         fields = "__all__"
+        validators = [
+                UniqueTogetherValidator(
+                    queryset=CustomerRegistry.objects.all(),
+                    fields=['company_name', 'vat_number'],
+                    message= "Il Nome della controparte e la Piva esistono già"
+                )
+            ]
+        
+
 
 
 class DocumentCustomerSerializer(serializers.ModelSerializer):

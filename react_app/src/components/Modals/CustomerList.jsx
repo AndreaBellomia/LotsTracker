@@ -40,12 +40,16 @@ export default function Dashboard() {
   const handleClose = () => setOpen(false);
 
   const [formValues, setFormValues] = useState({
-    company_name: "",
-    vat_number: "",
-    external_code: "",
+    description: "",
+    externalCode: "",
+    internalCode: "",
   });
 
-  const [formErrors, setFormErrors] = useState({});
+  const [formErrors, setFormErrors] = useState({
+    description: "",
+    external_code: "",
+    internal_code: "",
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -54,12 +58,16 @@ export default function Dashboard() {
       [name]: value,
     });
 
-    setFormErrors({})
+    setFormErrors({
+      description: "",
+      external_code: "",
+      internal_code: "",
+    })
   };
 
-  const POSTapi = () => {
+  const postAddModalData = () => {
     try {
-      new FetchApi().postCustomer(formValues).then((response) => {
+      new FetchApi().postWarehouseItems(formValues.description, formValues.internalCode, formValues.externalCode).then((response) => {
         setOpen(false)
       }).catch((error) => {
         if (!error.status === 400) {
@@ -84,17 +92,6 @@ export default function Dashboard() {
     }
   }
 
-
-  const saveCommitForm = () => {
-    // if (id) {
-    //   PUTapi();
-    // } else {
-    //   POSTapi();
-    // }
-
-    POSTapi();
-  };
-
   return (
     <>
       <CustomerTable addModalOpen={handleOpen} key={open} />
@@ -105,8 +102,43 @@ export default function Dashboard() {
           aria-describedby="modal-modal-description"
         >
           
+          <Box sx={style}>
+            <Button onClick={handleClose}>Ciudi</Button>
+            <FormControl sx={{ width: '100%' }}>
+              <FormLabel>Descrizione</FormLabel>
+              <TextField 
+                name="description" 
+                onChange={handleInputChange} 
+                helperText={formErrors.description}
+                error={Boolean(formErrors.description)}
+              ></TextField>
+
+              <FormLabel>Codice</FormLabel>
+              <TextField 
+                name="external_code" 
+                onChange={handleInputChange} 
+                helperText={formErrors.external_code}
+                error={Boolean(formErrors.external_code)}
+              ></TextField>
+
+              <FormLabel>Codice</FormLabel>
+              <TextField 
+                name="internal_code" 
+                onChange={handleInputChange} 
+                helperText={formErrors.internal_code}
+                error={Boolean(formErrors.internal_code)}
+              ></TextField>
+
+              
+              
+
+              <Button onClick={() => postAddModalData()}>Open modal</Button>
+
+            </FormControl>
+          </Box>
           
-        
+          
+        </Modal>
 
         <ModalBox>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -130,13 +162,13 @@ export default function Dashboard() {
                 lg={8}
                 sx={{ display: "flex", flexDirection: "column" }}
               >
-              <FormLabel>Nome Cliente</FormLabel>
+              <FormLabel>Descrizione</FormLabel>
               <TextField 
-                name="company_name" 
+                name="description" 
                 onChange={handleInputChange}
-                value={formValues.company_name}
-                helperText={formErrors.company_name || formErrors.non_field_errors}
-                error={Boolean(formErrors.company_name || formErrors.non_field_errors)}
+                value={formValues.description}
+                helperText={formErrors.description}
+                error={Boolean(formErrors.description)}
               ></TextField>
               </Grid>
             </Grid>
@@ -155,8 +187,8 @@ export default function Dashboard() {
                   name="vat_number"
                   value={formValues.vat_number}
                   onChange={handleInputChange}
-                  helperText={formErrors.vat_number || formErrors.non_field_errors}
-                  error={Boolean(formErrors.vat_number || formErrors.non_field_errors)}
+                  helperText={formErrors.vat_number}
+                  error={Boolean(formErrors.vat_number)}
                 ></TextField>
 
               </Grid>
@@ -205,7 +237,6 @@ export default function Dashboard() {
             </Box>
           </FormControl>
         </ModalBox>
-        </Modal>
     </>
   );
 }
