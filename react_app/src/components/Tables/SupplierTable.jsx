@@ -99,16 +99,18 @@ export default function ({ addModalOpen, addModalId }) {
                             orderBy={[orderBy, setOrderBy]}
                         ></Tables>
 
-                        <Box sx={{ p: "1rem", display: "flex", justifyContent: "end" }}>
-                            <Pagination
-                                count={Number(pages)}
-                                color="grey"
-                                shape="rounded"
-                                onChange={(e, page) => {
-                                    setPageSelected(page);
-                                }}
-                            />
-                        </Box>
+                        {Number(pages) > 1 && (
+                            <Box sx={{ p: "1rem", display: "flex", justifyContent: "end" }}>
+                                <Pagination
+                                    count={Number(pages)}
+                                    color="grey"
+                                    shape="rounded"
+                                    onChange={(e, page) => {
+                                        setPageSelected(page);
+                                    }}
+                                />
+                            </Box>
+                        )}
                     </Paper>
                 </Grid>
             </Grid>
