@@ -24,6 +24,7 @@ import {
     Person,
     Inventory,
     DocumentScanner,
+    EngineeringTwoTone,
 } from "@mui/icons-material";
 
 const drawerWidth = 240;
@@ -133,6 +134,34 @@ export default function AsideNavbar() {
         setOpen(!open);
     };
 
+    const listItems = [
+        {
+            url: "lotti",
+            name: "Lotti",
+            icon: <QrCodeScanner/>,
+        },
+        {
+            url: "magazzino",
+            name: "Magazzino",
+            icon: <Inventory/>,
+        },
+        {
+            url: "documenti",
+            name: "Doc. di consegna",
+            icon: <DocumentScanner/>,
+        },
+        {
+            url: "clienti",
+            name: "Clienti",
+            icon: <Person/>,
+        },
+        {
+            url: "fornitori",
+            name: "Fornitori",
+            icon: <EngineeringTwoTone/>,
+        },
+    ];
+
     return (
         <Box sx={{ display: "flex" }}>
             <CssBaseline />
@@ -143,130 +172,34 @@ export default function AsideNavbar() {
                     </IconButton>
                 </DrawerHeader>
                 <List>
-                    <Link to="/lotti">
-                        <CustomListItem disablePadding sx={{ color: "white" }}>
-                            <ListItemButton
-                                sx={{
-                                    justifyContent: open ? "initial" : "center",
-                                    px: 2,
-                                    py: 0.5,
-                                }}
-                            >
-                                <ListItemIcon
+                    {listItems.map((element, index) => (
+                        <Link to={element.url} key={index}>
+                            <CustomListItem disablePadding sx={{ color: "white" }}>
+                                <ListItemButton
                                     sx={{
-                                        minWidth: 0,
-                                        mr: open ? 2 : "auto",
-                                        justifyContent: "center",
-                                        color: "white",
+                                        justifyContent: open ? "initial" : "center",
+                                        px: 2,
+                                        py: 0.5,
                                     }}
                                 >
-                                    <QrCodeScanner />
-                                </ListItemIcon>
-                                <ListItemText primary={"Lotti"} sx={{ opacity: open ? 1 : 0 }} />
-                            </ListItemButton>
-                        </CustomListItem>
-                    </Link>
-                    <Link to="magazzino">
-                        <CustomListItem disablePadding sx={{ color: "white" }}>
-                            <ListItemButton
-                                sx={{
-                                    justifyContent: open ? "initial" : "center",
-                                    px: 2,
-                                    py: 0.5,
-                                }}
-                            >
-                                <ListItemIcon
-                                    sx={{
-                                        minWidth: 0,
-                                        mr: open ? 2 : "auto",
-                                        justifyContent: "center",
-                                        color: "white",
-                                    }}
-                                >
-                                    <Inventory />
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={"Magazzino"}
-                                    sx={{ opacity: open ? 1 : 0 }}
-                                />
-                            </ListItemButton>
-                        </CustomListItem>
-                    </Link>
-
-                    <Link to="documenti">
-                        <CustomListItem disablePadding sx={{ color: "white" }}>
-                            <ListItemButton
-                                sx={{
-                                    justifyContent: open ? "initial" : "center",
-                                    px: 2,
-                                    py: 0.5,
-                                }}
-                            >
-                                <ListItemIcon
-                                    sx={{
-                                        minWidth: 0,
-                                        mr: open ? 2 : "auto",
-                                        justifyContent: "center",
-                                        color: "white",
-                                    }}
-                                >
-                                    <DocumentScanner />
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={"Doc. di consegna"}
-                                    sx={{ opacity: open ? 1 : 0 }}
-                                />
-                            </ListItemButton>
-                        </CustomListItem>
-                    </Link>
-
-                    <Link to="clienti">
-                        <CustomListItem disablePadding sx={{ color: "white" }}>
-                            <ListItemButton
-                                sx={{
-                                    justifyContent: open ? "initial" : "center",
-                                    px: 2,
-                                    py: 0.5,
-                                }}
-                            >
-                                <ListItemIcon
-                                    sx={{
-                                        minWidth: 0,
-                                        mr: open ? 2 : "auto",
-                                        justifyContent: "center",
-                                        color: "white",
-                                    }}
-                                >
-                                    <Person />
-                                </ListItemIcon>
-                                <ListItemText primary={"Clienti"} sx={{ opacity: open ? 1 : 0 }} />
-                            </ListItemButton>
-                        </CustomListItem>
-                    </Link>
-
-                    <Link to="fornitori">
-                        <CustomListItem disablePadding sx={{ color: "white" }}>
-                            <ListItemButton
-                                sx={{
-                                    justifyContent: open ? "initial" : "center",
-                                    px: 2,
-                                    py: 0.5,
-                                }}
-                            >
-                                <ListItemIcon
-                                    sx={{
-                                        minWidth: 0,
-                                        mr: open ? 2 : "auto",
-                                        justifyContent: "center",
-                                        color: "white",
-                                    }}
-                                >
-                                    <Person />
-                                </ListItemIcon>
-                                <ListItemText primary={"Fornitori"} sx={{ opacity: open ? 1 : 0 }} />
-                            </ListItemButton>
-                        </CustomListItem>
-                    </Link>
+                                    <ListItemIcon
+                                        sx={{
+                                            minWidth: 0,
+                                            mr: open ? 2 : "auto",
+                                            justifyContent: "center",
+                                            color: "white",
+                                        }}
+                                    >
+                                        <>{element.icon}</>
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary={element.name}
+                                        sx={{ opacity: open ? 1 : 0 }}
+                                    />
+                                </ListItemButton>
+                            </CustomListItem>
+                        </Link>
+                    ))}
                 </List>
             </CustomDrawer>
             <Box id="main-content" component="div" sx={{ p: 3, mt: 5, width: { sm: `100%` } }}>
