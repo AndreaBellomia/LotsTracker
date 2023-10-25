@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import FetchApi, { manageFetchError } from "../../libs/axios.js";
 import {
   Button,
+  IconButton,
   Box,
   Modal,
   TextField,
@@ -8,49 +10,88 @@ import {
   FormLabel,
   Grid,
   Typography,
-  IconButton
 } from "@mui/material";
-
+import ModalBox from "../../layout/components/ModalBox.jsx";
 
 import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from "@mui/icons-material/Add";
 
-import ModalBox from "../layout/components/ModalBox.jsx";
-import CustomerTable from "../components/Tables/CustomerTable.jsx";
+export default function CustomerList({
+  modalStatus: modalStatus,
+  fetchId: fetchId,
+}) {
+  /* State */
+  const [open, setOpen] = modalStatus;
+  const [id, seId] = fetchId;
+  const handleClose = () => {
+    setOpen(false);
+    seId(undefined), clearForm();
+  };
 
-
-
-import FetchApi from "../libs/axios.js"
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 800,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
-
-
-export default function Dashboard() {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const [formValues, setFormValues] = useState({
-    description: "",
-    externalCode: "",
-    internalCode: "",
-  });
-
-  const [formErrors, setFormErrors] = useState({
-    description: "",
+  const modalStatusFormStructure = {
+    id: "",
+    company_name: "",
+    vat_number: "",
     external_code: "",
-    internal_code: "",
-  });
+  };
+  const [formValues, setFormValues] = useState(modalStatusFormStructure);
+  const [formErrors, setFormErrors] = useState({});
 
+  useEffect(() => {
+    if (id) {
+      GETapi(id);
+    }
+  }, [id]);
+
+  /* Fetch API */
+  const GETapi = (id) => {
+    try {
+      new FetchApi().getCustomer(id).then((res) => {
+        setFormValues({ ...res.data });
+      });
+    } catch (error) {
+      console.log("error");
+    }
+  };
+
+  const POSTapi = () => {
+    try {
+      new FetchApi()
+        .postCustomer(formValues)
+        .then((response) => {
+          setOpen(false);
+        })
+        .catch((error) => {
+          if (!error.status === 400) {
+            throw new Error("Error during request: " + error);
+          }
+
+          manageFetchError(error, formErrors, setFormErrors);
+        });
+    } catch (error) {
+      console.log("error");
+    }
+  };
+
+  const PUTapi = () => {
+    try {
+      new FetchApi()
+        .putCustomer(id, formValues)
+        .then((_) => {
+          handleClose();
+        })
+        .catch((error) => {
+          if (!error.status === 400) {
+            throw new Error("Error during request: " + error);
+          }
+          manageFetchError(error, formErrors, setFormErrors);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /* Form Methods  */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormValues({
@@ -58,94 +99,35 @@ export default function Dashboard() {
       [name]: value,
     });
 
-    setFormErrors({
-      description: "",
-      external_code: "",
-      internal_code: "",
-    })
+    setFormErrors({});
   };
 
-  const postAddModalData = () => {
-    try {
-      new FetchApi().postWarehouseItems(formValues.description, formValues.internalCode, formValues.externalCode).then((response) => {
-        setOpen(false)
-      }).catch((error) => {
-        if (!error.status === 400) {
-          throw new Error("Error during request: " + error);
-        }
-
-        const newErrors = {};
-        
-        if (error.response.data) {
-          Object.keys(error.response.data).forEach((key) => {
-            newErrors[key] = error.response.data[key];
-          });
-        }
-
-        setFormErrors({
-          ...formErrors,
-          ...newErrors,
-        });
-      });
-    } catch (error) { 
-      console.log("error")
+  const saveCommitForm = () => {
+    if (id) {
+      PUTapi();
+    } else {
+      POSTapi();
     }
-  }
+  };
+
+  const clearForm = () => {
+    setFormValues(modalStatusFormStructure);
+    setFormErrors({});
+  };
 
   return (
     <>
-      <CustomerTable addModalOpen={handleOpen} key={open} />
-      
-        <Modal
-          open={open}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          
-          <Box sx={style}>
-            <Button onClick={handleClose}>Ciudi</Button>
-            <FormControl sx={{ width: '100%' }}>
-              <FormLabel>Descrizione</FormLabel>
-              <TextField 
-                name="description" 
-                onChange={handleInputChange} 
-                helperText={formErrors.description}
-                error={Boolean(formErrors.description)}
-              ></TextField>
-
-              <FormLabel>Codice</FormLabel>
-              <TextField 
-                name="external_code" 
-                onChange={handleInputChange} 
-                helperText={formErrors.external_code}
-                error={Boolean(formErrors.external_code)}
-              ></TextField>
-
-              <FormLabel>Codice</FormLabel>
-              <TextField 
-                name="internal_code" 
-                onChange={handleInputChange} 
-                helperText={formErrors.internal_code}
-                error={Boolean(formErrors.internal_code)}
-              ></TextField>
-
-              
-              
-
-              <Button onClick={() => postAddModalData()}>Open modal</Button>
-
-            </FormControl>
-          </Box>
-          
-          
-        </Modal>
-
+      <Modal
+        open={open}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
         <ModalBox>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h6" fontWeight={600} color="text.primary">
-   {/*            {id
-                ? `Modifica articolo ${formValue.internal_code}`
-                : "Crea nuovo articolo"} */}
+                {id
+                ? `Modifica articolo ${formValues.internal_code}`
+                : "Crea nuovo articolo"}
             </Typography>
             <IconButton onClick={handleClose} color="error">
               <CloseIcon />
@@ -162,14 +144,18 @@ export default function Dashboard() {
                 lg={8}
                 sx={{ display: "flex", flexDirection: "column" }}
               >
-              <FormLabel>Descrizione</FormLabel>
-              <TextField 
-                name="description" 
-                onChange={handleInputChange}
-                value={formValues.description}
-                helperText={formErrors.description}
-                error={Boolean(formErrors.description)}
-              ></TextField>
+                <FormLabel>Nome Cliente</FormLabel>
+                <TextField
+                  name="company_name"
+                  onChange={handleInputChange}
+                  value={formValues.company_name}
+                  helperText={
+                    formErrors.company_name || formErrors.non_field_errors
+                  }
+                  error={Boolean(
+                    formErrors.company_name || formErrors.non_field_errors
+                  )}
+                ></TextField>
               </Grid>
             </Grid>
 
@@ -187,10 +173,13 @@ export default function Dashboard() {
                   name="vat_number"
                   value={formValues.vat_number}
                   onChange={handleInputChange}
-                  helperText={formErrors.vat_number}
-                  error={Boolean(formErrors.vat_number)}
+                  helperText={
+                    formErrors.vat_number || formErrors.non_field_errors
+                  }
+                  error={Boolean(
+                    formErrors.vat_number || formErrors.non_field_errors
+                  )}
                 ></TextField>
-
               </Grid>
 
               <Grid
@@ -226,17 +215,18 @@ export default function Dashboard() {
                 variant="contained"
                 color="grey"
               >
-   {/*              {id ? (
+                {id ? (
                   <>salva</>
                 ) : (
                   <>
                     conferma
                   </>
-                )} */}
+                )}
               </Button>
             </Box>
           </FormControl>
         </ModalBox>
+      </Modal>
     </>
   );
 }

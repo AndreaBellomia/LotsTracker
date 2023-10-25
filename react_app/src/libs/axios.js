@@ -76,7 +76,7 @@ class FetchApi {
 
 
   // Customers API methods
-  async getCustomer(page=1, search = "", order_by = "") {
+  async getCustomersList(page=1, search = "", order_by = "") {
     return await this.client
       .get(
         FetchApi.buildFilteredUrl(`customers?format=json&page=${page}`, {
@@ -86,9 +86,20 @@ class FetchApi {
       )
   }
 
+
+  async getCustomer(id) {
+    return await this.client
+      .get(`/customers/detail/${id}`)
+  }
+
   async postCustomer(body) {
     return await this.client
       .post("/customers", {...body})
+  }
+
+  async putCustomer(id, body) {
+    return await this.client
+      .put(`/customers/detail/${id}`, {...body})
   }
 
   async getCustomerDocuments(page=1, search = "", order_by = "") {
