@@ -139,7 +139,12 @@ export default function CreateLottForm({
                             <Grid item xs={6} sx={{ display: "flex", flexDirection: "column" }}>
                                 <FormLabel>Data di restituzione</FormLabel>
                                 <DatePicker
-                                    onChange={(target) => handleInputDatepickerChange(target)}
+                                    onChange={(target) => {
+                                        HandlerInput.handleInputDatepickerChange(
+                                            target,
+                                            "empty_date"
+                                        );
+                                    }}
                                     error={Boolean(formErrors.empty_date)}
                                     helperText={formErrors.empty_date}
                                     value={dayjs(formValue.empty_date)}
@@ -148,7 +153,7 @@ export default function CreateLottForm({
                             <Grid item xs={6} sx={{ display: "flex", flexDirection: "column" }}>
                                 <FormLabel>Numero Lotto</FormLabel>
                                 <TextField
-                                    onChange={(target) => HandlerInput.handleInputChange(target)}
+                                    onChange={HandlerInput.handleInputChange}
                                     name="batch_code"
                                     value={formValue.batch_code}
                                     helperText={formErrors.batch_code}
@@ -167,9 +172,12 @@ export default function CreateLottForm({
                                         <MenuItem
                                             key={option.value}
                                             value={option.value}
-                                            onClick={() =>
-                                                setFormValue({ ...formValue, status: option.value })
-                                            }
+                                            onClick={() => {
+                                                setFormValue({
+                                                    ...formValue,
+                                                    status: option.value,
+                                                });
+                                            }}
                                         >
                                             {option.label}
                                         </MenuItem>

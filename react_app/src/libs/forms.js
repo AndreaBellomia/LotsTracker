@@ -15,6 +15,17 @@ export class manageHandlerInput {
         this.setFormErrors({});
     };
 
+    handleInputDatepickerChange = (e, name) => {
+        
+        const date = e.$d;
+        this.setFormValue({
+            ...this.formValue,
+            [name]: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
+        });
+
+        this.setFormErrors({});
+    };
+
     clearForm() {
         Object.keys(this.formValue).map((key) => {
             this.formValue[key] = "";

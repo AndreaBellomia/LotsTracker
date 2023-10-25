@@ -27,6 +27,7 @@ export default function CustomDatePicker(props) {
                     },
                 }}
                 value={otherProps.value}
+                name={otherProps.name}
             />
         </LocalizationProvider>
     );
