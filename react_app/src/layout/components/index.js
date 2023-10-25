@@ -1,9 +1,4 @@
-import ButtonDocumentBig from './ButtonDocumentBig.jsx';
-import DatePicker from './DatePicker.jsx';
+import ButtonDocumentBig from "./ButtonDocumentBig.jsx";
+import DatePicker from "./DatePicker.jsx";
 
-
-
-export {
-    ButtonDocumentBig,
-    DatePicker
-}
+export { ButtonDocumentBig, DatePicker };
