@@ -11,6 +11,7 @@ import {
     DocumentCustomerTable,
     CustomerList,
     ManageLott,
+    SupplierList
 } from "./pages";
 
 export default function Router() {
@@ -21,6 +22,7 @@ export default function Router() {
                     <Route index element={<Dashboard />} />
                     <Route path="document" element={<FromSupplierDocument />} />
                     <Route path="clienti" element={<CustomerList />} />
+                    <Route path="fornitori" element={<SupplierList />} />
 
                     <Route path="documenti" element={<DocumentCustomerTable />} />
 

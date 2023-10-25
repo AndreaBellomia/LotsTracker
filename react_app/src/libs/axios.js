@@ -95,6 +95,29 @@ class FetchApi {
             })
         );
     }
+
+    // Supplier API methods
+    async getSuppliersList(page = 1, search = "", order_by = "") {
+        return await this.client.get(
+            FetchApi.buildFilteredUrl(`suppliers?format=json&page=${page}`, {
+                search: search,
+                ordering: order_by,
+            })
+        );
+    }
+
+    async getSupplier(id) {
+        return await this.client.get(`/suppliers/detail/${id}`);
+    }
+
+    async postSupplier(body) {
+        return await this.client.post("/suppliers", { ...body });
+    }
+
+    async putSupplier(id, body) {
+        return await this.client.put(`/suppliers/detail/${id}`, { ...body });
+    }
+
 }
 
 export default FetchApi;

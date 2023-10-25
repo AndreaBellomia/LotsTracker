@@ -243,6 +243,30 @@ export default function AsideNavbar() {
                             </ListItemButton>
                         </CustomListItem>
                     </Link>
+
+                    <Link to="fornitori">
+                        <CustomListItem disablePadding sx={{ color: "white" }}>
+                            <ListItemButton
+                                sx={{
+                                    justifyContent: open ? "initial" : "center",
+                                    px: 2,
+                                    py: 0.5,
+                                }}
+                            >
+                                <ListItemIcon
+                                    sx={{
+                                        minWidth: 0,
+                                        mr: open ? 2 : "auto",
+                                        justifyContent: "center",
+                                        color: "white",
+                                    }}
+                                >
+                                    <Person />
+                                </ListItemIcon>
+                                <ListItemText primary={"Fornitori"} sx={{ opacity: open ? 1 : 0 }} />
+                            </ListItemButton>
+                        </CustomListItem>
+                    </Link>
                 </List>
             </CustomDrawer>
             <Box id="main-content" component="div" sx={{ p: 3, mt: 5, width: { sm: `100%` } }}>
