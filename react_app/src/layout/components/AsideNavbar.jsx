@@ -24,7 +24,8 @@ import {
     Person,
     Inventory,
     DocumentScanner,
-    EngineeringTwoTone,
+    Engineering,
+    Category
 } from "@mui/icons-material";
 
 const drawerWidth = 240;
@@ -143,7 +144,7 @@ export default function AsideNavbar() {
         {
             url: "magazzino",
             name: "Magazzino",
-            icon: <Inventory/>,
+            icon: <Category/>,
         },
         {
             url: "documenti",
@@ -158,7 +159,7 @@ export default function AsideNavbar() {
         {
             url: "fornitori",
             name: "Fornitori",
-            icon: <EngineeringTwoTone/>,
+            icon: <Engineering/>,
         },
     ];
 
