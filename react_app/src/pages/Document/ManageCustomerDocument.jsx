@@ -23,9 +23,10 @@ import {
 import { DatePicker, ButtonDocumentBig } from "../../layout/components";
 import { manageHandlerInput } from "../../libs/forms.js";
 
-import { RemoveCircle, Add } from '@mui/icons-material';
+import { RemoveCircle, AddCircle, Edit, Done } from '@mui/icons-material';
 
 import SelectItemModal from "../../components/Modals/SelectItem.jsx"
+import SelectCustomerModal from "../../components/Modals/SelectCustomerModal.jsx"
 
 
 class BodyItem {
@@ -63,13 +64,19 @@ class ManageFormBodies {
 
 
 
+function getFormBody(formBody) {
+    return formBody.map(item => Object({ "id" : item.id }))
+}
+
 
 export default function ManageDocument() {
     const [itemModal, setItemModal] = useState(false);
+    const [customerModal, setCustomerModal] = useState(false);
     const [formValuesBody, setFormValuesBody] = useState([]);
+    const [formValuesCustomer, setFormValuesCustomer] = useState({});
 
     const [formValues, setFormValues] = useState({
-        body: formValuesBody,
+        body: getFormBody(formValuesBody),
         supplier_id: undefined,
         date: undefined,
         number: undefined,
@@ -81,34 +88,93 @@ export default function ManageDocument() {
     useEffect(()=> {
         setFormValues({
            ...formValues,
-           body: formValuesBody,
+           body: getFormBody(formValuesBody),
         })
     }, [formValuesBody]);
+    
+    useEffect(()=> {
+        setFormValues({
+           ...formValues,
+           supplier_id: formValuesCustomer.id,
+        })
+    }, [formValuesCustomer]);
 
 
     return (
-        <>
-            <FormControl sx={{ width: "100%" }}>
-                <FormLabel>Data di restituzione</FormLabel>
-                <DatePicker
-                    onChange={(target) => {
-                        HandlerInput.handleInputDatepickerChange(target, "date");
-                    }}
-                    error={Boolean(formErrors.date)}
-                    helperText={formErrors.date}
-                    value={dayjs(formValues.date)}
-                />
-            </FormControl>
+        <>  
+            
+            <Typography variant="h4">Documento di consegna</Typography>
 
-            <Box sx={{ mt: 6 }}/>
+            <Box mt={4} />
 
-            <Box sx={{ display: "flex", justifyContent: "end", mb: 2 }}>
-                <Button variant="contained" size="medium" color="grey" onClick={() => setItemModal(true)}>
-                    <Add />
-                    <Box mr={1} />
-                    Aggiungi
-                </Button>
-            </Box>
+            <Grid container spacing={2}>
+                <Grid item xs={12} md={6} lg={6}>
+                    <Paper
+                        elevation={5}
+                        direction="row"
+                        sx={{
+                            p: 2,
+                            border: formErrors.item_type_id ? "1px solid #FF5630" : "none",
+                            height: "100%",
+                            display: "flex",
+                            flexDirection: "column",
+                        }}
+                    >
+                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                            <Typography variant="h5">Cliente</Typography>
+                            <IconButton
+                                onClick={() => {
+                                    setCustomerModal(true);
+                                }}
+                                color="primary"
+                            >
+                                <Edit />
+                            </IconButton>
+                        </Box>
+
+                        <Box>
+                            <Typography variant="p" color="text.secondary">
+                                {formValuesCustomer.company_name || "--"}
+                            </Typography>
+                            <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
+                                <Typography variant="body2" color="text.secondary">
+                                    {formValuesCustomer.vat_number || "--"}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    {formValuesCustomer.external_code || "--"}
+                                </Typography>
+                            </Box>
+                        </Box>
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} md={6} lg={6}>
+                    <Box>
+                        <FormControl sx={{ width: "100%" }}>   
+                            <FormLabel>Data documento</FormLabel>
+                            <DatePicker
+                                onChange={(target) => {
+                                    HandlerInput.handleInputDatepickerChange(target, "date");
+                                }}
+                                error={Boolean(formErrors.date)}
+                                helperText={formErrors.date}
+                                value={formValues.date ? dayjs(formValues.date) : null}
+                            />
+                        </FormControl>
+                        <FormControl sx={{ width: "100%", mt: 2 }}>   
+                            <FormLabel>Numero documento</FormLabel>
+                            <TextField
+                                onChange={HandlerInput.handleInputChange}
+                                name="number"
+                                value={formValues.number || ''}
+                                helperText={formErrors.number}
+                                error={Boolean(formErrors.number)}
+                            ></TextField>
+                        </FormControl>
+                    </Box>
+                </Grid>
+            </Grid>
+
+            <Box mt={4} />
 
             <TableContainer component={Paper} >
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -134,13 +200,29 @@ export default function ManageDocument() {
                         <TableCell align="right"><IconButton onClick={() => formBodies.remove(row.id)}><RemoveCircle color="error"/></IconButton></TableCell>
                         </TableRow>
                     ))}
+                    <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0, textAlign: "center" } }}>
+                        <TableCell colSpan={4} align="right"><IconButton onClick={() => setItemModal(true)}><AddCircle color="secondary"/></IconButton></TableCell>
+                    </TableRow>
                     </TableBody>
                 </Table>
             </TableContainer>
-           
 
+            <Box sx={{ display: "flex", justifyContent: "space-between", my: 4 }}>
+                <Link to="/documenti">
+                    <Button variant="outlined" color="error">
+                        Annulla
+                    </Button>
+                </Link>
+                
+                <Button variant="contained" size="medium" color="primary" onClick={() => console.log(formValues)}>
+                    <Done />
+                    <Box mr={1} />
+                    Salva
+                </Button>
+            </Box>
 
            <SelectItemModal modalState={[itemModal, setItemModal]} tableChoices={(item) => formBodies.append(item)}/>
+           <SelectCustomerModal modalState={[customerModal, setCustomerModal]} tableChoices={(item) => setFormValuesCustomer(item)}/>
         </>
     );
 }

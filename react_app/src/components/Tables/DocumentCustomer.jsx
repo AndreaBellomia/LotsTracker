@@ -32,7 +32,6 @@ export default function TableComponent({ addModalOpen }) {
     useEffect(() => {
         try {
             new FetchApi().getCustomerDocuments(pageSelected, search, orderBy).then((response) => {
-                console.log(response.data);
                 setTableData(response.data.results);
                 setPages(response.data.num_pages);
             });
