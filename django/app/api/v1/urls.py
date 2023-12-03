@@ -78,6 +78,11 @@ urlpatterns = [
         name="warehouse-items"
     ),
     path(
+        "warehouse/items/available", 
+        views.WarehouseItemsAvailableApiView.as_view(), 
+        name="warehouse-items-available"
+    ),
+    path(
         "warehouse/items/detail/<int:pk>",
         views.WarehouseItemsDetailApiView.as_view(),
         name="warehouse-items-detail",

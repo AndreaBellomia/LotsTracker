@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom";
 
 import AsideNavbar from "./layout/components/AsideNavbar.jsx";
 
@@ -11,7 +11,8 @@ import {
     DocumentCustomerTable,
     CustomerList,
     ManageLott,
-    SupplierList
+    SupplierList,
+    ManageCustomerDocument
 } from "./pages";
 
 export default function Router() {
@@ -20,11 +21,10 @@ export default function Router() {
             <Routes>
                 <Route path="/" element={<AsideNavbar />}>
                     <Route index element={<Dashboard />} />
-                    <Route path="document" element={<FromSupplierDocument />} />
+                    <Route path="" element={<FromSupplierDocument />} />
                     <Route path="clienti" element={<CustomerList />} />
                     <Route path="fornitori" element={<SupplierList />} />
 
-                    <Route path="documenti" element={<DocumentCustomerTable />} />
 
                     <Route path="magazzino" element={<StorageList />} />
                     <Route path="lotti" element={<Outlet />}>
@@ -32,6 +32,13 @@ export default function Router() {
                         <Route path="modifica/:id" element={<ManageLott />} />
                         <Route index element={<StorageItemsList />} />
                     </Route>
+
+                    <Route path="documenti" element={<Outlet />}>
+                        <Route path="crea" element={<ManageCustomerDocument />} />
+                        <Route path="modifica/:id" element={<ManageLott />} />
+                        <Route index element={<DocumentCustomerTable />} />
+                    </Route>
+                    {/* <Route path="*" element={<Navigate to="api/" />} /> */}
                 </Route>
             </Routes>
         </BrowserRouter>

@@ -24,7 +24,8 @@ from django.urls import re_path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('app.api.v1.urls')),
-    re_path(r'.*', views.index),
+    
+    re_path(r'^(?!api/|admin/|accounts/).*$', views.index),
 ]
 
 if settings.DEBUG:

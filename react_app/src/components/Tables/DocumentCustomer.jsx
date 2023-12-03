@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Link, Paper, Grid, Button, Box, Stack, Chip, Pagination } from "@mui/material";
+import { Paper, Grid, Button, Box, Stack, Chip, Pagination } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+
+import AddIcon from "@mui/icons-material/Add";
 
 import FetchApi from "../../libs/axios";
 import InputSearch from "../InputSearch.jsx";
@@ -73,16 +76,13 @@ export default function TableComponent({ addModalOpen }) {
                 <Grid item xs={1} md={4} lg={4}></Grid>
                 <Grid item xs={5} md={4} lg={4}>
                     <Box sx={{ display: "flex", justifyContent: "end" }}>
-                        <Stack spacing={2} direction="row">
-                            <Button
-                                variant="contained"
-                                size="medium"
-                                color="secondary"
-                                onClick={() => addModalOpen()}
-                            >
+                        <Link to="/documenti/crea">
+                            <Button variant="contained" size="medium" color="grey">
+                                <AddIcon />
+                                <Box mr={1} />
                                 Aggiungi
                             </Button>
-                        </Stack>
+                        </Link>
                     </Box>
                 </Grid>
                 <Grid item xs={12}>

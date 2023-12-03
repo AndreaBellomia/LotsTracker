@@ -130,6 +130,28 @@ class WarehouseItemsApiView(ListCreateAPIView):
         return queryset
 
 
+class WarehouseItemsAvailableApiView(ListCreateAPIView):
+    pagination_class = BasicPaginationController
+    serializer_class = WarehouseItemsSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = [
+        "document_customer__customer__company_name",
+        "document_from_supplier__supplier__company_name",
+        "document_to_supplier__supplier__company_name",
+        "document_customer__date",
+        "document_from_supplier__date",
+        "document_to_supplier__date",
+        "empty_date",
+        "batch_code",
+        "item_type__description", "item_type__internal_code",
+    ]
+    ordering_fields = ["empty_date", "batch_code", "item_type__internal_code"]
+
+    def get_queryset(self):
+        queryset = WarehouseItemsQuery.warehouse_items_available_list()
+        return queryset
+
+
 class WarehouseItemsDetailApiView(RetrieveUpdateAPIView):
     serializer_class = WarehouseItemsSerializer
     lookup_field = "pk"

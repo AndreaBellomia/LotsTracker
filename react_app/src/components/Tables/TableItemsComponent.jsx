@@ -112,7 +112,7 @@ export default function TableComponent() {
     useEffect(() => {
         try {
             new FetchApi()
-                .getWarehouseItemDetail(pageSelected, search, orderBy)
+                .getWarehouseItems(pageSelected, search, orderBy)
                 .then((response) => {
                     setTableData(response.data.results);
                     setPages(response.data.num_pages);

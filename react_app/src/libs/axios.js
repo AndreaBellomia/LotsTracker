@@ -34,9 +34,18 @@ class FetchApi {
         return await this.client.get(`warehouse/registry/detail/${id}?format=json`);
     }
 
-    async getWarehouseItemDetail(page = 1, search = "", order_by = "") {
+    async getWarehouseItems(page = 1, search = "", order_by = "") {
         return await this.client.get(
             FetchApi.buildFilteredUrl(`warehouse/items?format=json&page=${page}`, {
+                search: search,
+                ordering: order_by,
+            })
+        );
+    }
+
+    async getWarehouseItemsAvailable(page = 1, search = "", order_by = "") {
+        return await this.client.get(
+            FetchApi.buildFilteredUrl(`warehouse/items/available?format=json&page=${page}`, {
                 search: search,
                 ordering: order_by,
             })
