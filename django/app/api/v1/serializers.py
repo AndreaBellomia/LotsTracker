@@ -178,7 +178,7 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
 
         with transaction.atomic():
             instance.warehouse_items.all().update(document_customer=None)
-
+            
             # instance.warehouse_items.clear()
             
             if (
