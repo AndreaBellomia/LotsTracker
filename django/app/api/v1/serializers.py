@@ -104,7 +104,6 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         body_items = validated_data.pop("warehouse_items")
-        error_messages = []
 
         with transaction.atomic():
 
@@ -131,15 +130,15 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
 
             if len(body_items) == 0:
                 raise serializers.ValidationError({"detail": "Body can't be empty"})
-
-            if save_document_bodies(body_items, instance):
+            
+            error_messages = save_document_bodies(body_items, instance)
+            if len(error_messages) != 0:
                 raise serializers.ValidationError({"body": error_messages})
 
         return instance
 
     def update(self, instance: DocumentCustomer, validated_data):
         body_items = validated_data.pop("warehouse_items")
-        error_messages = []
 
         with transaction.atomic():
             instance.warehouse_items.clear()
@@ -161,8 +160,9 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
 
             if len(body_items) == 0:
                 raise serializers.ValidationError({"detail": "Body can't be empty"})
-
-            if save_document_bodies(body_items, instance):
+            
+            error_messages = save_document_bodies(body_items, instance)
+            if len(error_messages) != 0:
                 raise serializers.ValidationError({"body": error_messages})
         return instance
 
