@@ -25,7 +25,7 @@ import {
 import { DatePicker } from "@/layout/components";
 import FetchApi, { manageFetchError } from "@/libs/axios.js";
 import { manageHandlerInput } from "@/libs/forms.js";
-import { ManageFormBodies , getFormBody} from "@/libs/documentFormBody.js" 
+import { ManageFormBodies, getFormBody } from "@/libs/documentFormBody.js";
 
 import SelectItemModal from "@/components/Modals/SelectItem.jsx";
 import SelectCustomerModal from "./components/SelectCustomerModal.jsx";
@@ -63,35 +63,32 @@ export default function ManageDocument() {
         });
     }, [formValuesCustomer]);
 
+    const handlerSnackbar = (msg, variant) => {
+        msg && enqueueSnackbar(msg, { variant })
+    }
+
     const POSTapi = () => {
-        console.log(formValues);
         try {
             new FetchApi()
                 .postCustomerDocument(formValues)
                 .then((res) => {
                     navigate("/documenti");
-                    handleClickVariant("Documento creato correttamente", "success");
+                    handlerSnackbar("Documento creato correttamente")
                 })
                 .catch((error) => {
-                    handleClickVariant(
-                        error.response.data.detail || "Error durante la creazione del documento!",
-                        "error"
-                    );
+              
                     if (!error.status === 400) {
                         throw new Error("Error during request: " + error);
                     }
                     if (!error.status === undefined) {
                         navigate("/documenti");
                     }
+                    console.log(error);
                     manageFetchError(error, formErrors, setFormErrors);
                 });
         } catch (error) {
             console.error(error);
         }
-    };
-
-    const handleClickVariant = (msg, variant) => () => {
-        enqueueSnackbar(msg, { variant });
     };
 
     return (

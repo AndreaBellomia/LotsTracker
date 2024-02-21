@@ -1,7 +1,7 @@
-from django.db import transaction
+import logging
+from django.db import transaction, IntegrityError
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
-from django.db import IntegrityError
 
 
 from app.api.v1.mixins import (
@@ -17,6 +17,9 @@ from app.core.models import (
     WarehouseItemsRegistry,
     DocumentToSupplier,
 )
+from app.api.v1.utilities import save_document_bodies
+
+log = logging.getLogger(__name__)
 
 
 #####
@@ -58,7 +61,11 @@ class DocumentCustomerSerializer(serializers.ModelSerializer):
         try:
             instance = super().create(validated_data)
         except IntegrityError:
-            raise serializers.ValidationError({"detail": f'Document number "{validated_data["number"]}" duplicated for year {validated_data["date"]}'})
+            raise serializers.ValidationError(
+                {
+                    "detail": f'Document number "{validated_data["number"]}" duplicated for year {validated_data["date"]}'
+                }
+            )
         except Exception as e:
             raise serializers.ValidationError({"detail": "Error creating document."})
         return instance
@@ -68,30 +75,23 @@ class DocumentCustomerSerializer(serializers.ModelSerializer):
         exclude = ["created_at", "updated_at"]
 
 
-class WarehouseItemsDocumentCustomerSerializer(WarehouseItemsDocumentSerializerMixin):
-    class Meta:
-        model = WarehouseItems
-        exclude = [
-            "created_at",
-            "updated_at",
-            "document_from_supplier",
-            "document_to_supplier",
-            "document_customer",
-        ]
-        read_only_fields = [
-            "item_type_description",
-            "item_type_code",
-            "status",
-            "batch_code",
-            "item_type",
-        ]
-
-        extra_kwargs = {
-            "custom_status": {"write_only": True},
-        }
-
-
 class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
+
+    class WarehouseItemsDocumentCustomerSerializer(
+        WarehouseItemsDocumentSerializerMixin
+    ):
+        class Meta:
+            read_only_fields = [
+                "item_type_description",
+                "item_type_code",
+                "status",
+                "batch_code",
+                "item_type",
+            ]
+            extra_kwargs = {
+                "custom_status": {"write_only": True},
+            }
+
     status = serializers.StringRelatedField(source="document_status", read_only=True)
     body = WarehouseItemsDocumentCustomerSerializer(many=True, source="warehouse_items")
 
@@ -102,50 +102,37 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
         queryset=CustomerRegistry.objects.all(), source="customer", write_only=False
     )
 
-    # customer_url = serializers.HyperlinkedIdentityField(
-    #     view_name="customer-detail", source="customer.company_name"
-    # )
-
     def create(self, validated_data):
         body_items = validated_data.pop("warehouse_items")
         error_messages = []
 
         with transaction.atomic():
-            try:
-                instance = super().create(validated_data)
-            except IntegrityError:
-                raise serializers.ValidationError({"detail": f'Document number "{validated_data["number"]}" duplicated for year {validated_data["date"].year}'})
-            except Exception as e:
-                print(e)
+
+            if self.Meta.model.objects.filter(
+                year=validated_data["date"].year, number=validated_data["number"]
+            ).exists():
                 raise serializers.ValidationError(
-                    {"Detail": "Error creating document."}
+                    {
+                        "date": "Document already exist for this yar",
+                        "number": "Document already exist for this yar",
+                    }
                 )
 
-            for b_item in body_items:
-                item_instance: WarehouseItems = b_item.pop("instance")
+            try:
+                instance: self.Meta.model = super().create(validated_data)
+            except Exception as e:
+                log.exception(
+                    "Unexpected exception during save document instance: %s", e
+                )
 
-                if item_instance and item_instance.document_customer != None:
-                    error_messages.append(
-                        {
-                            "id": item_instance.id,
-                            "message": "Item already related to another document customer",
-                        }
-                    )
+                raise serializers.ValidationError(
+                    {"detail": "Error creating document."}
+                )
 
-                elif item_instance:
-                    item_instance.document_customer = instance
-                    item_instance.empty_date = b_item.get("empty_date", None)
-                    item_instance.custom_status = b_item.get("custom_status", None)
-                    item_instance.save()
-                else:
-                    error_messages.append(
-                        {
-                            "id": item_instance.id,
-                            "message": "Item id not found in database",
-                        }
-                    )
+            if len(body_items) == 0:
+                raise serializers.ValidationError({"detail": "Body can't be empty"})
 
-            if error_messages:
+            if save_document_bodies(body_items, instance):
                 raise serializers.ValidationError({"body": error_messages})
 
         return instance
@@ -157,35 +144,25 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
         with transaction.atomic():
             instance.warehouse_items.clear()
 
-            for b_item in body_items:
-                item_instance: WarehouseItems = b_item.pop("instance")
+            if (
+                self.Meta.model.objects.exclude(id=instance.id)
+                .filter(
+                    year=validated_data["date"].year,
+                    number=validated_data["number"],
+                )
+                .exists()
+            ):
+                raise serializers.ValidationError(
+                    {
+                        "date": "Document already exist for this yar",
+                        "number": "Document already exist for this yar",
+                    }
+                )
 
-                if (
-                    item_instance
-                    and item_instance.document_customer
-                    and item_instance.document_customer.id != instance.id
-                ):
-                    error_messages.append(
-                        {
-                            "id": item_instance.id,
-                            "message": "Item already related to another document customer",
-                        }
-                    )
+            if len(body_items) == 0:
+                raise serializers.ValidationError({"detail": "Body can't be empty"})
 
-                elif item_instance:
-                    item_instance.document_customer = instance
-                    item_instance.empty_date = b_item.get("empty_date", None)
-                    item_instance.custom_status = b_item.get("custom_status", None)
-                    item_instance.save()
-                else:
-                    error_messages.append(
-                        {
-                            "id": item_instance.id,
-                            "message": "Item id not found in database",
-                        }
-                    )
-
-            if error_messages:
+            if save_document_bodies(body_items, instance):
                 raise serializers.ValidationError({"body": error_messages})
         return instance
 
@@ -233,14 +210,6 @@ class WarehouseItemsDocumentSupplierFromSerializer(
     WarehouseItemsDocumentSerializerMixin
 ):
     class Meta:
-        model = WarehouseItems
-        exclude = [
-            "created_at",
-            "updated_at",
-            "document_from_supplier",
-            "document_to_supplier",
-            "document_customer",
-        ]
         read_only_fields = [
             "item_type_description",
             "item_type_code",
@@ -360,14 +329,6 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
 
 class WarehouseItemsDocumentSupplierToSerializer(WarehouseItemsDocumentSerializerMixin):
     class Meta:
-        model = WarehouseItems
-        exclude = [
-            "created_at",
-            "updated_at",
-            "document_from_supplier",
-            "document_to_supplier",
-            "document_customer",
-        ]
         read_only_fields = [
             "item_type_description",
             "item_type_code",

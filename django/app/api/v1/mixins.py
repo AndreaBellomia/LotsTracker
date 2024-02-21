@@ -23,6 +23,16 @@ class WarehouseItemsDocumentSerializerMixin(serializers.ModelSerializer):
             validated_data["instance"] = None
 
         return validated_data
+    
+    class Meta:
+        model = WarehouseItems
+        exclude = [
+            "created_at",
+            "updated_at",
+            "document_from_supplier",
+            "document_to_supplier",
+            "document_customer",
+        ]
 
 
 class DocumentSupplierSerializerMixin(serializers.ModelSerializer):
