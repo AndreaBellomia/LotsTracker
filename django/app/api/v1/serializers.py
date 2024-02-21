@@ -177,8 +177,10 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
         body_items = validated_data.pop("warehouse_items")
 
         with transaction.atomic():
-            instance.warehouse_items.clear()
+            instance.warehouse_items.all().update(document_customer=None)
 
+            # instance.warehouse_items.clear()
+            
             if (
                 self.Meta.model.objects.exclude(id=instance.id)
                 .filter(

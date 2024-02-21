@@ -146,6 +146,10 @@ export class CustomerApi extends FetchApi {
         return await this.client.post("/customers/documents/create", { ...body });
     }
     
+    async putCustomerDocument(id, body) {
+        return await this.client.put(`/customers/documents/detail/${id}`, { ...body });
+    }
+    
 }
 
 export function manageFetchError(error, formError, setFormError) {

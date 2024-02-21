@@ -68,26 +68,33 @@ export default function ManageDocument() {
       ...formValues,
       customer_id: formValuesCustomer.id,
     });
-
-    console.log(formValuesCustomer);
   }, [formValuesCustomer]);
 
   const handlerSnackbar = (msg, variant) => {
     msg && enqueueSnackbar(msg, { variant });
   };
+
+  const handlerSubmit = () => {
+    if (id) {
+      PUTapi();
+    } else {
+      POSTapi();
+    }
+  };
+
   const GETapi = (id) => {
     try {
       new CustomerApi().getCustomerDocument(id).then((res) => {
-        console.log(res);
-        setFormValues({
-          customer_id: res.data.customer_id,
-          date: res.data.date,
-          number: res.data.number,
-        });
+          setFormValuesBody(res.data.body);
+          
+          setFormValuesCustomer(res.data.customer);
 
-        setFormValuesBody(res.data.body);
-
-        setFormValuesCustomer(res.data.customer);
+          setFormValues({
+            customer_id: res.data.customer_id,
+            date: res.data.date,
+            number: res.data.number,
+            body : getFormBody(res.data.body)
+          });
       });
     } catch (error) {
       console.error(error);
@@ -106,11 +113,35 @@ export default function ManageDocument() {
           if (!error.status === 400) {
             throw new Error('Error during request: ' + error);
           }
-          if (!error.status === undefined) {
-            navigate('/documenti');
-          }
-          console.log(error);
+
           manageFetchError(error, formErrors, setFormErrors);
+          if (error.response.data.detail) {
+            handlerSnackbar(error.response.data.detail, 'error');
+          }
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const PUTapi = () => {
+    try {
+      new CustomerApi()
+        .putCustomerDocument(id, formValues)
+        .then((res) => {
+          navigate('/documenti');
+          handlerSnackbar('Documento aggiornato correttamente');
+        })
+        .catch((error) => {
+          if (!error.status === 400) {
+            throw new Error('Error during request: ' + error);
+          }
+
+          manageFetchError(error, formErrors, setFormErrors);
+
+          if (error.response.data.detail) {
+            handlerSnackbar(error.response.data.detail, 'error');
+          }
         });
     } catch (error) {
       console.error(error);
@@ -245,7 +276,7 @@ export default function ManageDocument() {
           </Button>
         </Link>
 
-        <Button variant="contained" size="medium" color="grey" onClick={() => POSTapi()}>
+        <Button variant="contained" size="medium" color="grey" onClick={handlerSubmit}>
           <Done />
           <Box mr={1} />
           Salva

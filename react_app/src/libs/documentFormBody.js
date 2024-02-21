@@ -7,7 +7,6 @@ export class ManageFormBodies {
     append(item) {
         
         if (!this.body.some((existingItem) => existingItem.id === item.id)) {
-            console.log([...this.body, item])
             this.setBody([...this.body, item]);
         }
     }

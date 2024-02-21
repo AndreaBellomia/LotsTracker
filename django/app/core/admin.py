@@ -17,7 +17,7 @@ admin.site.register(WarehouseItemsRegistry)
 @admin.register(WarehouseItems)
 class WarehouseItemsAdmin(admin.ModelAdmin):
     list_display = ["batch_code", "display_item_type", "status"]
-    search_fields = ["batch_code", "display_item_type", "status"]
+    search_fields = ["batch_code", "status"]
     list_filter = ["status", "item_type"]
     raw_id_fields = [
         "document_from_supplier",
