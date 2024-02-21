@@ -113,6 +113,7 @@ export default function ManageDocument() {
           if (!error.status === 400) {
             throw new Error('Error during request: ' + error);
           }
+          console.log(error)
 
           manageFetchError(error, formErrors, setFormErrors);
           if (error.response.data.detail) {
@@ -265,9 +266,12 @@ export default function ManageDocument() {
           </TableBody>
         </Table>
       </TableContainer>
-      <Typography variant="body2" color="text.error">
-        {formErrors.body}
-      </Typography>
+        {formErrors.body && formErrors.body.map(error => 
+          <Typography variant="body2" color="error" key={error.id}>
+            {error.message}
+          </Typography>
+        )}
+
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 4 }}>
         <Link to="/documenti">

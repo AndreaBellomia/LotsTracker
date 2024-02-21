@@ -160,7 +160,7 @@ export function manageFetchError(error, formError, setFormError) {
             newErrors[key] = error.response.data[key];
         });
     }
-
+    
     setFormError({
         ...formError,
         ...newErrors,

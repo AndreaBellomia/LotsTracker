@@ -177,9 +177,10 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
         body_items = validated_data.pop("warehouse_items")
 
         with transaction.atomic():
-            instance.warehouse_items.all().update(document_customer=None)
-            
-            # instance.warehouse_items.clear()
+            instance.warehouse_items.all().update(
+                document_customer=None,
+                status=WarehouseItems.WarehouseItemsStatus.AVAILABLE
+            )
             
             if (
                 self.Meta.model.objects.exclude(id=instance.id)
@@ -202,7 +203,7 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
             error_messages = save_document_bodies(body_items, instance)
             if len(error_messages) != 0:
                 raise serializers.ValidationError({"body": error_messages})
-        return instance
+        return super().update(instance, validated_data)
 
     class Meta:
         model = DocumentCustomer
@@ -357,7 +358,7 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
 
             if error_messages:
                 raise serializers.ValidationError({"body": error_messages})
-
+            
         return super().update(instance, validated_data)
 
     class Meta:

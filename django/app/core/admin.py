@@ -24,6 +24,7 @@ class WarehouseItemsAdmin(admin.ModelAdmin):
         "document_to_supplier",
         "document_customer",
     ]
+    readonly_fields = ('status',)
 
     def display_item_type(self, obj):
         try:
