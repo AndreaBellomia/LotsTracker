@@ -77,7 +77,7 @@ class CustomerRegistryDetailApiView(RetrieveUpdateAPIView):
 
 
 class DocumentCustomerCreateApiView(CreateAPIView):
-    serializer_class = DocumentCustomerSerializer
+    serializer_class = DocumentCustomerDetailSerializer
 
     def get_queryset(self):
         queryset = DocumentCustomerQuery.document_customer_list()

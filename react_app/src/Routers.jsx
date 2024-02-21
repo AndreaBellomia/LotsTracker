@@ -17,6 +17,7 @@ import {
 
 export default function Router() {
     return (
+        <>
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<AsideNavbar />}>
@@ -41,6 +42,8 @@ export default function Router() {
                     {/* <Route path="*" element={<Navigate to="api/" />} /> */}
                 </Route>
             </Routes>
+            
         </BrowserRouter>
+        </>
     );
 }

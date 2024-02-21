@@ -3,6 +3,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 from django.db import IntegrityError
 
+
 from app.api.v1.mixins import (
     WarehouseItemsDocumentSerializerMixin,
     DocumentSupplierSerializerMixin,
@@ -56,8 +57,10 @@ class DocumentCustomerSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         try:
             instance = super().create(validated_data)
+        except IntegrityError:
+            raise serializers.ValidationError({"detail": f'Document number "{validated_data["number"]}" duplicated for year {validated_data["date"]}'})
         except Exception as e:
-            raise serializers.ValidationError({"Detail": "Error creating document."})
+            raise serializers.ValidationError({"detail": "Error creating document."})
         return instance
 
     class Meta:
@@ -110,7 +113,10 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
         with transaction.atomic():
             try:
                 instance = super().create(validated_data)
+            except IntegrityError:
+                raise serializers.ValidationError({"detail": f'Document number "{validated_data["number"]}" duplicated for year {validated_data["date"].year}'})
             except Exception as e:
+                print(e)
                 raise serializers.ValidationError(
                     {"Detail": "Error creating document."}
                 )

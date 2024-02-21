@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { Link, useParams } from "react-router-dom";
 import {
@@ -30,6 +31,8 @@ import FetchApi, { manageFetchError } from "../../libs/axios.js";
 
 import SelectItemModal from "../../components/Modals/SelectItem.jsx"
 import SelectCustomerModal from "../../components/Modals/SelectCustomerModal.jsx"
+
+import { useSnackbar } from 'notistack';
 
 
 class BodyItem {
@@ -73,6 +76,9 @@ function getFormBody(formBody) {
 
 
 export default function ManageDocument() {
+    const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
+
     const [itemModal, setItemModal] = useState(false);
     const [customerModal, setCustomerModal] = useState(false);
     const [formValuesBody, setFormValuesBody] = useState([]);
@@ -80,7 +86,7 @@ export default function ManageDocument() {
 
     const [formValues, setFormValues] = useState({
         body: getFormBody(formValuesBody),
-        supplier_id: undefined,
+        customer_id: undefined,
         date: undefined,
         number: undefined,
     });
@@ -98,7 +104,7 @@ export default function ManageDocument() {
     useEffect(()=> {
         setFormValues({
            ...formValues,
-           supplier_id: formValuesCustomer.id,
+           customer_id: formValuesCustomer.id,
         })
     }, [formValuesCustomer]);
 
@@ -109,22 +115,24 @@ export default function ManageDocument() {
             new FetchApi()
                 .postCustomerDocument(formValues)
                 .then((res) => {
-                    console.log()
                     navigate("/documenti");
                 })
                 .catch((error) => {
                     console.log(error)
+                    const variant = "error"
+                    enqueueSnackbar(error.response.data.detail || "Error durante la creazione del documento!" , { variant });
                     if (!error.status === 400) {
                         throw new Error("Error during request: " + error);
                     }
                     if (!error.status === undefined) {
-                        navigate("documenti");
+                        navigate("/documenti");
                     }
                     console.log(error)
                     
                     manageFetchError(error, formErrors, setFormErrors);
                 });
         } catch (error) {
+           
             console.error(error);
         }
     };
