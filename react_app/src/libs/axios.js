@@ -104,6 +104,11 @@ class FetchApi {
             })
         );
     }
+    async postCustomerDocument(body) {
+        return await this.client.post("/customers/documents/create", { ...body });
+    }
+    
+
 
     // Supplier API methods
     async getSuppliersList(page = 1, search = "", order_by = "") {

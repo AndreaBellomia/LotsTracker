@@ -25,6 +25,9 @@ import { manageHandlerInput } from "../../libs/forms.js";
 
 import { RemoveCircle, AddCircle, Edit, Done } from '@mui/icons-material';
 
+import FetchApi, { manageFetchError } from "../../libs/axios.js";
+
+
 import SelectItemModal from "../../components/Modals/SelectItem.jsx"
 import SelectCustomerModal from "../../components/Modals/SelectCustomerModal.jsx"
 
@@ -98,6 +101,33 @@ export default function ManageDocument() {
            supplier_id: formValuesCustomer.id,
         })
     }, [formValuesCustomer]);
+
+
+    const POSTapi = () => {
+        console.log(formValues)
+        try {
+            new FetchApi()
+                .postCustomerDocument(formValues)
+                .then((res) => {
+                    console.log()
+                    navigate("/documenti");
+                })
+                .catch((error) => {
+                    console.log(error)
+                    if (!error.status === 400) {
+                        throw new Error("Error during request: " + error);
+                    }
+                    if (!error.status === undefined) {
+                        navigate("documenti");
+                    }
+                    console.log(error)
+                    
+                    manageFetchError(error, formErrors, setFormErrors);
+                });
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
 
     return (
@@ -206,6 +236,9 @@ export default function ManageDocument() {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <Typography variant="body2" color="text.error">
+                {formErrors.body}
+            </Typography>
 
             <Box sx={{ display: "flex", justifyContent: "space-between", my: 4 }}>
                 <Link to="/documenti">
@@ -214,7 +247,7 @@ export default function ManageDocument() {
                     </Button>
                 </Link>
                 
-                <Button variant="contained" size="medium" color="primary" onClick={() => console.log(formValues)}>
+                <Button variant="contained" size="medium" color="primary" onClick={() => POSTapi()}>
                     <Done />
                     <Box mr={1} />
                     Salva
