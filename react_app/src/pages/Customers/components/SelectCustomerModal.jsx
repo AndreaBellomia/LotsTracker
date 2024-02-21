@@ -13,10 +13,10 @@ import {
     Pagination,
     
 } from "@mui/material";
-import ModalBox from "../../layout/components/ModalBox.jsx";
-import InputSearch from "../InputSearch.jsx";
+import ModalBox from "@/layout/components/ModalBox.jsx";
+import InputSearch from "@/components/InputSearch.jsx";
 
-import FetchApi from "../../libs/axios.js";
+import FetchApi from "@/libs/axios.js";
 
 export default function ArticlesListModal({ modalState: modaleState, tableChoices: tableChoices }) {
     const [open, setOpen] = modaleState;

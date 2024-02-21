@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import { useSnackbar } from "notistack";
+
 import { Link } from "react-router-dom";
+import { RemoveCircle, AddCircle, Edit, Done } from "@mui/icons-material";
 import {
     FormControl,
     Grid,
@@ -19,40 +22,13 @@ import {
     TableBody,
     TableCell,
 } from "@mui/material";
-import { DatePicker, ButtonDocumentBig } from "../../layout/components";
-import { manageHandlerInput } from "../../libs/forms.js";
+import { DatePicker } from "@/layout/components";
+import FetchApi, { manageFetchError } from "@/libs/axios.js";
+import { manageHandlerInput } from "@/libs/forms.js";
+import { ManageFormBodies , getFormBody} from "@/libs/documentFormBody.js" 
 
-import { RemoveCircle, AddCircle, Edit, Done } from "@mui/icons-material";
-
-import FetchApi, { manageFetchError } from "../../libs/axios.js";
-
-import SelectItemModal from "../../components/Modals/SelectItem.jsx";
-import SelectCustomerModal from "../../components/Modals/SelectCustomerModal.jsx";
-
-import { useSnackbar } from "notistack";
-
-
-class ManageFormBodies {
-    constructor(body, setBody, itemCode, batchCode) {
-        this.body = body;
-        this.setBody = setBody;
-    }
-
-    append(item) {
-        if (!this.body.some((existingItem) => existingItem.id === item.id)) {
-            this.setBody([...this.body, item]);
-        }
-    }
-
-    remove(id) {
-        const updatedValues = this.body.filter((item) => item.id !== id);
-        this.setBody(updatedValues);
-    }
-}
-
-function getFormBody(formBody) {
-    return formBody.map((item) => Object({ id: item.id }));
-}
+import SelectItemModal from "@/components/Modals/SelectItem.jsx";
+import SelectCustomerModal from "./components/SelectCustomerModal.jsx";
 
 export default function ManageDocument() {
     const navigate = useNavigate();
@@ -231,7 +207,7 @@ export default function ManageDocument() {
                         >
                             <TableCell colSpan={4} align="right">
                                 <IconButton onClick={() => setItemModal(true)}>
-                                    <AddCircle color="secondary" />
+                                    <AddCircle color="grey" />
                                 </IconButton>
                             </TableCell>
                         </TableRow>
@@ -249,7 +225,7 @@ export default function ManageDocument() {
                     </Button>
                 </Link>
 
-                <Button variant="contained" size="medium" color="primary" onClick={() => POSTapi()}>
+                <Button variant="contained" size="medium" color="grey" onClick={() => POSTapi()}>
                     <Done />
                     <Box mr={1} />
                     Salva

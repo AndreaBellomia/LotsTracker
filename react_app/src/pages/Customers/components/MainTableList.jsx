@@ -4,9 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 
 import AddIcon from "@mui/icons-material/Add";
 
-import FetchApi from "../../libs/axios";
-import InputSearch from "../InputSearch.jsx";
-import Tables, { TableHeaderMixin, TableRowsMixin } from "../Tables.jsx";
+import FetchApi from "../../../libs/axios.js";
+import InputSearch from "../../../components/InputSearch.jsx";
+import Tables, { TableHeaderMixin, TableRowsMixin } from "../../../components/Tables.jsx";
 
 function renderStatus(status) {
     switch (status) {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Button, Box, Modal, TextField, FormControl, FormLabel, Grid } from "@mui/material";
 
-import DocumentCustomer from "../components/Tables/DocumentCustomer.jsx";
+import DocumentCustomer from "./components/MainTableList.jsx";
 
-import FetchApi from "../libs/axios.js";
+import FetchApi from "@/libs/axios.js";
 
 const style = {
     position: "absolute",

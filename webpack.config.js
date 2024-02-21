@@ -6,6 +6,12 @@ module.exports = {
   entry: {
     frontend: "./react_app/src/index.js",
   },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'react_app/src'), // Assumi che le tue librerie siano nella directory 'src'
+      'node_modules': path.resolve(__dirname, 'node_modules') // Alias per il percorso dei moduli nodejs
+    }
+  },
   output: {
     path: path.resolve("./django/app/frontend/static/frontend/"),
     filename: "[name]-react.js",
