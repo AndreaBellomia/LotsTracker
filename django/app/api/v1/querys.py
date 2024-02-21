@@ -12,38 +12,40 @@ from app.core.models import (
 
 
 class DocumentCustomerQuery:
-    
+
     @staticmethod
     def document_customer_list():
-        base_queryset = DocumentCustomer.objects.select_related(
-            "customer",
-        ).prefetch_related(
-            "warehouse_items", 
-            "warehouse_items__item_type"
-        ).annotate(
-            open_count=Count(
-                Case(
-                    When(
-                        warehouse_items__status=WarehouseItems.WarehouseItemsStatus.BOOKED,
-                        then=Value(1),
-                    ),
-                    default=None,
-                )
-            ),
-            closed_count=Count(
-                Case(
-                    When(
-                        warehouse_items__status__in=[
-                            WarehouseItems.WarehouseItemsStatus.EMPTY,
-                            WarehouseItems.WarehouseItemsStatus.RETURNED,
-                        ],
-                        then=Value(1),
-                    ),
-                    default=None,
-                )
-            ),
-            total_count=Count("warehouse_items__id", output_field=CharField()),
-        ).distinct()
+        base_queryset = (
+            DocumentCustomer.objects.select_related(
+                "customer",
+            )
+            .prefetch_related("warehouse_items", "warehouse_items__item_type")
+            .annotate(
+                open_count=Count(
+                    Case(
+                        When(
+                            warehouse_items__status=WarehouseItems.WarehouseItemsStatus.BOOKED,
+                            then=Value(1),
+                        ),
+                        default=None,
+                    )
+                ),
+                closed_count=Count(
+                    Case(
+                        When(
+                            warehouse_items__status__in=[
+                                WarehouseItems.WarehouseItemsStatus.EMPTY,
+                                WarehouseItems.WarehouseItemsStatus.RETURNED,
+                            ],
+                            then=Value(1),
+                        ),
+                        default=None,
+                    )
+                ),
+                total_count=Count("warehouse_items__id", output_field=CharField()),
+            )
+            .distinct()
+        )
 
         return base_queryset.annotate(
             document_status=Case(
@@ -58,35 +60,38 @@ class DocumentCustomerQuery:
 
     @staticmethod
     def document_customer_detail(pk):
-        base_queryset = DocumentCustomer.objects.filter(pk=pk).select_related(
-            "customer",
-        ).prefetch_related(
-            "warehouse_items", 
-            "warehouse_items__item_type"
-        ).annotate(
-            open_count=Count(
-                Case(
-                    When(
-                        warehouse_items__status=WarehouseItems.WarehouseItemsStatus.BOOKED,
-                        then=Value(1),
-                    ),
-                    default=None,
-                )
-            ),
-            closed_count=Count(
-                Case(
-                    When(
-                        warehouse_items__status__in=[
-                            WarehouseItems.WarehouseItemsStatus.EMPTY,
-                            WarehouseItems.WarehouseItemsStatus.RETURNED,
-                        ],
-                        then=Value(1),
-                    ),
-                    default=None,
-                )
-            ),
-            total_count=Count("warehouse_items__id", output_field=CharField()),
-        ).distinct()
+        base_queryset = (
+            DocumentCustomer.objects.filter(pk=pk)
+            .select_related(
+                "customer",
+            )
+            .prefetch_related("warehouse_items", "warehouse_items__item_type")
+            .annotate(
+                open_count=Count(
+                    Case(
+                        When(
+                            warehouse_items__status=WarehouseItems.WarehouseItemsStatus.BOOKED,
+                            then=Value(1),
+                        ),
+                        default=None,
+                    )
+                ),
+                closed_count=Count(
+                    Case(
+                        When(
+                            warehouse_items__status__in=[
+                                WarehouseItems.WarehouseItemsStatus.EMPTY,
+                                WarehouseItems.WarehouseItemsStatus.RETURNED,
+                            ],
+                            then=Value(1),
+                        ),
+                        default=None,
+                    )
+                ),
+                total_count=Count("warehouse_items__id", output_field=CharField()),
+            )
+            .distinct()
+        )
 
         return base_queryset.annotate(
             document_status=Case(
@@ -98,9 +103,10 @@ class DocumentCustomerQuery:
             ),
             document_details=F("total_count"),
         )
-        
+
+
 class WarehouseItemsQuery:
-    
+
     @staticmethod
     def warehouse_items_list():
         base_queryset = WarehouseItems.objects.select_related(
@@ -125,62 +131,72 @@ class WarehouseItemsQuery:
             item_type_code=F("item_type__internal_code"),
         )
         return base_queryset
-    
+
     @staticmethod
     def warehouse_items_available_list():
-        base_queryset = WarehouseItems.objects.select_related(
-            "document_customer__customer",
-            "document_from_supplier__supplier",
-            "document_to_supplier__supplier",
-            "item_type",
-        ).filter(
-            status=WarehouseItems.WarehouseItemsStatus.AVAILABLE
-        ).annotate(
-            customer_company_name=F("document_customer__customer__company_name"),
-            customer_company_code=F("document_customer__customer__external_code"),
-            supplier_from_company_name=F(
-                "document_from_supplier__supplier__company_name"
-            ),
-            supplier_from_company_code=F(
-                "document_from_supplier__supplier__external_code"
-            ),
-            document_to_supplier_name=F("document_to_supplier__supplier__company_name"),
-            document_to_supplier_code=F(
-                "document_to_supplier__supplier__external_code"
-            ),
-            item_type_description=F("item_type__description"),
-            item_type_code=F("item_type__internal_code"),
-        )
-        return base_queryset
-    
-    @staticmethod
-    def warehouse_items_detail(pk):
-        base_queryset = WarehouseItems.objects.filter(pk=pk).select_related(
-            "document_customer__customer",
-            "document_from_supplier__supplier",
-            "document_to_supplier__supplier",
-            "item_type",
-        ).annotate(
-            customer_company_name=F("document_customer__customer__company_name"),
-            customer_company_code=F("document_customer__customer__external_code"),
-            document_customer_code=F("document_customer__number"),
-            document_customer_date=F("document_customer__date"),
-            supplier_from_company_name=F(
-                "document_from_supplier__supplier__company_name"
-            ),
-            supplier_from_company_code=F(
-                "document_from_supplier__supplier__external_code"
-            ),
-            document_to_supplier_name=F("document_to_supplier__supplier__company_name"),
-            document_to_supplier_code=F(
-                "document_to_supplier__supplier__external_code"
+        base_queryset = (
+            WarehouseItems.objects.select_related(
+                "document_customer__customer",
+                "document_from_supplier__supplier",
+                "document_to_supplier__supplier",
+                "item_type",
+            )
+            .filter(status=WarehouseItems.WarehouseItemsStatus.AVAILABLE)
+            .annotate(
+                customer_company_name=F("document_customer__customer__company_name"),
+                customer_company_code=F("document_customer__customer__external_code"),
+                supplier_from_company_name=F(
+                    "document_from_supplier__supplier__company_name"
+                ),
+                supplier_from_company_code=F(
+                    "document_from_supplier__supplier__external_code"
+                ),
+                document_to_supplier_name=F(
+                    "document_to_supplier__supplier__company_name"
+                ),
+                document_to_supplier_code=F(
+                    "document_to_supplier__supplier__external_code"
+                ),
+                item_type_description=F("item_type__description"),
+                item_type_code=F("item_type__internal_code"),
             )
         )
         return base_queryset
-    
+
+    @staticmethod
+    def warehouse_items_detail(pk):
+        base_queryset = (
+            WarehouseItems.objects.filter(pk=pk)
+            .select_related(
+                "document_customer__customer",
+                "document_from_supplier__supplier",
+                "document_to_supplier__supplier",
+                "item_type",
+            )
+            .annotate(
+                customer_company_name=F("document_customer__customer__company_name"),
+                customer_company_code=F("document_customer__customer__external_code"),
+                document_customer_code=F("document_customer__number"),
+                document_customer_date=F("document_customer__date"),
+                supplier_from_company_name=F(
+                    "document_from_supplier__supplier__company_name"
+                ),
+                supplier_from_company_code=F(
+                    "document_from_supplier__supplier__external_code"
+                ),
+                document_to_supplier_name=F(
+                    "document_to_supplier__supplier__company_name"
+                ),
+                document_to_supplier_code=F(
+                    "document_to_supplier__supplier__external_code"
+                ),
+            )
+        )
+        return base_queryset
+
 
 class DocumentFromSupplierQuery:
-    
+
     @staticmethod
     def document_from_supplier_list():
         base_queryset = (
@@ -198,10 +214,10 @@ class DocumentFromSupplierQuery:
             document_details=F("total_count"),
         )
         return base_queryset
-    
+
 
 class DocumentToSupplierQuery:
-    
+
     @staticmethod
     def document_to_supplier_list():
         base_queryset = (
@@ -219,8 +235,8 @@ class DocumentToSupplierQuery:
             document_details=F("total_count"),
         )
         return base_queryset
-    
-    
+
+
 class WarehouseItemsRegistryQuery:
     @staticmethod
     def document_to_supplier_list():
@@ -229,7 +245,7 @@ class WarehouseItemsRegistryQuery:
                 Case(
                     When(warehouse_items__status="A", then=Value(1)),
                     default=Value(0),
-                    output_field=IntegerField()
+                    output_field=IntegerField(),
                 )
             )
         )

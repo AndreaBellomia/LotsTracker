@@ -6,9 +6,7 @@ from app.api.v1 import views
 urlpatterns = [
     # Suppliers
     path(
-        "suppliers", 
-        views.SupplierRegistryApiView.as_view(), 
-        name="supplier-registry"
+        "suppliers", views.SupplierRegistryApiView.as_view(), name="supplier-registry"
     ),
     path(
         "suppliers/detail/<int:pk>",
@@ -47,9 +45,7 @@ urlpatterns = [
     ),
     # Customers
     path(
-        "customers", 
-        views.CustomerRegistryApiView.as_view(), 
-        name="customer-registry"
+        "customers", views.CustomerRegistryApiView.as_view(), name="customer-registry"
     ),
     path(
         "customers/detail/<int:pk>",
@@ -73,14 +69,12 @@ urlpatterns = [
     ),
     # Warehouse
     path(
-        "warehouse/items", 
-        views.WarehouseItemsApiView.as_view(), 
-        name="warehouse-items"
+        "warehouse/items", views.WarehouseItemsApiView.as_view(), name="warehouse-items"
     ),
     path(
-        "warehouse/items/available", 
-        views.WarehouseItemsAvailableApiView.as_view(), 
-        name="warehouse-items-available"
+        "warehouse/items/available",
+        views.WarehouseItemsAvailableApiView.as_view(),
+        name="warehouse-items-available",
     ),
     path(
         "warehouse/items/detail/<int:pk>",

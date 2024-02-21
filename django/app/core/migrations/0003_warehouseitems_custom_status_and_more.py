@@ -6,18 +6,40 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0002_alter_documentcustomer_customer_and_more'),
+        ("core", "0002_alter_documentcustomer_customer_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='warehouseitems',
-            name='custom_status',
-            field=models.CharField(blank=True, choices=[('A', 'Available'), ('B', 'Booked'), ('E', 'Empty'), ('R', 'Returned')], default=None, max_length=1, null=True),
+            model_name="warehouseitems",
+            name="custom_status",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("A", "Available"),
+                    ("B", "Booked"),
+                    ("E", "Empty"),
+                    ("R", "Returned"),
+                ],
+                default=None,
+                max_length=1,
+                null=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='warehouseitems',
-            name='status',
-            field=models.CharField(blank=True, choices=[('A', 'Available'), ('B', 'Booked'), ('E', 'Empty'), ('R', 'Returned')], editable=False, max_length=1, null=True),
+            model_name="warehouseitems",
+            name="status",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("A", "Available"),
+                    ("B", "Booked"),
+                    ("E", "Empty"),
+                    ("R", "Returned"),
+                ],
+                editable=False,
+                max_length=1,
+                null=True,
+            ),
         ),
     ]

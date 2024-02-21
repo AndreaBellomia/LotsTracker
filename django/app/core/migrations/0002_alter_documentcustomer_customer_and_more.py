@@ -7,18 +7,24 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0001_initial'),
+        ("core", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='documentcustomer',
-            name='customer',
-            field=models.ForeignKey(blank=True, default=None, null=True, on_delete=django.db.models.deletion.CASCADE, to='core.customerregistry'),
+            model_name="documentcustomer",
+            name="customer",
+            field=models.ForeignKey(
+                blank=True,
+                default=None,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="core.customerregistry",
+            ),
         ),
         migrations.AlterField(
-            model_name='documentcustomer',
-            name='date',
+            model_name="documentcustomer",
+            name="date",
             field=models.DateField(db_index=True),
         ),
     ]

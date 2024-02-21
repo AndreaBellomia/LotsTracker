@@ -1,5 +1,10 @@
 from rest_framework import filters, status
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, CreateAPIView, ListAPIView
+from rest_framework.generics import (
+    ListCreateAPIView,
+    RetrieveUpdateAPIView,
+    CreateAPIView,
+    ListAPIView,
+)
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db import transaction
@@ -30,7 +35,13 @@ from app.core.models import (
     DocumentToSupplier,
 )
 
-from app.api.v1.querys import DocumentCustomerQuery, WarehouseItemsQuery, DocumentFromSupplierQuery, DocumentToSupplierQuery, WarehouseItemsRegistryQuery
+from app.api.v1.querys import (
+    DocumentCustomerQuery,
+    WarehouseItemsQuery,
+    DocumentFromSupplierQuery,
+    DocumentToSupplierQuery,
+    WarehouseItemsRegistryQuery,
+)
 
 
 class SupplierRegistryApiView(ListCreateAPIView):
@@ -121,7 +132,9 @@ class WarehouseItemsApiView(ListCreateAPIView):
         "document_to_supplier__date",
         "empty_date",
         "batch_code",
-        "item_type__description", "item_type__internal_code", "status",
+        "item_type__description",
+        "item_type__internal_code",
+        "status",
     ]
     ordering_fields = ["empty_date", "batch_code", "item_type__internal_code", "status"]
 
@@ -143,7 +156,8 @@ class WarehouseItemsAvailableApiView(ListCreateAPIView):
         "document_to_supplier__date",
         "empty_date",
         "batch_code",
-        "item_type__description", "item_type__internal_code",
+        "item_type__description",
+        "item_type__internal_code",
     ]
     ordering_fields = ["empty_date", "batch_code", "item_type__internal_code"]
 
@@ -170,7 +184,12 @@ class WarehouseItemsRegistryApiView(ListCreateAPIView):
         "external_code",
         "internal_code",
     ]
-    ordering_fields = ["description", "external_code", "internal_code", "available_count"]
+    ordering_fields = [
+        "description",
+        "external_code",
+        "internal_code",
+        "available_count",
+    ]
 
     def get_queryset(self):
         queryset = WarehouseItemsRegistryQuery.document_to_supplier_list()

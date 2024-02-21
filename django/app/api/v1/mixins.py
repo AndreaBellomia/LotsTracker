@@ -13,15 +13,12 @@ class WarehouseItemsDocumentSerializerMixin(serializers.ModelSerializer):
         source="item_type.internal_code", default=None
     )
 
-
     def to_internal_value(self, data):
         validated_data = super().to_internal_value(data)
         id = data.get("id", None)
 
         try:
-            validated_data["instance"] = WarehouseItems.objects.filter(
-                pk=id
-            ).first()
+            validated_data["instance"] = WarehouseItems.objects.filter(pk=id).first()
         except:
             validated_data["instance"] = None
 

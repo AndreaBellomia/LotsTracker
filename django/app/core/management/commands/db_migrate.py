@@ -18,6 +18,7 @@ from app.core.models import (
 
 log = logging.getLogger(__name__)
 
+
 class Command(BaseCommand):
     help = "Closes the specified poll for voting"
 
@@ -41,9 +42,8 @@ class Command(BaseCommand):
         mysql_connection = connector.connect(
             host=host, user="root", password="", database=database
         )
-        
-        document_errors = []
 
+        document_errors = []
 
         log.debug("Connected to mysql database")
 
@@ -57,7 +57,10 @@ class Command(BaseCommand):
         for row in rows:
             try:
                 _, create = CustomerRegistry.objects.get_or_create(
-                    id=row[0], external_code=row[1], company_name=row[2], vat_number=row[3]
+                    id=row[0],
+                    external_code=row[1],
+                    company_name=row[2],
+                    vat_number=row[3],
                 )
             except Exception as e:
                 log.warning("duplicate customer: %s, %s, %s", row[0], row[1], row[2])
@@ -67,23 +70,24 @@ class Command(BaseCommand):
                         "DocumentId": "",
                         "DocumentCode": "",
                         "DocumentData": "",
-                        "DocumentSupplierId":"",
+                        "DocumentSupplierId": "",
                         "TextError": f"duplicate customer: {row[0]}, {row[1]}, {row[2]}",
                         "AticleCode": "",
-                        "DocumentDetails": ""
+                        "DocumentDetails": "",
                     }
                 )
-        
-        end_time = (tz.now() - stat_time )
+
+        end_time = tz.now() - stat_time
         _cursor.execute("SELECT COUNT(id) FROM clienti")
         count = _cursor.fetchall()
-        
-        log.debug("Generated %s on %s customers in %s seconds",
+
+        log.debug(
+            "Generated %s on %s customers in %s seconds",
             CustomerRegistry.objects.all().count(),
-            count[0][0], 
-            end_time
+            count[0][0],
+            end_time,
         )
-        
+
         log.debug("Starting generate WarehouseItemsRegistry form fixture...")
         with open("app/fixtures/magazzino.csv", newline="") as CSVfile:
             reader = csv.DictReader(CSVfile, delimiter=",")
@@ -95,14 +99,13 @@ class Command(BaseCommand):
                 )
 
         log.debug("Generate all WarehouseItemsRegistry form fixture")
-        
+
         log.debug("Starting generate DocumentCustomer...")
         stat_time = tz.now()
-        
+
         _cursor.execute("SELECT * FROM document")
         rows = _cursor.fetchall()
 
-        
         document_errors = []
         document_errors.append(
             {
@@ -110,10 +113,10 @@ class Command(BaseCommand):
                 "DocumentId": "",
                 "DocumentCode": "",
                 "DocumentData": "",
-                "DocumentSupplierId":"",
+                "DocumentSupplierId": "",
                 "TextError": "",
                 "AticleCode": "",
-                "DocumentDetails": ""
+                "DocumentDetails": "",
             }
         )
         for row in rows:
@@ -124,10 +127,10 @@ class Command(BaseCommand):
                 document_errors.append(
                     {
                         "Type": "CustomerRegistryDoesNotExist",
-                        "DocumentId": row[0], 
-                        "DocumentCode": row[1], 
-                        "DocumentData": row[2], 
-                        "DocumentSupplierId": row[3]
+                        "DocumentId": row[0],
+                        "DocumentCode": row[1],
+                        "DocumentData": row[2],
+                        "DocumentSupplierId": row[3],
                     }
                 )
 
@@ -140,26 +143,27 @@ class Command(BaseCommand):
 
                 detail = json.loads(json.loads(row[4]))
                 if create:
-                    
+
                     for item in detail["dettaglio"]:
-                        item_type, created = WarehouseItemsRegistry.objects.get_or_create(
-                            internal_code=item["cod_articolo"],
-                            external_code=item["cod_articolo"],
+                        item_type, created = (
+                            WarehouseItemsRegistry.objects.get_or_create(
+                                internal_code=item["cod_articolo"],
+                                external_code=item["cod_articolo"],
+                            )
                         )
-                        
+
                         if created:
                             document_errors.append(
                                 {
                                     "Type": "WarehouseItemsRegistryDoesNotExist",
-                                    "DocumentId": row[0], 
-                                    "DocumentCode": row[1], 
-                                    "DocumentData": row[2], 
+                                    "DocumentId": row[0],
+                                    "DocumentCode": row[1],
+                                    "DocumentData": row[2],
                                     "DocumentSupplierId": row[3],
                                     "TextError": "Item type does not exist in csv file",
                                     "AticleCode": item["cod_articolo"],
                                 }
                             )
-
 
                         _stato = None
                         if item["stato"] == True:
@@ -176,16 +180,18 @@ class Command(BaseCommand):
                             batch_code=item["matr_atricolo"],
                             item_type=item_type,
                             status=_stato,
-                            document_customer=document_instance
+                            document_customer=document_instance,
                         )
 
-                    if not WarehouseItems.objects.filter(document_customer=document_instance).count() == len(detail["dettaglio"]):
+                    if not WarehouseItems.objects.filter(
+                        document_customer=document_instance
+                    ).count() == len(detail["dettaglio"]):
                         document_errors.append(
                             {
                                 "Type": "WarehouseItemsError",
-                                "DocumentId": row[0], 
-                                "DocumentCode": row[1], 
-                                "DocumentData": row[2], 
+                                "DocumentId": row[0],
+                                "DocumentCode": row[1],
+                                "DocumentData": row[2],
                                 "DocumentSupplierId": row[3],
                                 "TextError": "Not all detail lines have been loaded",
                                 "DocumentDetails": detail["dettaglio"],
@@ -195,42 +201,41 @@ class Command(BaseCommand):
             except IntegrityError as e:
                 if "already exists" in str(e):
                     document_errors.append(
-                    {
-                        "Type": "DocumentCustomerAlreadyExist",
-                        "DocumentId": row[0], 
-                        "DocumentCode": row[1], 
-                        "DocumentData": row[2], 
-                        "DocumentSupplierId": row[3],
-                        "TextError": "Document date and code already exist",
-                    }
-                )
+                        {
+                            "Type": "DocumentCustomerAlreadyExist",
+                            "DocumentId": row[0],
+                            "DocumentCode": row[1],
+                            "DocumentData": row[2],
+                            "DocumentSupplierId": row[3],
+                            "TextError": "Document date and code already exist",
+                        }
+                    )
                 else:
-                  
+
                     document_errors.append(
                         {
                             "Type": "DocumentCustomerError",
-                            "DocumentId": row[0], 
-                            "DocumentCode": row[1], 
-                            "DocumentData": row[2], 
+                            "DocumentId": row[0],
+                            "DocumentCode": row[1],
+                            "DocumentData": row[2],
                             "DocumentSupplierId": row[3],
                             "TextError": "DocumentCustomer not created unknown error",
                         }
                     )
 
-        
-        end_time = (tz.now() - stat_time)
+        end_time = tz.now() - stat_time
         _cursor.execute("SELECT COUNT(id) FROM document")
         count = _cursor.fetchall()
-        
-        log.debug("Generated generate %s of %s documents in %s seconds", 
+
+        log.debug(
+            "Generated generate %s of %s documents in %s seconds",
             DocumentCustomer.objects.all().count(),
             count[0][0],
-            end_time
+            end_time,
         )
-        
+
         log.warning("During the procedure there were %s errors", len(document_errors))
-        
-        
+
         with open("./erros_dump.csv", mode="w", newline="") as csv_file:
             csv_writer = csv.DictWriter(csv_file, fieldnames=document_errors[0].keys())
 
@@ -238,5 +243,5 @@ class Command(BaseCommand):
 
             for row in document_errors:
                 csv_writer.writerow(row)
-                
+
             log.warning("Generated dump file error")
