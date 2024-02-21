@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Container } from "@mui/material";
 
-import FetchApi, { manageFetchError } from "../../libs/axios.js";
+import FetchApi, { manageFetchError, LottiApi } from "../../libs/axios.js";
 
-import ManageLottForm from "../../components/Forms/ManageLott.jsx";
-import SelectArticleList from "../../components/Modals/SelectArticleList.jsx";
+import ManageLottForm from "./components/ManageLott.jsx";
+import SelectArticleList from "./components/SelectArticleList.jsx";
 
 export default function ManageLott() {
     const navigate = useNavigate();
@@ -51,7 +51,7 @@ export default function ManageLott() {
     // Apis support
     const GETapi = (id) => {
         try {
-            new FetchApi().getWarehouseItemsLott(id).then((res) => {
+            new LottiApi().getWarehouseItemsLott(id).then((res) => {
                 setFormValue({
                     empty_date: res.data.empty_date,
                     batch_code: res.data.batch_code,
@@ -82,7 +82,7 @@ export default function ManageLott() {
 
     const POSTapi = () => {
         try {
-            new FetchApi()
+            new LottiApi()
                 .postWarehouseItemsLott(formValue)
                 .then((res) => {
                     navigate("/lotti");
@@ -100,7 +100,7 @@ export default function ManageLott() {
 
     const PUTapi = () => {
         try {
-            new FetchApi()
+            new LottiApi()
                 .putWarehouseItemsLott(id, formValue)
                 .then((res) => {
                     navigate("/lotti");

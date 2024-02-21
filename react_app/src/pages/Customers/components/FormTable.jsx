@@ -14,7 +14,7 @@ import {
   TableCell,
 } from '@mui/material';
 
-export default function ({ formValues, formErrors }) {
+export default function ({ formValues, formErrors, modalButton }) {
   return (
     <>
       <TableContainer component={Paper}>
@@ -52,7 +52,7 @@ export default function ({ formValues, formErrors }) {
               }}
             >
               <TableCell colSpan={4} align="right">
-                <IconButton onClick={() => setItemModal(true)}>
+                <IconButton onClick={() => modalButton(true)}>
                   <AddCircle color="grey" />
                 </IconButton>
               </TableCell>

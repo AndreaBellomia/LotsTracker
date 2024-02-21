@@ -17,8 +17,8 @@ import {
 
 import { AssignmentReturnedOutlined, Sell, Edit, Output } from "@mui/icons-material";
 
-import { DatePicker, ButtonDocumentBig } from "../../layout/components";
-import { manageHandlerInput } from "../../libs/forms.js";
+import { DatePicker, ButtonDocumentBig } from "../../../layout/components/index.js";
+import { manageHandlerInput } from "../../../libs/forms.js";
 
 const statusChoices = [
     { label: "--", value: "" },

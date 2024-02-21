@@ -12,17 +12,17 @@ import Tables, { TableHeaderMixin, TableRowsMixin } from '../../../components/Ta
 function renderStatus(status) {
   switch (status) {
     case 'Open':
-      return <Chip label="Aperto" color="info" variant="outlined" />;
+      return <Chip label="Aperto" color="success" />;
     case 'Partial':
-      return <Chip label="Parziale" color="warning" variant="outlined" />;
+      return <Chip label="Parziale" color="warning"/>;
     case 'Closed':
-      return <Chip label="Chiuso" color="success" variant="outlined" />;
+      return <Chip label="Chiuso" color="info"/>;
     default:
-      return <Chip label="Error" color="error" variant="outlined" />;
+      return <Chip label="Error" color="error"/>;
   }
 }
 
-export default function TableComponent() {
+export default function () {
   const navigate = useNavigate();
 
   const [tableData, setTableData] = useState([]);
@@ -34,7 +34,7 @@ export default function TableComponent() {
 
   useEffect(() => {
     try {
-      new FetchApi().getCustomerDocuments(pageSelected, search, orderBy).then((response) => {
+      new FetchApi().getCustomerDocumentList(pageSelected, search, orderBy).then((response) => {
         setTableData(response.data.results);
         setPages(response.data.num_pages);
       });

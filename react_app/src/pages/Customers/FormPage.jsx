@@ -172,7 +172,7 @@ export default function ManageDocument() {
 
       <Box mt={4} />
 
-      <FormTable formValues={formValuesBody} formErrors={formErrors} />
+      <FormTable formValues={formValuesBody} formErrors={formErrors} modalButton={setItemModal} />
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 4 }}>
         <Link to="/documenti">

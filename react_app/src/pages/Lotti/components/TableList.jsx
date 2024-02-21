@@ -14,9 +14,9 @@ import {
 
 import EditIcon from "@mui/icons-material/Edit";
 
-import FetchApi from "../../libs/axios";
-import InputSearch from "../InputSearch.jsx";
-import Tables, { TableHeaderMixin, TableRowsMixin } from "../Tables.jsx";
+import { LottiApi } from "../../../libs/axios.js";
+import InputSearch from "../../../components/InputSearch.jsx";
+import Tables, { TableHeaderMixin, TableRowsMixin } from "../../../components/Tables.jsx";
 import AddIcon from "@mui/icons-material/Add";
 
 function renderStatus(status) {
@@ -111,7 +111,7 @@ export default function TableComponent() {
 
     useEffect(() => {
         try {
-            new FetchApi()
+            new LottiApi()
                 .getWarehouseItems(pageSelected, search, orderBy)
                 .then((response) => {
                     setTableData(response.data.results);

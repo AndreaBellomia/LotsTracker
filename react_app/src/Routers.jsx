@@ -5,16 +5,17 @@ import AsideNavbar from "@/layout/components/AsideNavbar.jsx";
 
 import {
     Dashboard,
-    FromSupplierDocument,
     StorageList,
-    StorageItemsList,
     CustomerList,
-    ManageLott,
     SupplierList,
 } from "@/pages";
 
 import CustomerDocumentTableList from "@/pages/Customers/TableListPage.jsx";
 import CustomerDocumentFrom from "@/pages/Customers/FormPage.jsx";
+
+
+import ManageLott from "@/pages/Lotti/FormPage.jsx";
+import StorageItemsList from "@/pages/Lotti/TableListPage.jsx";
 
 
 export default function Router() {
@@ -24,7 +25,6 @@ export default function Router() {
                 <Routes>
                     <Route path="/" element={<AsideNavbar />}>
                         <Route index element={<Dashboard />} />
-                        <Route path="" element={<FromSupplierDocument />} />
                         <Route path="clienti" element={<CustomerList />} />
                         <Route path="fornitori" element={<SupplierList />} />
 
@@ -40,7 +40,6 @@ export default function Router() {
                             <Route path="modifica/:id" element={<CustomerDocumentFrom />} />
                             <Route index element={<CustomerDocumentTableList />} />
                         </Route>
-                        {/* <Route path="*" element={<Navigate to="api/" />} /> */}
                     </Route>
                 </Routes>
             </BrowserRouter>
