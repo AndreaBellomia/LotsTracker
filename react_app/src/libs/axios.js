@@ -104,10 +104,7 @@ class FetchApi {
             })
         );
     }
-    async postCustomerDocument(body) {
-        return await this.client.post("/customers/documents/create", { ...body });
-    }
-    
+
 
 
     // Supplier API methods
@@ -135,6 +132,21 @@ class FetchApi {
 }
 
 export default FetchApi;
+
+
+
+
+export class CustomerApi extends FetchApi {
+    async getCustomerDocument(id) {
+        return await this.client.get(`customers/documents/detail/${id}`
+        );
+    }
+
+    async postCustomerDocument(body) {
+        return await this.client.post("/customers/documents/create", { ...body });
+    }
+    
+}
 
 export function manageFetchError(error, formError, setFormError) {
     const newErrors = {};

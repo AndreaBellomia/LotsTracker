@@ -5,36 +5,6 @@ from app.core.models import (
 )
 
 
-class WarehouseItemsDocumentSerializerMixin(serializers.ModelSerializer):
-    item_type_description = serializers.StringRelatedField(
-        source="item_type.description", default=None
-    )
-    item_type_code = serializers.StringRelatedField(
-        source="item_type.internal_code", default=None
-    )
-
-    def to_internal_value(self, data):
-        validated_data = super().to_internal_value(data)
-        id = data.get("id", None)
-
-        try:
-            validated_data["instance"] = WarehouseItems.objects.filter(pk=id).first()
-        except:
-            validated_data["instance"] = None
-
-        return validated_data
-    
-    class Meta:
-        model = WarehouseItems
-        exclude = [
-            "created_at",
-            "updated_at",
-            "document_from_supplier",
-            "document_to_supplier",
-            "document_customer",
-        ]
-
-
 class DocumentSupplierSerializerMixin(serializers.ModelSerializer):
     document_details = serializers.IntegerField(read_only=True)
 

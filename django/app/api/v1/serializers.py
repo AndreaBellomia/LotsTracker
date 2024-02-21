@@ -5,7 +5,6 @@ from rest_framework.validators import UniqueTogetherValidator
 
 
 from app.api.v1.mixins import (
-    WarehouseItemsDocumentSerializerMixin,
     DocumentSupplierSerializerMixin,
 )
 from app.core.models import (
@@ -21,6 +20,45 @@ from app.api.v1.utilities import save_document_bodies
 
 log = logging.getLogger(__name__)
 
+class WarehouseItemsRegistrySerializer(serializers.ModelSerializer):
+    # detail_url = serializers.HyperlinkedIdentityField(
+    #     view_name="warehouse-registry-detail", source="id"
+    # )
+
+    available_count = serializers.ReadOnlyField()
+
+    class Meta:
+        model = WarehouseItemsRegistry
+        exclude = [
+            "created_at",
+            "updated_at",
+        ]
+
+
+class WarehouseItemsDocumentSerializerMixin(serializers.ModelSerializer):
+    
+    item_type = WarehouseItemsRegistrySerializer(read_only=True)
+
+    def to_internal_value(self, data):
+        validated_data = super().to_internal_value(data)
+        id = data.get("id", None)
+
+        try:
+            validated_data["instance"] = WarehouseItems.objects.filter(pk=id).first()
+        except:
+            validated_data["instance"] = None
+
+        return validated_data
+    
+    class Meta:
+        model = WarehouseItems
+        exclude = [
+            "created_at",
+            "updated_at",
+            "document_from_supplier",
+            "document_to_supplier",
+            "document_customer",
+        ]
 
 #####
 # Customer
@@ -80,7 +118,7 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
     class WarehouseItemsDocumentCustomerSerializer(
         WarehouseItemsDocumentSerializerMixin
     ):
-        class Meta:
+        class Meta(WarehouseItemsDocumentSerializerMixin.Meta):
             read_only_fields = [
                 "item_type_description",
                 "item_type_code",
@@ -95,9 +133,7 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
     status = serializers.StringRelatedField(source="document_status", read_only=True)
     body = WarehouseItemsDocumentCustomerSerializer(many=True, source="warehouse_items")
 
-    customer = serializers.StringRelatedField(
-        source="customer.company_name", read_only=True
-    )
+    customer = CustomerRegistrySerializer(read_only=True)
     customer_id = serializers.PrimaryKeyRelatedField(
         queryset=CustomerRegistry.objects.all(), source="customer", write_only=False
     )
@@ -438,21 +474,6 @@ class DocumentToSupplierDetailSerializer(serializers.ModelSerializer):
 ####
 # Warehouse
 ####
-
-
-class WarehouseItemsRegistrySerializer(serializers.ModelSerializer):
-    # detail_url = serializers.HyperlinkedIdentityField(
-    #     view_name="warehouse-registry-detail", source="id"
-    # )
-
-    available_count = serializers.ReadOnlyField()
-
-    class Meta:
-        model = WarehouseItemsRegistry
-        exclude = [
-            "created_at",
-            "updated_at",
-        ]
 
 
 class WarehouseItemsCustomerEntrySerializer(serializers.Serializer):
