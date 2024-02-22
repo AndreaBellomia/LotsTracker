@@ -21,7 +21,7 @@ class FetchApi {
     return [url, queryParams].join('&');
   }
 
-  async getWarehouseItems(search = '', order_by = '') {
+  async getWarehouseRegistry(search = '', order_by = '') {
     return await this.client.get(
       FetchApi.buildFilteredUrl('warehouse/registry?format=json', {
         search: search,
@@ -108,10 +108,19 @@ class FetchApi {
 
 export default FetchApi;
 
-export class CustomerApi extends FetchApi {
-  async getCustomerDocumentList(page = 1, search = '', order_by = '') {
+class DocumentApi extends FetchApi {
+  async getSuppliersList(page = 1, search = '', order_by = '') {
     return await this.client.get(
-      FetchApi.buildFilteredUrl(`customers/documents?format=json&page=${page}`, {
+      FetchApi.buildFilteredUrl(`${this.SuppliersListUrl}?format=json&page=${page}`, {
+        search: search,
+        ordering: order_by,
+      })
+    );
+  }
+
+  async getDocumentsList(page = 1, search = '', order_by = '') {
+    return await this.client.get(
+      FetchApi.buildFilteredUrl(`${this.documentsListUrl}?format=json&page=${page}`, {
         search: search,
         ordering: order_by,
       })
@@ -119,81 +128,51 @@ export class CustomerApi extends FetchApi {
   }
 
   async getDocument(id) {
-    return await this.client.get(`customers/documents/detail/${id}`);
+    return await this.client.get(`${this.formGetUrl}/${id}`);
   }
 
   async postDocument(body) {
-    return await this.client.post('customers/documents/create', { ...body });
+    return await this.client.post(this.formPostUrl, { ...body });
   }
 
   async putDocument(id, body) {
-    return await this.client.put(`customers/documents/detail/${id}`, { ...body });
+    return await this.client.put(`${this.formGetUrl}/${id}`, { ...body });
   }
 }
 
-export class FromSupplierApi extends FetchApi {
+export class CustomerApi extends DocumentApi {
+  constructor() {
+    super();
+    this.SuppliersListUrl = 'suppliers';
+    this.documentsListUrl = 'customers/documents';
 
-  async getSuppliersList(page = 1, search = '', order_by = '') {
-    return await this.client.get(
-      FetchApi.buildFilteredUrl(`suppliers?format=json&page=${page}`, {
-        search: search,
-        ordering: order_by,
-      })
-    );
-  }
-  
-  async getDocumentsList(page = 1, search = '', order_by = '') {
-    return await this.client.get(
-      FetchApi.buildFilteredUrl(`suppliers/documents/from?format=json&page=${page}`, {
-        search: search,
-        ordering: order_by,
-      })
-    );
-  }
-
-  async getDocument(id) {
-    return await this.client.get(`suppliers/documents/from/detail/${id}`);
-  }
-
-  async postDocument(body) {
-    return await this.client.post('suppliers/documents/from/create', { ...body });
-  }
-
-  async putDocument(id, body) {
-    return await this.client.put(`suppliers/documents/from/detail/${id}`, { ...body });
+    this.formGetUrl = 'customers/documents/detail';
+    this.formPostUrl = 'customers/documents/create';
+    this.formPutUrl = this.formGetUrl;
   }
 }
 
-export class ToSupplierApi extends FetchApi {
+export class FromSupplierApi extends DocumentApi {
+  constructor() {
+    super();
+    this.SuppliersListUrl = 'suppliers';
+    this.documentsListUrl = 'suppliers/documents/from';
 
-  async getSuppliersList(page = 1, search = '', order_by = '') {
-    return await this.client.get(
-      FetchApi.buildFilteredUrl(`suppliers?format=json&page=${page}`, {
-        search: search,
-        ordering: order_by,
-      })
-    );
+    this.formGetUrl = 'suppliers/documents/from/detail';
+    this.formPostUrl = 'suppliers/documents/from/create';
+    this.formPutUrl = this.formGetUrl;
   }
-  
-  async getDocumentsList(page = 1, search = '', order_by = '') {
-    return await this.client.get(
-      FetchApi.buildFilteredUrl(`suppliers/documents/to?format=json&page=${page}`, {
-        search: search,
-        ordering: order_by,
-      })
-    );
-  }
+}
 
-  async getDocument(id) {
-    return await this.client.get(`suppliers/documents/to/detail/${id}`);
-  }
+export class ToSupplierApi extends DocumentApi {
+  constructor() {
+    super();
+    this.SuppliersListUrl = 'suppliers';
+    this.documentsListUrl = 'suppliers/documents/to';
 
-  async postDocument(body) {
-    return await this.client.post('suppliers/documents/to/create', { ...body });
-  }
-
-  async putDocument(id, body) {
-    return await this.client.put(`suppliers/documents/to/detail/${id}`, { ...body });
+    this.formGetUrl = 'suppliers/documents/to/detail';
+    this.formPostUrl = 'suppliers/documents/to/create';
+    this.formPutUrl = this.formGetUrl;
   }
 }
 
@@ -221,11 +200,9 @@ export class LottiApi extends FetchApi {
 }
 
 export class ItemsTypeApi extends FetchApi {
-
   async getItemsList() {
     return await this.client.get(`warehouse/registry`);
   }
-
 }
 
 export function manageFetchError(error, formError, setFormError) {

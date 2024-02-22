@@ -25,7 +25,7 @@ export default function ArticlesListModal({ modalState: modaleState, tableChoice
 
     useEffect(() => {
         try {
-            new FetchApi().getWarehouseItems(search, orderBy).then((response) => {
+            new FetchApi().getWarehouseRegistry(search, orderBy).then((response) => {
                 setTableData(response.data);
             });
         } catch (error) {

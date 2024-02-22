@@ -34,7 +34,7 @@ export default function () {
 
   useEffect(() => {
     try {
-      new CustomerApi().getCustomerDocumentList(pageSelected, search, orderBy).then((response) => {
+      new CustomerApi().getDocumentsList(pageSelected, search, orderBy).then((response) => {
         setTableData(response.data.results);
         setPages(response.data.num_pages);
       });
