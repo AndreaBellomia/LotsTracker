@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import { RemoveCircle, AddCircle, Done } from '@mui/icons-material';
 
@@ -14,9 +14,14 @@ import {
   TableCell,
 } from '@mui/material';
 
-export default function ({ formValues, formErrors, modalButton }) {
+import SelectItemModal from '@/components/Modals/SelectItem.jsx';
+
+export default function ({ formValues, formErrors, formManager }) {
+  const [modal, setModal] = useState(false);
   return (
     <>
+      <SelectItemModal modalState={[modal, setModal]} tableChoices={(item) => formManager.append(item)} />
+
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -37,7 +42,7 @@ export default function ({ formValues, formErrors, modalButton }) {
                   <TableCell align="right">{row.item_type.internal_code}</TableCell>
                   <TableCell align="right">{row.batch_code}</TableCell>
                   <TableCell align="right">
-                    <IconButton onClick={() => formBodies.remove(row.id)}>
+                    <IconButton onClick={() => formManager.remove(row.id)}>
                       <RemoveCircle color="error" />
                     </IconButton>
                   </TableCell>
@@ -52,7 +57,7 @@ export default function ({ formValues, formErrors, modalButton }) {
               }}
             >
               <TableCell colSpan={4} align="right">
-                <IconButton onClick={() => modalButton(true)}>
+                <IconButton onClick={() => setModal(true)}>
                   <AddCircle color="grey" />
                 </IconButton>
               </TableCell>

@@ -1,51 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import dayjs from 'dayjs';
 import { useSnackbar } from 'notistack';
 
 import { Link } from 'react-router-dom';
 import { Done } from '@mui/icons-material';
-import { FormControl, Grid, FormLabel, TextField, Button, Box, Typography } from '@mui/material';
-import { DatePicker } from '@/layout/components';
+import { FormControl, Grid, FormLabel, Button, Box, Typography } from '@mui/material';
 import { manageFetchError, CustomerApi } from '@/libs/axios.js';
-import { manageHandlerInput } from '@/libs/forms.js';
-import { ManageFormBodies, getFormBody } from '@/libs/documentFormBody.js';
+import { manageHandlerInput, ManageFormDocument } from '@/libs/forms.js';
 
-import SelectItemModal from '@/components/Modals/SelectItem.jsx';
 import CustomerCard from './components/FormCustomCard.jsx';
 import FormTable from './components/FormTable.jsx';
+import InputDate from '@/components/forms/InputDate.jsx';
+import InputText from '@/components/forms/InputText.jsx';
 
 export default function ManageDocument() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [itemModal, setItemModal] = useState(false);
-  const [formValuesBody, setFormValuesBody] = useState([]);
   const [formValuesCustomer, setFormValuesCustomer] = useState({});
   const [formErrors, setFormErrors] = useState({});
   const [formValues, setFormValues] = useState({
-    body: getFormBody(formValuesBody),
+    body: [],
     customer_id: undefined,
     date: undefined,
     number: undefined,
   });
 
   const HandlerInput = new manageHandlerInput(formValues, setFormValues, setFormErrors);
-  const formBodies = new ManageFormBodies(formValuesBody, setFormValuesBody);
+  const formManager = new ManageFormDocument(formValues, setFormValues);
 
   useEffect(() => {
     if (id) {
       GETapi(id);
     }
   }, [id]);
-
-  useEffect(() => {
-    setFormValues({
-      ...formValues,
-      body: getFormBody(formValuesBody),
-    });
-  }, [formValuesBody]);
 
   useEffect(() => {
     setFormValues({
@@ -69,15 +58,13 @@ export default function ManageDocument() {
   const GETapi = (id) => {
     try {
       new CustomerApi().getCustomerDocument(id).then((res) => {
-        setFormValuesBody(res.data.body);
-
         setFormValuesCustomer(res.data.customer);
 
         setFormValues({
           customer_id: res.data.customer_id,
           date: res.data.date,
           number: res.data.number,
-          body: getFormBody(res.data.body),
+          body: res.data.body,
         });
       });
     } catch (error) {
@@ -88,7 +75,7 @@ export default function ManageDocument() {
   const POSTapi = () => {
     try {
       new CustomerApi()
-        .postCustomerDocument(formValues)
+        .postCustomerDocument(formManager.getSubmitForm(formValues))
         .then((res) => {
           navigate('/documenti');
           handlerSnackbar('Documento creato correttamente');
@@ -112,7 +99,7 @@ export default function ManageDocument() {
   const PUTapi = () => {
     try {
       new CustomerApi()
-        .putCustomerDocument(id, formValues)
+        .putCustomerDocument(id, formManager.getSubmitForm(formValues))
         .then((res) => {
           navigate('/documenti');
           handlerSnackbar('Documento aggiornato correttamente');
@@ -147,24 +134,11 @@ export default function ManageDocument() {
           <Box>
             <FormControl sx={{ width: '100%' }}>
               <FormLabel>Data documento</FormLabel>
-              <DatePicker
-                onChange={(target) => {
-                  HandlerInput.handleInputDatepickerChange(target, 'date');
-                }}
-                error={Boolean(formErrors.date)}
-                helperText={formErrors.date}
-                value={formValues.date ? dayjs(formValues.date) : null}
-              />
+              <InputDate value={formValues.date} error={formErrors.date} handler={HandlerInput} />
             </FormControl>
             <FormControl sx={{ width: '100%', mt: 2 }}>
               <FormLabel>Numero documento</FormLabel>
-              <TextField
-                onChange={HandlerInput.handleInputChange}
-                name="number"
-                value={formValues.number || ''}
-                helperText={formErrors.number}
-                error={Boolean(formErrors.number)}
-              ></TextField>
+              <InputText name="number" value={formValues.number} error={formErrors.number} handler={HandlerInput} />
             </FormControl>
           </Box>
         </Grid>
@@ -172,7 +146,11 @@ export default function ManageDocument() {
 
       <Box mt={4} />
 
-      <FormTable formValues={formValuesBody} formErrors={formErrors} modalButton={setItemModal} />
+      <FormTable
+        formValues={formValues.body}
+        formErrors={formErrors}
+        formManager={formManager}
+      />
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 4 }}>
         <Link to="/documenti">
@@ -187,8 +165,6 @@ export default function ManageDocument() {
           Salva
         </Button>
       </Box>
-
-      <SelectItemModal modalState={[itemModal, setItemModal]} tableChoices={(item) => formBodies.append(item)} />
     </>
   );
 }

@@ -32,3 +32,34 @@ export class manageHandlerInput {
         });
     }
 }
+
+export class ManageFormDocument {
+    constructor(form, setForm) {
+      this.form = form;
+      this.setForm = setForm;
+    }
+  
+    append(item) {
+      const formBody = this.form.body;
+  
+      if (!formBody.some((existingItem) => existingItem.id === item.id)) {
+        this.setForm({ ...this.form, body: [...formBody, item] });
+      }
+    }
+  
+    remove(id) {
+      const formBody = this.form.body;
+      const updatedValues = formBody.filter((item) => item.id !== id);
+      this.setForm({ ...this.form, body: updatedValues });
+    }
+  
+    getSubmitForm() {
+      const formValues = this.form
+  
+      return {
+          ...formValues,
+          body : formValues.body.map((item) => Object({ id: item.id }))
+      }
+    }
+  }
+  
