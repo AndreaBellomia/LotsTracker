@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
 import { RemoveCircle, AddCircle, Done } from '@mui/icons-material';
+import { styled } from '@mui/material/styles';
 
 import {
   Typography,
@@ -12,9 +13,52 @@ import {
   Table,
   TableBody,
   TableCell,
+  Tooltip,
 } from '@mui/material';
 
 import SelectItemModal from '@/components/Modals/SelectItem.jsx';
+
+const CustomTableRow = styled(TableRow)(({ theme, sx }) => ({
+  '&:last-child td, &:last-child th': { border: 0 },
+
+  ...sx,
+}));
+
+function generateTableRow(row, index, errors, formManager) {
+  const id = row.id;
+
+  const error = errors && errors.find((obj) => parseInt(obj.id) === id);
+
+  const sxError = error
+    ? {
+        border: 1,
+        borderColor: 'red',
+        borderStyle: 'solid',
+        backgroundColor: '#ffa896',
+
+        '&:hover': {
+          backgroundColor: '#e0897b',
+        },
+      }
+    : {};
+
+  return (
+    <Tooltip title={(error && error.message) || ''} key={index} followCursor>
+      <CustomTableRow sx={{ ...sxError }}>
+        <TableCell component="th" scope="row">
+          {row.item_type.description}
+        </TableCell>
+        <TableCell align="right">{row.item_type.internal_code}</TableCell>
+        <TableCell align="right">{row.batch_code}</TableCell>
+        <TableCell align="right">
+          <IconButton onClick={() => formManager.remove(id)}>
+            <RemoveCircle color="error" />
+          </IconButton>
+        </TableCell>
+      </CustomTableRow>
+    </Tooltip>
+  );
+}
 
 export default function ({ formValues, formErrors, formManager }) {
   const [modal, setModal] = useState(false);
@@ -33,21 +77,7 @@ export default function ({ formValues, formErrors, formManager }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {formValues &&
-              formValues.map((row, index) => (
-                <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell component="th" scope="row">
-                    {row.item_type.description}
-                  </TableCell>
-                  <TableCell align="right">{row.item_type.internal_code}</TableCell>
-                  <TableCell align="right">{row.batch_code}</TableCell>
-                  <TableCell align="right">
-                    <IconButton onClick={() => formManager.remove(row.id)}>
-                      <RemoveCircle color="error" />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
+            {formValues && formValues.map((row, index) => generateTableRow(row, index, formErrors.body, formManager))}
             <TableRow
               sx={{
                 '&:last-child td, &:last-child th': {
@@ -65,12 +95,6 @@ export default function ({ formValues, formErrors, formManager }) {
           </TableBody>
         </Table>
       </TableContainer>
-      {formErrors.body &&
-        formErrors.body.map((error) => (
-          <Typography variant="body2" color="error" key={error.id}>
-            {error.message}
-          </Typography>
-        ))}
     </>
   );
 }
