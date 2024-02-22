@@ -75,7 +75,7 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
       new API()
         .postDocument(formManager.getSubmitForm(formValues))
         .then((res) => {
-          navigate('/documenti');
+          navigate(-1);
           handlerSnackbar('Documento creato correttamente');
         })
         .catch((error) => {
@@ -99,7 +99,7 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
       new API()
         .putDocument(id, formManager.getSubmitForm(formValues))
         .then((res) => {
-          navigate('/documenti');
+          navigate(-1);
           handlerSnackbar('Documento aggiornato correttamente');
         })
         .catch((error) => {
@@ -148,11 +148,9 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
       />
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 4 }}>
-        <Link to="/documenti">
-          <Button variant="outlined" color="error">
-            Annulla
-          </Button>
-        </Link>
+        <Button variant="outlined" color="error" onClick={() => navigate(-1)}>
+          Annulla
+        </Button>
 
         <Button variant="contained" size="medium" color="grey" onClick={handlerSubmit}>
           <Done />

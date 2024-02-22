@@ -109,15 +109,15 @@ export class CustomerApi extends FetchApi {
     );
   }
 
-  async getCustomerDocument(id) {
+  async getDocument(id) {
     return await this.client.get(`customers/documents/detail/${id}`);
   }
 
-  async postCustomerDocument(body) {
+  async postDocument(body) {
     return await this.client.post('customers/documents/create', { ...body });
   }
 
-  async putCustomerDocument(id, body) {
+  async putDocument(id, body) {
     return await this.client.put(`customers/documents/detail/${id}`, { ...body });
   }
 }
@@ -150,7 +150,7 @@ export class SupplierApi extends FetchApi {
     return await this.client.post('suppliers/documents/from/create', { ...body });
   }
 
-  async putrDocument(id, body) {
+  async putDocument(id, body) {
     return await this.client.put(`suppliers/documents/from/detail/${id}`, { ...body });
   }
 }

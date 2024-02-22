@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import SelectCustomerModal from './SelectCustomerModal.jsx';
 
 import { Edit } from '@mui/icons-material';
 import { Box, Typography, Paper, IconButton } from '@mui/material';
 
-export default function ({ customerState: customerState, formErrors: formErrors }) {
+import SelectCustomerModal from './SelectCustomerModal.jsx';
+
+export default function ({ state: state, formErrors: formErrors }) {
   const [modal, setModal] = useState(false);
-  const [value, setter] = customerState;
+  const [value, setter] = state;
   return (
     <>
       <SelectCustomerModal modalState={[modal, setModal]} tableChoices={(item) => setter(item)} />
