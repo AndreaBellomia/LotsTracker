@@ -4,25 +4,24 @@ import { useSnackbar } from 'notistack';
 
 import { Link } from 'react-router-dom';
 import { Done } from '@mui/icons-material';
-import { FormControl, Grid, FormLabel, Button, Box, Typography } from '@mui/material';
-import { manageFetchError, CustomerApi } from '@/libs/axios.js';
+import { FormControl, Grid, FormLabel, Button, Box } from '@mui/material';
+import { manageFetchError } from '@/libs/axios.js';
 import { manageHandlerInput, ManageFormDocument } from '@/libs/forms.js';
 
-import CustomerCard from './components/FormCustomCard.jsx';
-import FormTable from './components/FormTable.jsx';
+import FormTable from './FormTable.jsx';
 import InputDate from '@/components/forms/InputDate.jsx';
 import InputText from '@/components/forms/InputText.jsx';
 
-export default function ManageDocument() {
+export default function ManageDocument({ counterpartKey, API, CounterpartCard, TableModal }) {
   const navigate = useNavigate();
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [formValuesCustomer, setFormValuesCustomer] = useState({});
+  const [formCounterpart, setFormCounterpart] = useState({});
   const [formErrors, setFormErrors] = useState({});
   const [formValues, setFormValues] = useState({
     body: [],
-    customer_id: undefined,
+    [`${counterpartKey}_id`] : undefined,
     date: undefined,
     number: undefined,
   });
@@ -39,9 +38,9 @@ export default function ManageDocument() {
   useEffect(() => {
     setFormValues({
       ...formValues,
-      customer_id: formValuesCustomer.id,
+      [`${counterpartKey}_id`]: formCounterpart.id,
     });
-  }, [formValuesCustomer]);
+  }, [formCounterpart]);
 
   const handlerSnackbar = (msg, variant) => {
     msg && enqueueSnackbar(msg, { variant });
@@ -57,13 +56,10 @@ export default function ManageDocument() {
 
   const GETapi = (id) => {
     try {
-      new CustomerApi().getCustomerDocument(id).then((res) => {
-        setFormValuesCustomer(res.data.customer);
-
-        console.log(res.data)
-
+      new API().getDocument(id).then((res) => {
+        setFormCounterpart(res.data[counterpartKey]);
         setFormValues({
-          customer_id: res.data.customer_id,
+          [`${counterpartKey}_id`]: res.data[`${counterpartKey}_id`],
           date: res.data.date,
           number: res.data.number,
           body: res.data.body,
@@ -76,8 +72,8 @@ export default function ManageDocument() {
 
   const POSTapi = () => {
     try {
-      new CustomerApi()
-        .postCustomerDocument(formManager.getSubmitForm(formValues))
+      new API()
+        .postDocument(formManager.getSubmitForm(formValues))
         .then((res) => {
           navigate('/documenti');
           handlerSnackbar('Documento creato correttamente');
@@ -100,8 +96,8 @@ export default function ManageDocument() {
 
   const PUTapi = () => {
     try {
-      new CustomerApi()
-        .putCustomerDocument(id, formManager.getSubmitForm(formValues))
+      new API()
+        .putDocument(id, formManager.getSubmitForm(formValues))
         .then((res) => {
           navigate('/documenti');
           handlerSnackbar('Documento aggiornato correttamente');
@@ -124,13 +120,9 @@ export default function ManageDocument() {
 
   return (
     <>
-      <Typography variant="h4">Documento di consegna</Typography>
-
-      <Box mt={4} />
-
       <Grid container spacing={2}>
         <Grid item xs={12} md={6} lg={6}>
-          <CustomerCard customerState={[formValuesCustomer, setFormValuesCustomer]} formErrors={formErrors} />
+          <CounterpartCard state={[formCounterpart, setFormCounterpart]} formErrors={formErrors} />
         </Grid>
         <Grid item xs={12} md={6} lg={6}>
           <Box>
@@ -152,6 +144,7 @@ export default function ManageDocument() {
         formValues={formValues.body}
         formErrors={formErrors}
         formManager={formManager}
+        Modal={TableModal}
       />
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 4 }}>

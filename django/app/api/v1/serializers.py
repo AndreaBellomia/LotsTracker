@@ -266,11 +266,10 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
         many=True, source="warehouse_items"
     )
 
-    supplier = serializers.StringRelatedField(
-        source="supplier.company_name", read_only=True
-    )
+    supplier = CustomerRegistrySerializer(read_only=True)
+    
     supplier_id = serializers.PrimaryKeyRelatedField(
-        queryset=SupplierRegistry.objects.all(), source="supplier", write_only=True
+        queryset=CustomerRegistry.objects.all(), source="supplier", write_only=False
     )
 
     def create(self, validated_data):

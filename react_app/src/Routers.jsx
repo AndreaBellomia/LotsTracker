@@ -18,6 +18,7 @@ import StorageItemsList from "@/pages/Lotti/TableListPage.jsx";
 import ManageLott from "@/pages/Lotti/FormPage.jsx";
 
 import FromSupplierItemsList from "@/pages/FromSupplier/TableListPage.jsx";
+import FromSupplierDocumentFrom from "@/pages/FromSupplier/FormPage.jsx";
 
 
 
@@ -46,6 +47,8 @@ export default function Router() {
                         
                         <Route path="fornitori" element={<Outlet />}>
                             <Route path="documenti/carico" element={<FromSupplierItemsList />} />
+                            <Route path="documenti/carico/crea" element={<FromSupplierDocumentFrom />} />
+                            <Route path="documenti/carico/modifica/:id" element={<FromSupplierDocumentFrom />} />
 
                             <Route index element={<SupplierList />} />
                         </Route>

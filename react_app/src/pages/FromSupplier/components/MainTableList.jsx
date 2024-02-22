@@ -9,18 +9,18 @@ import { SupplierApi } from '../../../libs/axios.js';
 import InputSearch from '../../../components/InputSearch.jsx';
 import Tables, { TableHeaderMixin, TableRowsMixin } from '../../../components/Tables.jsx';
 
-function renderStatus(status) {
-  switch (status) {
-    case 'Open':
-      return <Chip label="Aperto" color="success" />;
-    case 'Partial':
-      return <Chip label="Parziale" color="warning"/>;
-    case 'Closed':
-      return <Chip label="Chiuso" color="info"/>;
-    default:
-      return <Chip label="Error" color="error"/>;
-  }
-}
+// function renderStatus(status) {
+//   switch (status) {
+//     case 'Open':
+//       return <Chip label="Aperto" color="success" />;
+//     case 'Partial':
+//       return <Chip label="Parziale" color="warning"/>;
+//     case 'Closed':
+//       return <Chip label="Chiuso" color="info"/>;
+//     default:
+//       return <Chip label="Error" color="error"/>;
+//   }
+// }
 
 export default function () {
   const navigate = useNavigate();
@@ -68,7 +68,7 @@ export default function () {
         <EditIcon />
       </IconButton>
     ),
-    status: (value) => renderStatus(value),
+    // status: (value) => renderStatus(value),
   });
 
   return (
@@ -80,7 +80,7 @@ export default function () {
         <Grid item xs={1} md={4} lg={4}></Grid>
         <Grid item xs={5} md={4} lg={4}>
           <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-            <Link to="/documenti/crea">
+            <Link to="/fornitori/documenti/carico/crea">
               <Button variant="contained" size="medium" color="grey">
                 <AddIcon />
                 <Box mr={1} />

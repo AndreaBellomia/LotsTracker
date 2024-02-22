@@ -114,16 +114,25 @@ export class CustomerApi extends FetchApi {
   }
 
   async postCustomerDocument(body) {
-    return await this.client.post('/customers/documents/create', { ...body });
+    return await this.client.post('customers/documents/create', { ...body });
   }
 
   async putCustomerDocument(id, body) {
-    return await this.client.put(`/customers/documents/detail/${id}`, { ...body });
+    return await this.client.put(`customers/documents/detail/${id}`, { ...body });
   }
 }
 
 export class SupplierApi extends FetchApi {
 
+  async getSuppliersList(page = 1, search = '', order_by = '') {
+    return await this.client.get(
+      FetchApi.buildFilteredUrl(`suppliers?format=json&page=${page}`, {
+        search: search,
+        ordering: order_by,
+      })
+    );
+  }
+  
   async getDocumentsList(page = 1, search = '', order_by = '') {
     return await this.client.get(
       FetchApi.buildFilteredUrl(`suppliers/documents/from?format=json&page=${page}`, {
@@ -131,6 +140,18 @@ export class SupplierApi extends FetchApi {
         ordering: order_by,
       })
     );
+  }
+
+  async getDocument(id) {
+    return await this.client.get(`suppliers/documents/from/detail/${id}`);
+  }
+
+  async postDocument(body) {
+    return await this.client.post('suppliers/documents/from/create', { ...body });
+  }
+
+  async putrDocument(id, body) {
+    return await this.client.put(`suppliers/documents/from/detail/${id}`, { ...body });
   }
 }
 
