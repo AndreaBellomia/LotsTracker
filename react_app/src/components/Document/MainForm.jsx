@@ -72,6 +72,8 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
 
   const POSTapi = () => {
     try {
+      console.log(formValues)
+      console.log(formManager.getSubmitForm(formValues))
       new API()
         .postDocument(formManager.getSubmitForm(formValues))
         .then((res) => {
@@ -132,7 +134,7 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
             </FormControl>
             <FormControl sx={{ width: '100%', mt: 2 }}>
               <FormLabel>Numero documento</FormLabel>
-              <InputText name="number" value={formValues.number} error={formErrors.number} handler={HandlerInput} />
+              <InputText name="number" value={formValues.number} error={formErrors.number} handler={HandlerInput.handleInputChange} />
             </FormControl>
           </Box>
         </Grid>

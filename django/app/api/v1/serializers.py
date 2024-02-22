@@ -249,7 +249,12 @@ class DocumentToSupplierSerializer(DocumentSerializerBase):
 class WarehouseItemsDocumentSupplierFromSerializer(
     WarehouseItemsDocumentSerializerMixin
 ):
-    class Meta:
+    
+    item_type_id = serializers.PrimaryKeyRelatedField(
+        queryset=WarehouseItemsRegistry.objects.all(), source="item_type", write_only=True
+    )
+    
+    class Meta(WarehouseItemsDocumentSerializerMixin.Meta):
         read_only_fields = [
             "item_type_description",
             "item_type_code",
@@ -266,53 +271,31 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
         many=True, source="warehouse_items"
     )
 
-    supplier = CustomerRegistrySerializer(read_only=True)
+    supplier = SupplierRegistrySerializer(read_only=True)
     
     supplier_id = serializers.PrimaryKeyRelatedField(
-        queryset=CustomerRegistry.objects.all(), source="supplier", write_only=False
+        queryset=SupplierRegistry.objects.all(), source="supplier", write_only=False
     )
 
     def create(self, validated_data):
         body_items = validated_data.pop("warehouse_items")
-        error_messages = []
 
         with transaction.atomic():
             try:
                 instance = super().create(validated_data)
             except Exception as e:
+                log.exception(e)
                 raise serializers.ValidationError(
-                    {"Detail": "Error creating document."}
+                    {"detail": "Error creating document."}
                 )
-
-            for b_item in body_items:
-                item_instance: WarehouseItems = b_item.pop("instance")
-
-                if item_instance and item_instance.document_from_supplier != None:
-                    error_messages.append(
-                        {
-                            "id": item_instance.id,
-                            "message": "Item already related to another document customer",
-                        }
-                    )
-
-                elif item_instance:
-                    item_instance.document_from_supplier = instance
-                    item_instance.empty_date = b_item.get("empty_date", None)
-                    item_instance.save()
-                else:
-                    try:
-                        WarehouseItems.objects.create(
-                            **b_item, document_from_supplier=instance
-                        )
-                    except:
-                        error_messages.append(
-                            {
-                                "batch_code": item_instance.id,
-                                "message": "Error creating item",
-                            }
-                        )
-            if error_messages:
-                raise serializers.ValidationError({"body": error_messages})
+                
+            for item in body_items:
+                WarehouseItems.objects.create(
+                    batch_code=item["batch_code"],
+                    item_type=item["item_type"],
+                    document_from_supplier=instance
+                )
+                
         return instance
 
     def update(self, instance: DocumentFromSupplier, validated_data):

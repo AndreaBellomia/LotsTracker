@@ -6,7 +6,7 @@ export default function ({ name, value, error, handler }) {
   return (
     <>
       <TextField
-        onChange={handler.handleInputChange}
+        onChange={handler}
         name={name}
         value={value || ''}
         helperText={error}

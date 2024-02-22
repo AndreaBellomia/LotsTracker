@@ -41,9 +41,14 @@ export class ManageFormDocument {
   
     append(item) {
       const formBody = this.form.body;
-  
-      if (!formBody.some((existingItem) => existingItem.id === item.id)) {
-        this.setForm({ ...this.form, body: [...formBody, item] });
+      if (formBody.some((existingItem) => "id" in Object.keys(formBody))) {
+        if (!formBody.some((existingItem) => existingItem.id === item.id)) {
+          this.setForm({ ...this.form, body: [...formBody, item] });
+        }
+      } else {
+        if (!formBody.some((existingItem) => existingItem.batch_code === item.batch_code)) {
+          this.setForm({ ...this.form, body: [...formBody, item] });
+        }
       }
     }
   
@@ -55,10 +60,18 @@ export class ManageFormDocument {
   
     getSubmitForm() {
       const formValues = this.form
-  
-      return {
+      const formBody = this.form.body;
+
+      if (formBody.some((existingItem) => "id" in Object.keys(formBody))) {
+        return {
           ...formValues,
           body : formValues.body.map((item) => Object({ id: item.id }))
+        }
+      } else {
+        return {
+          ...formValues,
+          body : formValues.body.map((item) => Object({ item_type_id: item.item_type.id, batch_code: item.batch_code }))
+        }
       }
     }
   }

@@ -178,6 +178,14 @@ export class LottiApi extends FetchApi {
   }
 }
 
+export class ItemsTypeApi extends FetchApi {
+
+  async getItemsList() {
+    return await this.client.get(`warehouse/registry`);
+  }
+
+}
+
 export function manageFetchError(error, formError, setFormError) {
   const newErrors = {};
 

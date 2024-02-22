@@ -5,7 +5,7 @@ import { SupplierApi } from '@/libs/axios.js';
 
 
 import SupplierCard from './components/FormSupplierCard.jsx';
-import SelectItemModal from '@/components/Modals/SelectItem.jsx';
+import CreateItemModal from './components/CreateItemModal.jsx';
 
 
 import MainForm from '@/components/Document/MainForm.jsx'
@@ -15,7 +15,7 @@ export default function ManageDocument() {
 
   return (
     <>
-      <MainForm counterpartKey="supplier" API={SupplierApi} CounterpartCard={SupplierCard} TableModal={SelectItemModal} />
+      <MainForm counterpartKey="supplier" API={SupplierApi} CounterpartCard={SupplierCard} TableModal={CreateItemModal} />
     </>
   );
 }
