@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, Paper, Grid, Button, Box, Stack, Chip, Typography, IconButton } from "@mui/material";
 
-import FetchApi from "../../libs/axios";
-import InputSearch from "../InputSearch.jsx";
-import Tables, { TableHeaderMixin, TableRowsMixin } from "../Tables.jsx";
+import { ItemsTypeApi } from "@/libs/axios.js";
+import InputSearch from "@/components/InputSearch.jsx";
+import Tables, { TableHeaderMixin, TableRowsMixin } from "@/components/Tables.jsx";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -27,11 +27,11 @@ export default function TableComponent({ addModalOpen, addModalId }) {
 
     useEffect(() => {
         try {
-            new FetchApi()
-                .getWarehouseItems(search, orderBy)
+            new ItemsTypeApi()
+                .getItemsList(search, orderBy)
                 .then((response) => setTableData(response.data));
         } catch (error) {
-            console.log("error");
+            console.error(error);
         }
     }, [orderBy, search]);
 

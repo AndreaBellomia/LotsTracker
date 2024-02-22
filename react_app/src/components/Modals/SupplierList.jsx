@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import FetchApi, { manageFetchError } from "../../libs/axios.js";
+import SupplierApi, { manageFetchError } from "../../libs/axios.js";
 import {
     Button,
     IconButton,
@@ -44,7 +44,7 @@ export default function CustomerList({ modalStatus: modalStatus, fetchId: fetchI
     /* Fetch API */
     const GETapi = (id) => {
         try {
-            new FetchApi().getSupplier(id).then((res) => {
+            new SupplierApi().getSupplier(id).then((res) => {
                 setFormValues({ ...res.data });
             });
         } catch (error) {
@@ -54,7 +54,7 @@ export default function CustomerList({ modalStatus: modalStatus, fetchId: fetchI
 
     const POSTapi = () => {
         try {
-            new FetchApi()
+            new SupplierApi()
                 .postSupplier(formValues)
                 .then((response) => {
                     setOpen(false);
@@ -73,7 +73,7 @@ export default function CustomerList({ modalStatus: modalStatus, fetchId: fetchI
 
     const PUTapi = () => {
         try {
-            new FetchApi()
+            new SupplierApi()
                 .putSupplier(id, formValues)
                 .then((_) => {
                     handleClose();

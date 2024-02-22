@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Box, Typography } from '@mui/material';
-import { FromSupplierApi } from '@/libs/axios.js';
+import { FromSupplierApiDocument } from '@/libs/axios.js';
 
 
 import SupplierCard from '../../components/forms/FormSupplierCard.jsx';
@@ -19,7 +19,7 @@ export default function ManageDocument() {
 
       <Box mt={4} />
 
-      <MainForm counterpartKey="supplier" API={FromSupplierApi} CounterpartCard={SupplierCard} TableModal={CreateItemModal} />
+      <MainForm counterpartKey="supplier" API={FromSupplierApiDocument} CounterpartCard={SupplierCard} TableModal={CreateItemModal} />
     </>
   );
 }

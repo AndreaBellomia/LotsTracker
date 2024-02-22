@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import TableComponent from "../components/Tables/TableComponent.jsx";
-import StorageArticleModal from "../components/Modals/StorageArticleModal.jsx";
+import MainTableList from "./components/MainTableList.jsx";
+import CreateArticleModal from "./components/CreateArticleModal.jsx";
 
 export default function Dashboard() {
     // Modal state
@@ -13,13 +13,13 @@ export default function Dashboard() {
 
     return (
         <>
-            <TableComponent
+            <MainTableList
                 addModalOpen={handleOpen}
                 addModalId={setAddModalStatusId}
                 key={addModalStatus}
             />
 
-            <StorageArticleModal
+            <CreateArticleModal
                 modalStatus={[addModalStatus, setAddModalStatus]}
                 fetchId={[addModalStatusId, setAddModalStatusId]}
             />

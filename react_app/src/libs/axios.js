@@ -14,57 +14,20 @@ class FetchApi {
     });
   }
 
-  static buildFilteredUrl(url, filters) {
+  buildFilteredUrl(url, filters) {
     const queryParams = Object.keys(filters)
       .map((key) => `${key}=${encodeURIComponent(filters[key])}`)
       .join('&');
     return [url, queryParams].join('&');
   }
+}
 
-  async getWarehouseRegistry(search = '', order_by = '') {
-    return await this.client.get(
-      FetchApi.buildFilteredUrl('warehouse/registry?format=json', {
-        search: search,
-        ordering: order_by,
-      })
-    );
-  }
+export default FetchApi;
 
-  async getWarehouseItemDetail(id) {
-    return await this.client.get(`warehouse/registry/detail/${id}?format=json`);
-  }
-
-  async getWarehouseItems(page = 1, search = '', order_by = '') {
-    return await this.client.get(
-      FetchApi.buildFilteredUrl(`warehouse/items?format=json&page=${page}`, {
-        search: search,
-        ordering: order_by,
-      })
-    );
-  }
-
-  async getWarehouseItemsAvailable(page = 1, search = '', order_by = '') {
-    return await this.client.get(
-      FetchApi.buildFilteredUrl(`warehouse/items/A?format=json&page=${page}`, {
-        search: search,
-        ordering: order_by,
-      })
-    );
-  }
-
-  async getWarehouseItemsToReturn(page = 1, search = '', order_by = '') {
-    return await this.client.get(
-      FetchApi.buildFilteredUrl(`warehouse/items/A,E?format=json&page=${page}`, {
-        search: search,
-        ordering: order_by,
-      })
-    );
-  }
-
-  // Customers API methods
+export class CustomerApi extends FetchApi {
   async getCustomersList(page = 1, search = '', order_by = '') {
     return await this.client.get(
-      FetchApi.buildFilteredUrl(`customers?format=json&page=${page}`, {
+      this.buildFilteredUrl(`customers?format=json&page=${page}`, {
         search: search,
         ordering: order_by,
       })
@@ -82,11 +45,12 @@ class FetchApi {
   async putCustomer(id, body) {
     return await this.client.put(`/customers/detail/${id}`, { ...body });
   }
+}
 
-  // Supplier API methods
+export class SupplierApi extends FetchApi {
   async getSuppliersList(page = 1, search = '', order_by = '') {
     return await this.client.get(
-      FetchApi.buildFilteredUrl(`suppliers?format=json&page=${page}`, {
+      this.buildFilteredUrl(`suppliers?format=json&page=${page}`, {
         search: search,
         ordering: order_by,
       })
@@ -106,21 +70,10 @@ class FetchApi {
   }
 }
 
-export default FetchApi;
-
 class DocumentApi extends FetchApi {
-  async getSuppliersList(page = 1, search = '', order_by = '') {
-    return await this.client.get(
-      FetchApi.buildFilteredUrl(`${this.SuppliersListUrl}?format=json&page=${page}`, {
-        search: search,
-        ordering: order_by,
-      })
-    );
-  }
-
   async getDocumentsList(page = 1, search = '', order_by = '') {
     return await this.client.get(
-      FetchApi.buildFilteredUrl(`${this.documentsListUrl}?format=json&page=${page}`, {
+      this.buildFilteredUrl(`${this.documentsListUrl}?format=json&page=${page}`, {
         search: search,
         ordering: order_by,
       })
@@ -140,7 +93,7 @@ class DocumentApi extends FetchApi {
   }
 }
 
-export class CustomerApi extends DocumentApi {
+export class CustomerApiDocument extends DocumentApi {
   constructor() {
     super();
     this.SuppliersListUrl = 'suppliers';
@@ -152,10 +105,9 @@ export class CustomerApi extends DocumentApi {
   }
 }
 
-export class FromSupplierApi extends DocumentApi {
+export class FromSupplierApiDocument extends DocumentApi {
   constructor() {
     super();
-    this.SuppliersListUrl = 'suppliers';
     this.documentsListUrl = 'suppliers/documents/from';
 
     this.formGetUrl = 'suppliers/documents/from/detail';
@@ -164,10 +116,9 @@ export class FromSupplierApi extends DocumentApi {
   }
 }
 
-export class ToSupplierApi extends DocumentApi {
+export class ToSupplierApiDocument extends DocumentApi {
   constructor() {
     super();
-    this.SuppliersListUrl = 'suppliers';
     this.documentsListUrl = 'suppliers/documents/to';
 
     this.formGetUrl = 'suppliers/documents/to/detail';
@@ -200,8 +151,46 @@ export class LottiApi extends FetchApi {
 }
 
 export class ItemsTypeApi extends FetchApi {
-  async getItemsList() {
-    return await this.client.get(`warehouse/registry`);
+  async getItemsList(search = '', order_by = '') {
+    return await this.client.get(
+      this.buildFilteredUrl('warehouse/registry?format=json', {
+        search: search,
+        ordering: order_by,
+      })
+    );
+  }
+
+  async getWarehouseItemDetail(id) {
+    return await this.client.get(`warehouse/registry/detail/${id}?format=json`);
+  }
+}
+
+export class ItemsApi extends FetchApi {
+  async getWarehouseItemsList(page = 1, search = '', order_by = '') {
+    return await this.client.get(
+      this.buildFilteredUrl(`warehouse/items?format=json&page=${page}`, {
+        search: search,
+        ordering: order_by,
+      })
+    );
+  }
+
+  async getWarehouseItemsAvailable(page = 1, search = '', order_by = '') {
+    return await this.client.get(
+      this.buildFilteredUrl(`warehouse/items/A?format=json&page=${page}`, {
+        search: search,
+        ordering: order_by,
+      })
+    );
+  }
+
+  async getWarehouseItemsToReturn(page = 1, search = '', order_by = '') {
+    return await this.client.get(
+      this.buildFilteredUrl(`warehouse/items/A,E?format=json&page=${page}`, {
+        search: search,
+        ordering: order_by,
+      })
+    );
   }
 }
 

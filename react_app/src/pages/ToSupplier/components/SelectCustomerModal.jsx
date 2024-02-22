@@ -28,7 +28,7 @@ export default function ArticlesListModal({ modalState: modaleState, tableChoice
 
     useEffect(() => {
         try {
-            new FetchApi().getCustomersList(pageSelected, search, " ").then((response) => {
+            new CustomerApi().getCustomersList(pageSelected, search, " ").then((response) => {
                 setTableData(response.data.results);
                 setPages(response.data.num_pages)
             });

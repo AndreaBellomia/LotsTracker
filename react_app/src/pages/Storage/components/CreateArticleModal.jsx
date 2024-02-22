@@ -12,9 +12,9 @@ import {
     Typography,
 } from "@mui/material";
 
-import FetchApi, { manageFetchError } from "../../libs/axios.js";
-import { manageHandlerInput } from "../../libs/forms.js";
-import ModalBox from "../../layout/components/ModalBox.jsx";
+import { manageFetchError, LottiApi } from "@/libs/axios.js";
+import { manageHandlerInput } from "@/libs/forms.js";
+import ModalBox from "@/layout/components/ModalBox.jsx";
 
 export default function StorageArticleModal({ modalStatus: modalStatus, fetchId: fetchId }) {
     /* State */
@@ -43,7 +43,7 @@ export default function StorageArticleModal({ modalStatus: modalStatus, fetchId:
     /* Fetch API */
     const GETapi = (id) => {
         try {
-            new FetchApi().getWarehouseRegistryDetail(id).then((res) => {
+            new LottiApi().getWarehouseRegistryDetail(id).then((res) => {
                 setFormValue({ ...res.data });
             });
         } catch (error) {
@@ -53,7 +53,7 @@ export default function StorageArticleModal({ modalStatus: modalStatus, fetchId:
 
     const POSTapi = () => {
         try {
-            new FetchApi()
+            new LottiApi()
                 .postWarehouseItems(formValue)
                 .then((_) => {
                     handleClose();
@@ -71,7 +71,7 @@ export default function StorageArticleModal({ modalStatus: modalStatus, fetchId:
 
     const PUTapi = () => {
         try {
-            new FetchApi()
+            new LottiApi()
                 .putWarehouseItems(id, formValue)
                 .then((_) => {
                     handleClose();

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Container } from "@mui/material";
 
-import FetchApi, { manageFetchError, LottiApi } from "../../libs/axios.js";
+import { manageFetchError, LottiApi } from "@/libs/axios.js";
 
 import ManageLottForm from "./components/ManageLott.jsx";
 import SelectArticleList from "./components/SelectArticleList.jsx";

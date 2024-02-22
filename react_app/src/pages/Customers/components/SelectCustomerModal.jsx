@@ -16,7 +16,7 @@ import {
 import ModalBox from "@/layout/components/ModalBox.jsx";
 import InputSearch from "@/components/InputSearch.jsx";
 
-import FetchApi from "@/libs/axios.js";
+import { CustomerApi } from "@/libs/axios.js";
 
 export default function ArticlesListModal({ modalState: modaleState, tableChoices: tableChoices }) {
     const [open, setOpen] = modaleState;
@@ -28,7 +28,7 @@ export default function ArticlesListModal({ modalState: modaleState, tableChoice
 
     useEffect(() => {
         try {
-            new FetchApi().getCustomersList(pageSelected, search, " ").then((response) => {
+            new CustomerApi().getCustomersList(pageSelected, search, " ").then((response) => {
                 setTableData(response.data.results);
                 setPages(response.data.num_pages)
             });

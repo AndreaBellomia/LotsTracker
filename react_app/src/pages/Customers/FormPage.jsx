@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Box, Typography } from '@mui/material';
 
-import { CustomerApi } from '@/libs/axios.js';
+import { CustomerApiDocument } from '@/libs/axios.js';
 
 import SelectItemModal from './components/SelectItem.jsx';
 import MainForm from '@/components/Document/MainForm.jsx';
@@ -18,7 +18,7 @@ export default function ManageDocument() {
 
       <MainForm
         counterpartKey="customer"
-        API={CustomerApi}
+        API={CustomerApiDocument}
         CounterpartCard={CustomerCard}
         TableModal={SelectItemModal}
       />

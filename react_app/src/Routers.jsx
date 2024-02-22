@@ -5,10 +5,11 @@ import AsideNavbar from "@/layout/components/AsideNavbar.jsx";
 
 import {
     Dashboard,
-    StorageList,
     CustomerList,
     SupplierList,
 } from "@/pages";
+
+import StorageList from "@/pages/Storage/TableListPage.jsx"
 
 import CustomerDocumentTableList from "@/pages/Customers/TableListPage.jsx";
 import CustomerDocumentFrom from "@/pages/Customers/FormPage.jsx";
@@ -37,6 +38,8 @@ export default function Router() {
                         
 
                         <Route path="magazzino" element={<StorageList />} />
+
+
                         <Route path="lotti" element={<Outlet />}>
                             <Route path="crea" element={<ManageLott />} />
                             <Route path="modifica/:id" element={<ManageLott />} />

@@ -5,8 +5,8 @@ import { Link, Paper, Grid, Button, Box, Stack, Chip, Pagination, IconButton } f
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 
-import FetchApi from "../../libs/axios";
-import InputSearch from "../InputSearch.jsx";
+import CustomerApi from "@/libs/axios";
+import InputSearch from "@/components/InputSearch.jsx";
 import Tables, { TableHeaderMixin, TableRowsMixin } from "../Tables.jsx";
 
 export default function TableComponent({ addModalOpen, addModalId }) {
@@ -21,7 +21,7 @@ export default function TableComponent({ addModalOpen, addModalId }) {
 
     useEffect(() => {
         try {
-            new FetchApi().getCustomersList(pageSelected, search, orderBy).then((response) => {
+            new CustomerApi().getCustomersList(pageSelected, search, orderBy).then((response) => {
                 setTableData(response.data.results);
                 setPages(response.data.num_pages);
             });

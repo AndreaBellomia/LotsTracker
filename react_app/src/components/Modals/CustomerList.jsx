@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import FetchApi, { manageFetchError } from "../../libs/axios.js";
+import CustomerApi, { manageFetchError } from "@/libs/axios.js";
 import {
     Button,
     IconButton,
@@ -11,11 +11,10 @@ import {
     Grid,
     Typography,
 } from "@mui/material";
-import ModalBox from "../../layout/components/ModalBox.jsx";
-import { manageHandlerInput } from "../../libs/forms.js";
+import ModalBox from "@/layout/components/ModalBox.jsx";
+import { manageHandlerInput } from "@/libs/forms.js";
 
 import CloseIcon from "@mui/icons-material/Close";
-import AddIcon from "@mui/icons-material/Add";
 
 export default function CustomerList({ modalStatus: modalStatus, fetchId: fetchId }) {
     /* State */
@@ -44,7 +43,7 @@ export default function CustomerList({ modalStatus: modalStatus, fetchId: fetchI
     /* Fetch API */
     const GETapi = (id) => {
         try {
-            new FetchApi().getCustomer(id).then((res) => {
+            new CustomerApi().getCustomer(id).then((res) => {
                 setFormValues({ ...res.data });
             });
         } catch (error) {
@@ -54,7 +53,7 @@ export default function CustomerList({ modalStatus: modalStatus, fetchId: fetchI
 
     const POSTapi = () => {
         try {
-            new FetchApi()
+            new CustomerApi()
                 .postCustomer(formValues)
                 .then((response) => {
                     setOpen(false);
@@ -73,7 +72,7 @@ export default function CustomerList({ modalStatus: modalStatus, fetchId: fetchI
 
     const PUTapi = () => {
         try {
-            new FetchApi()
+            new CustomerApi()
                 .putCustomer(id, formValues)
                 .then((_) => {
                     handleClose();

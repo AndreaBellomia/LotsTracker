@@ -11,10 +11,10 @@ import {
     Box,
     Button,
 } from "@mui/material";
-import ModalBox from "../../../layout/components/ModalBox.jsx";
-import InputSearch from "../../../components/InputSearch.jsx";
+import ModalBox from "@/layout/components/ModalBox.jsx";
+import InputSearch from "@/components/InputSearch.jsx";
 
-import FetchApi from "../../../libs/axios.js";
+import { ItemsTypeApi } from "@/libs/axios.js";
 
 export default function ArticlesListModal({ modalState: modaleState, tableChoices: tableChoices }) {
     const [open, setOpen] = modaleState;
@@ -25,11 +25,11 @@ export default function ArticlesListModal({ modalState: modaleState, tableChoice
 
     useEffect(() => {
         try {
-            new FetchApi().getWarehouseRegistry(search, orderBy).then((response) => {
+            new ItemsTypeApi().getItemsList(search, orderBy).then((response) => {
                 setTableData(response.data);
             });
         } catch (error) {
-            console.log("error");
+            console.error(error);
         }
     }, [orderBy, search]);
 
