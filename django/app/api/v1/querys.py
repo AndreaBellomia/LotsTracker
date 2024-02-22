@@ -133,7 +133,7 @@ class WarehouseItemsQuery:
         return base_queryset
 
     @staticmethod
-    def warehouse_items_available_list():
+    def warehouse_items_available_list(status):
         base_queryset = (
             WarehouseItems.objects.select_related(
                 "document_customer__customer",
@@ -141,7 +141,7 @@ class WarehouseItemsQuery:
                 "document_to_supplier__supplier",
                 "item_type",
             )
-            .filter(status=WarehouseItems.WarehouseItemsStatus.AVAILABLE)
+            .filter(status__in=status)
             .annotate(
                 customer_company_name=F("document_customer__customer__company_name"),
                 customer_company_code=F("document_customer__customer__external_code"),

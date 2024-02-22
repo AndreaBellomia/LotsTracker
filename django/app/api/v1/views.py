@@ -7,6 +7,7 @@ from rest_framework.generics import (
 )
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.exceptions import NotFound
 from django.db import transaction
 from django.db.models import Case, When, Value, CharField, Count, F
 from django.utils import timezone as tz
@@ -143,7 +144,7 @@ class WarehouseItemsApiView(ListCreateAPIView):
         return queryset
 
 
-class WarehouseItemsAvailableApiView(ListCreateAPIView):
+class WarehouseItemsStatusApiView(ListCreateAPIView):
     pagination_class = BasicPaginationController
     serializer_class = WarehouseItemsSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -162,7 +163,13 @@ class WarehouseItemsAvailableApiView(ListCreateAPIView):
     ordering_fields = ["empty_date", "batch_code", "item_type__internal_code"]
 
     def get_queryset(self):
-        queryset = WarehouseItemsQuery.warehouse_items_available_list()
+        status = self.kwargs["status"].split(",")
+        
+        for st in status:
+            if not st in WarehouseItems.WarehouseItemsStatus.values:
+                raise NotFound(f"invalid status value {st}, the valid status are: [{WarehouseItems.WarehouseItemsStatus.values}]")
+            
+        queryset = WarehouseItemsQuery.warehouse_items_available_list(status)
         return queryset
 
 

@@ -72,9 +72,9 @@ urlpatterns = [
         "warehouse/items", views.WarehouseItemsApiView.as_view(), name="warehouse-items"
     ),
     path(
-        "warehouse/items/available",
-        views.WarehouseItemsAvailableApiView.as_view(),
-        name="warehouse-items-available",
+        "warehouse/items/<str:status>",
+        views.WarehouseItemsStatusApiView.as_view(),
+        name="warehouse-items-status",
     ),
     path(
         "warehouse/items/detail/<int:pk>",
