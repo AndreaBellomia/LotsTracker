@@ -2,6 +2,7 @@ import logging
 from django.db import transaction, IntegrityError
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
+from django.db.models import Q
 
 from app.core.models import (
     CustomerRegistry,
@@ -334,9 +335,17 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
 
                 body_items_id.append(item_instance.id)
 
-            instance.warehouse_items.exclude(id__in=body_items_id).delete()
-            instance.refresh_from_db()
+            item_remove = instance.warehouse_items.exclude(id__in=body_items_id)
 
+            if item_remove.filter(
+                Q(document_to_supplier__isnull=False)
+                | Q(document_customer__isnull=False)
+            ).exists():
+                raise serializers.ValidationError(
+                    {"detail": "You cannot delete objects linked to other documents"}
+                )
+
+            item_remove.delete()
         return super().update(instance, validated_data)
 
     class Meta:
