@@ -3,10 +3,6 @@ from django.db import transaction, IntegrityError
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-
-from app.api.v1.mixins import (
-    DocumentSupplierSerializerMixin,
-)
 from app.core.models import (
     CustomerRegistry,
     DocumentCustomer,
@@ -19,6 +15,7 @@ from app.core.models import (
 from app.api.v1.utilities import save_document_bodies
 
 log = logging.getLogger(__name__)
+
 
 class WarehouseItemsRegistrySerializer(serializers.ModelSerializer):
     # detail_url = serializers.HyperlinkedIdentityField(
@@ -36,7 +33,7 @@ class WarehouseItemsRegistrySerializer(serializers.ModelSerializer):
 
 
 class WarehouseItemsDocumentSerializerMixin(serializers.ModelSerializer):
-    
+
     item_type = WarehouseItemsRegistrySerializer(read_only=True)
 
     def to_internal_value(self, data):
@@ -49,7 +46,7 @@ class WarehouseItemsDocumentSerializerMixin(serializers.ModelSerializer):
             validated_data["instance"] = None
 
         return validated_data
-    
+
     class Meta:
         model = WarehouseItems
         exclude = [
@@ -59,6 +56,12 @@ class WarehouseItemsDocumentSerializerMixin(serializers.ModelSerializer):
             "document_to_supplier",
             "document_customer",
         ]
+
+
+class DocumentSerializerBase(serializers.ModelSerializer):
+    status = serializers.StringRelatedField(source="document_status", read_only=True)
+    document_details = serializers.IntegerField(read_only=True)
+
 
 #####
 # Customer
@@ -80,10 +83,7 @@ class CustomerRegistrySerializer(serializers.ModelSerializer):
         ]
 
 
-class DocumentCustomerSerializer(serializers.ModelSerializer):
-    status = serializers.StringRelatedField(source="document_status", read_only=True)
-    document_details = serializers.IntegerField(read_only=True)
-
+class DocumentCustomerSerializer(DocumentSerializerBase):
     customer = serializers.StringRelatedField(
         source="customer.company_name", read_only=True
     )
@@ -94,19 +94,6 @@ class DocumentCustomerSerializer(serializers.ModelSerializer):
     detail_url = serializers.HyperlinkedIdentityField(
         view_name="customers-documents-detail", source="id"
     )
-
-    def create(self, validated_data):
-        try:
-            instance = super().create(validated_data)
-        except IntegrityError:
-            raise serializers.ValidationError(
-                {
-                    "detail": f'Document number "{validated_data["number"]}" duplicated for year {validated_data["date"]}'
-                }
-            )
-        except Exception as e:
-            raise serializers.ValidationError({"detail": "Error creating document."})
-        return instance
 
     class Meta:
         model = DocumentCustomer
@@ -166,7 +153,7 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
 
             if len(body_items) == 0:
                 raise serializers.ValidationError({"detail": "Body can't be empty"})
-            
+
             error_messages = save_document_bodies(body_items, instance)
             if len(error_messages) != 0:
                 raise serializers.ValidationError({"body": error_messages})
@@ -179,9 +166,9 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
         with transaction.atomic():
             instance.warehouse_items.all().update(
                 document_customer=None,
-                status=WarehouseItems.WarehouseItemsStatus.AVAILABLE
+                status=WarehouseItems.WarehouseItemsStatus.AVAILABLE,
             )
-            
+
             if (
                 self.Meta.model.objects.exclude(id=instance.id)
                 .filter(
@@ -199,7 +186,7 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
 
             if len(body_items) == 0:
                 raise serializers.ValidationError({"detail": "Body can't be empty"})
-            
+
             error_messages = save_document_bodies(body_items, instance)
             if len(error_messages) != 0:
                 raise serializers.ValidationError({"body": error_messages})
@@ -225,7 +212,14 @@ class SupplierRegistrySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class DocumentFromSupplierSerializer(DocumentSupplierSerializerMixin):
+class DocumentFromSupplierSerializer(DocumentSerializerBase):
+    supplier = serializers.StringRelatedField(
+        source="supplier.company_name", read_only=True
+    )
+    supplier_code = serializers.StringRelatedField(
+        source="supplier.external_code", read_only=True
+    )
+
     detail_url = serializers.HyperlinkedIdentityField(
         view_name="suppliers-documents-from-detail", source="id"
     )
@@ -235,7 +229,14 @@ class DocumentFromSupplierSerializer(DocumentSupplierSerializerMixin):
         exclude = ["created_at", "updated_at"]
 
 
-class DocumentToSupplierSerializer(DocumentSupplierSerializerMixin):
+class DocumentToSupplierSerializer(DocumentSerializerBase):
+    supplier = serializers.StringRelatedField(
+        source="supplier.company_name", read_only=True
+    )
+    supplier_code = serializers.StringRelatedField(
+        source="supplier.external_code", read_only=True
+    )
+
     detail_url = serializers.HyperlinkedIdentityField(
         view_name="suppliers-documents-to-detail", source="id"
     )
@@ -358,7 +359,7 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
 
             if error_messages:
                 raise serializers.ValidationError({"body": error_messages})
-            
+
         return super().update(instance, validated_data)
 
     class Meta:

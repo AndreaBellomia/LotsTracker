@@ -122,6 +122,18 @@ export class CustomerApi extends FetchApi {
   }
 }
 
+export class SupplierApi extends FetchApi {
+
+  async getDocumentsList(page = 1, search = '', order_by = '') {
+    return await this.client.get(
+      FetchApi.buildFilteredUrl(`suppliers/documents/from?format=json&page=${page}`, {
+        search: search,
+        ordering: order_by,
+      })
+    );
+  }
+}
+
 export class LottiApi extends FetchApi {
   async getWarehouseRegistryDetail(id) {
     return await this.client.get(`warehouse/registry/detail/${id}?format=json`);

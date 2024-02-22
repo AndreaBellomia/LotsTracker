@@ -217,8 +217,7 @@ class DocumentFromSupplierListApiView(ListAPIView):
         "supplier__company_name",
         "supplier__external_code",
         "date",
-        "number",
-        "document_status",
+        "number"
     ]
     ordering_fields = [
         "supplier__company_name",

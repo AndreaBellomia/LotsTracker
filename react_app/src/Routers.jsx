@@ -14,8 +14,11 @@ import CustomerDocumentTableList from "@/pages/Customers/TableListPage.jsx";
 import CustomerDocumentFrom from "@/pages/Customers/FormPage.jsx";
 
 
-import ManageLott from "@/pages/Lotti/FormPage.jsx";
 import StorageItemsList from "@/pages/Lotti/TableListPage.jsx";
+import ManageLott from "@/pages/Lotti/FormPage.jsx";
+
+import FromSupplierItemsList from "@/pages/FromSupplier/TableListPage.jsx";
+
 
 
 export default function Router() {
@@ -26,7 +29,7 @@ export default function Router() {
                     <Route path="/" element={<AsideNavbar />}>
                         <Route index element={<Dashboard />} />
                         <Route path="clienti" element={<CustomerList />} />
-                        <Route path="fornitori" element={<SupplierList />} />
+                        
 
                         <Route path="magazzino" element={<StorageList />} />
                         <Route path="lotti" element={<Outlet />}>
@@ -39,6 +42,12 @@ export default function Router() {
                             <Route path="crea" element={<CustomerDocumentFrom />} />
                             <Route path="modifica/:id" element={<CustomerDocumentFrom />} />
                             <Route index element={<CustomerDocumentTableList />} />
+                        </Route>
+                        
+                        <Route path="fornitori" element={<Outlet />}>
+                            <Route path="documenti/carico" element={<FromSupplierItemsList />} />
+
+                            <Route index element={<SupplierList />} />
                         </Route>
                     </Route>
                 </Routes>

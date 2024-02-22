@@ -1,11 +1,12 @@
 import React from "react";
 
-import DocumentCustomerTable from "./components/MainTableList.jsx";
+import DocumentSupplierTable from "./components/MainTableList.jsx";
 
 export default function Dashboard() {
+    
     return (
         <>
-            <DocumentCustomerTable/>
+            <DocumentSupplierTable/>
         </>
     );
 }
