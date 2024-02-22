@@ -24,29 +24,37 @@ class DocumentBaseSerializer(serializers.ModelSerializer):
     counterpart_code = serializers.SerializerMethodField()
 
     def get_counterpart(self, obj):
-        return getattr(obj, self.Meta.type).company_name
+        field = getattr(obj, self.Meta.type)
+        if field:
+            return field.company_name
+        return None
 
     def get_counterpart_code(self, obj):
-        return getattr(obj, self.Meta.type).external_code
+        field = getattr(obj, self.Meta.type)
+        if field:
+            return field.external_code
+        return None
 
     class Meta:
         exclude = ["created_at", "updated_at"]
 
 
 class DocumentCustomerSerializer(DocumentBaseSerializer):
+    status = serializers.ReadOnlyField(source="document_status")
+    
     class Meta(DocumentBaseSerializer.Meta):
         model = DocumentCustomer
         type = "customer"
 
 
 class DocumentFromSupplierSerializer(DocumentBaseSerializer):
-    class Meta:
+    class Meta(DocumentBaseSerializer.Meta):
         model = DocumentFromSupplier
         type = "supplier"
 
 
 class DocumentToSupplierSerializer(DocumentBaseSerializer):
-    class Meta:
+    class Meta(DocumentBaseSerializer.Meta):
         model = DocumentToSupplier
         type = "supplier"
 

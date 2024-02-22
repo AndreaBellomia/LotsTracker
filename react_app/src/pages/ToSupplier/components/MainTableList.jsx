@@ -47,7 +47,7 @@ export default function () {
     new TableHeaderMixin({ key: 'id', label: '', orderable: true }),
     new TableHeaderMixin({ key: 'number', label: 'Numero', align: 'right', orderable: true }),
     new TableHeaderMixin({
-      key: 'supplier',
+      key: 'counterpart',
       label: 'Fornitore',
       align: 'right',
       orderable: true,

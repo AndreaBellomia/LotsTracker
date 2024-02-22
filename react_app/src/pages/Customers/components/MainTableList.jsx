@@ -35,6 +35,7 @@ export default function () {
   useEffect(() => {
     try {
       new CustomerApiDocument().getDocumentsList(pageSelected, search, orderBy).then((response) => {
+        console.log(response.data)
         setTableData(response.data.results);
         setPages(response.data.num_pages);
       });
@@ -47,7 +48,7 @@ export default function () {
     new TableHeaderMixin({ key: 'id', label: '', orderable: true }),
     new TableHeaderMixin({ key: 'number', label: 'Numero', align: 'right', orderable: true }),
     new TableHeaderMixin({
-      key: 'customer',
+      key: 'counterpart',
       label: 'Cliente',
       align: 'right',
       orderable: true,
