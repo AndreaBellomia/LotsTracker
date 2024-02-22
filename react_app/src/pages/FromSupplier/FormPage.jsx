@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-import { FormControl, Grid, FormLabel, Button, Box, Typography } from '@mui/material';
-import { SupplierApi } from '@/libs/axios.js';
+import { Box, Typography } from '@mui/material';
+import { FromSupplierApi } from '@/libs/axios.js';
 
 
-import SupplierCard from './components/FormSupplierCard.jsx';
+import SupplierCard from '../../components/forms/FormSupplierCard.jsx';
 import CreateItemModal from './components/CreateItemModal.jsx';
 
 
@@ -15,7 +15,11 @@ export default function ManageDocument() {
 
   return (
     <>
-      <MainForm counterpartKey="supplier" API={SupplierApi} CounterpartCard={SupplierCard} TableModal={CreateItemModal} />
+      <Typography variant="h4">Carico magazzino</Typography>
+
+      <Box mt={4} />
+
+      <MainForm counterpartKey="supplier" API={FromSupplierApi} CounterpartCard={SupplierCard} TableModal={CreateItemModal} />
     </>
   );
 }

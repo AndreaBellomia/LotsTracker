@@ -5,22 +5,22 @@ import { Link, useNavigate } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 
-import { FromSupplierApi } from '@/libs/axios.js';
-import InputSearch from '@/components/InputSearch.jsx';
-import Tables, { TableHeaderMixin, TableRowsMixin } from '@/components/Tables.jsx';
+import { ToSupplierApi } from '../../../libs/axios.js';
+import InputSearch from '../../../components/InputSearch.jsx';
+import Tables, { TableHeaderMixin, TableRowsMixin } from '../../../components/Tables.jsx';
 
-// function renderStatus(status) {
-//   switch (status) {
-//     case 'Open':
-//       return <Chip label="Aperto" color="success" />;
-//     case 'Partial':
-//       return <Chip label="Parziale" color="warning"/>;
-//     case 'Closed':
-//       return <Chip label="Chiuso" color="info"/>;
-//     default:
-//       return <Chip label="Error" color="error"/>;
-//   }
-// }
+function renderStatus(status) {
+  switch (status) {
+    case 'Open':
+      return <Chip label="Aperto" color="success" />;
+    case 'Partial':
+      return <Chip label="Parziale" color="warning"/>;
+    case 'Closed':
+      return <Chip label="Chiuso" color="info"/>;
+    default:
+      return <Chip label="Error" color="error"/>;
+  }
+}
 
 export default function () {
   const navigate = useNavigate();
@@ -34,12 +34,12 @@ export default function () {
 
   useEffect(() => {
     try {
-      new FromSupplierApi().getDocumentsList(pageSelected, search, orderBy).then((response) => {
+      new ToSupplierApi().getDocumentsList(pageSelected, search, orderBy).then((response) => {
         setTableData(response.data.results);
         setPages(response.data.num_pages);
       });
     } catch (error) {
-      console.error(error);
+      console.log('error');
     }
   }, [pageSelected, orderBy, search]);
 
@@ -54,7 +54,7 @@ export default function () {
     }),
     new TableHeaderMixin({ key: 'date', label: 'Data', align: 'right', orderable: true }),
     new TableHeaderMixin({ key: 'year', label: 'Anno', align: 'right', orderable: true }),
-    // new TableHeaderMixin({ key: 'status', label: 'Stato', align: 'right', orderable: true }),
+    new TableHeaderMixin({ key: 'status', label: 'Stato', align: 'right', orderable: true }),
   ];
 
   const bodis = new TableRowsMixin(tableData, {
@@ -68,7 +68,7 @@ export default function () {
         <EditIcon />
       </IconButton>
     ),
-    // status: (value) => renderStatus(value),
+    status: (value) => renderStatus(value),
   });
 
   return (
@@ -80,7 +80,7 @@ export default function () {
         <Grid item xs={1} md={4} lg={4}></Grid>
         <Grid item xs={5} md={4} lg={4}>
           <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-            <Link to="/fornitori/documenti/carico/crea">
+            <Link to="crea">
               <Button variant="contained" size="medium" color="grey">
                 <AddIcon />
                 <Box mr={1} />

@@ -21,6 +21,10 @@ import FromSupplierItemsList from "@/pages/FromSupplier/TableListPage.jsx";
 import FromSupplierDocumentFrom from "@/pages/FromSupplier/FormPage.jsx";
 
 
+import ToSupplierItemsList from "@/pages/ToSupplier/TableListPage.jsx";
+import ToSupplierDocumentFrom from "@/pages/ToSupplier/FormPage.jsx";
+
+
 
 export default function Router() {
     return (
@@ -49,6 +53,10 @@ export default function Router() {
                             <Route path="documenti/carico" element={<FromSupplierItemsList />} />
                             <Route path="documenti/carico/crea" element={<FromSupplierDocumentFrom />} />
                             <Route path="documenti/carico/modifica/:id" element={<FromSupplierDocumentFrom />} />
+
+                            <Route path="documenti/scarico" element={<ToSupplierItemsList />} />
+                            <Route path="documenti/scarico/crea" element={<ToSupplierDocumentFrom />} />
+                            <Route path="documenti/scarico/modifica/:id" element={<ToSupplierDocumentFrom />} />
 
                             <Route index element={<SupplierList />} />
                         </Route>

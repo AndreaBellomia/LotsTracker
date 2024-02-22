@@ -340,6 +340,8 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
             if item_remove.filter(
                 Q(document_to_supplier__isnull=False)
                 | Q(document_customer__isnull=False)
+                | Q(empty_date__isnull=False)
+                | ~Q(empty_date="")
             ).exists():
                 raise serializers.ValidationError(
                     {"detail": "You cannot delete objects linked to other documents"}
