@@ -157,6 +157,11 @@ export default function AsideNavbar() {
             icon: <DocumentScanner/>,
         },
         {
+            url: "fornitori/documenti/scarico",
+            name: "Doc. di reso",
+            icon: <DocumentScanner/>,
+        },
+        {
             url: "clienti",
             name: "Clienti",
             icon: <Person/>,

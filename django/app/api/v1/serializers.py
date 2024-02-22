@@ -180,15 +180,15 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
             ):
                 raise serializers.ValidationError(
                     {
-                        "date": "Document already exist for this yar",
-                        "number": "Document already exist for this yar",
+                        "date": "Document already exist for this year",
+                        "number": "Document already exist for this year",
                     }
                 )
 
             if len(body_items) == 0:
                 raise serializers.ValidationError({"detail": "Body can't be empty"})
 
-            error_messages = save_document_bodies(body_items, instance)
+            error_messages = save_document_bodies(body_items, instance, "document_customer")
             if len(error_messages) != 0:
                 raise serializers.ValidationError({"body": error_messages})
         return super().update(instance, validated_data)
@@ -302,6 +302,17 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
         body_items = validated_data.pop("warehouse_items")
 
         with transaction.atomic():
+            
+            if self.Meta.model.objects.filter(
+                year=validated_data["date"].year, number=validated_data["number"]
+            ).exists():
+                raise serializers.ValidationError(
+                    {
+                        "date": "Document already exist for this year",
+                        "number": "Document already exist for this year",
+                    }
+                )
+            
             try:
                 instance = super().create(validated_data)
             except Exception as e:
@@ -309,6 +320,10 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     {"detail": "Error creating document."}
                 )
+                
+            
+            if len(body_items) == 0:
+                raise serializers.ValidationError({"detail": "Body can't be empty"})
 
             for item in body_items:
                 WarehouseItems.objects.create(
@@ -322,6 +337,25 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
     def update(self, instance: DocumentFromSupplier, validated_data):
         body_items = validated_data.pop("warehouse_items")
         with transaction.atomic():
+            
+            if (
+                self.Meta.model.objects.exclude(id=instance.id)
+                .filter(
+                    year=validated_data["date"].year,
+                    number=validated_data["number"],
+                )
+                .exists()
+            ):
+                raise serializers.ValidationError(
+                    {
+                        "date": "Document already exist for this year",
+                        "number": "Document already exist for this year",
+                    }
+                )
+
+            if len(body_items) == 0:
+                raise serializers.ValidationError({"detail": "Body can't be empty"})
+            
             body_items_id = []
             for item in body_items:
                 item_instance = item.get("instance")
@@ -356,7 +390,7 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
 
 
 class WarehouseItemsDocumentSupplierToSerializer(WarehouseItemsDocumentSerializerMixin):
-    class Meta:
+    class Meta(WarehouseItemsDocumentSerializerMixin.Meta):
         read_only_fields = [
             "item_type_description",
             "item_type_code",
@@ -373,89 +407,76 @@ class DocumentToSupplierDetailSerializer(serializers.ModelSerializer):
         many=True, source="warehouse_items"
     )
 
-    supplier = serializers.StringRelatedField(
-        source="supplier.company_name", read_only=True
-    )
-    supplier_id = serializers.PrimaryKeyRelatedField(
-        queryset=SupplierRegistry.objects.all(), source="supplier", write_only=True
-    )
+    supplier = SupplierRegistrySerializer(read_only=True)
 
+    supplier_id = serializers.PrimaryKeyRelatedField(
+        queryset=SupplierRegistry.objects.all(), source="supplier", write_only=False
+    )
+    
     def create(self, validated_data):
         body_items = validated_data.pop("warehouse_items")
-        error_messages = []
 
         with transaction.atomic():
-            try:
-                instance = super().create(validated_data)
-            except Exception as e:
+
+            if self.Meta.model.objects.filter(
+                year=validated_data["date"].year, number=validated_data["number"]
+            ).exists():
                 raise serializers.ValidationError(
-                    {"Detail": "Error creating document."}
+                    {
+                        "date": "Document already exist for this yar",
+                        "number": "Document already exist for this yar",
+                    }
                 )
 
-            for b_item in body_items:
-                item_instance: WarehouseItems = b_item.pop("instance")
+            try:
+                instance: self.Meta.model = super().create(validated_data)
+            except Exception as e:
+                log.exception(
+                    "Unexpected exception during save document instance: %s", e
+                )
 
-                if item_instance and item_instance.document_to_supplier != None:
-                    error_messages.append(
-                        {
-                            "id": item_instance.id,
-                            "message": "Item already related to another document customer",
-                        }
-                    )
+                raise serializers.ValidationError(
+                    {"detail": "Error creating document."}
+                )
 
-                elif item_instance:
-                    item_instance.document_to_supplier = instance
-                    item_instance.save()
-                else:
-                    error_messages.append(
-                        {
-                            "id": item_instance.id,
-                            "message": "Item id not found in database",
-                        }
-                    )
+            if len(body_items) == 0:
+                raise serializers.ValidationError({"detail": "Body can't be empty"})
 
-            if error_messages:
+            error_messages = save_document_bodies(body_items, instance, "document_to_supplier")
+            if len(error_messages) != 0:
                 raise serializers.ValidationError({"body": error_messages})
 
         return instance
 
-    def update(self, instance: DocumentFromSupplier, validated_data):
+    def update(self, instance: DocumentCustomer, validated_data):
         body_items = validated_data.pop("warehouse_items")
-        error_messages = []
 
         with transaction.atomic():
-            instance.warehouse_items.clear()
+            for item in instance.warehouse_items.all():
+                item.document_to_supplier=None
+                item.save()
 
-            for b_item in body_items:
-                item_instance: WarehouseItems = b_item.pop("instance")
+            if (
+                self.Meta.model.objects.exclude(id=instance.id)
+                .filter(
+                    year=validated_data["date"].year,
+                    number=validated_data["number"],
+                )
+                .exists()
+            ):
+                raise serializers.ValidationError(
+                    {
+                        "date": "Document already exist for this year",
+                        "number": "Document already exist for this year",
+                    }
+                )
 
-                if (
-                    item_instance
-                    and item_instance.document_to_supplier
-                    and item_instance.document_to_supplier.id != instance.id
-                ):
-                    error_messages.append(
-                        {
-                            "id": item_instance.id,
-                            "message": "Item already related to another document customer",
-                        }
-                    )
+            if len(body_items) == 0:
+                raise serializers.ValidationError({"detail": "Body can't be empty"})
 
-                elif item_instance:
-                    item_instance.document_to_supplier = instance
-                    item_instance.save()
-
-                else:
-                    error_messages.append(
-                        {
-                            "id": item_instance.id,
-                            "message": "Item id not found in database",
-                        }
-                    )
-
-            if error_messages:
+            error_messages = save_document_bodies(body_items, instance, "document_to_supplier")
+            if len(error_messages) != 0:
                 raise serializers.ValidationError({"body": error_messages})
-
         return super().update(instance, validated_data)
 
     class Meta:

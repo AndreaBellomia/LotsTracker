@@ -1,13 +1,13 @@
 from app.core.models import DocumentCustomer, DocumentToSupplier, WarehouseItems
 
 
-def save_document_bodies(bodies: list[WarehouseItems], document_instance: DocumentCustomer | DocumentToSupplier):
+def save_document_bodies(bodies: list[WarehouseItems], document_instance: DocumentCustomer | DocumentToSupplier, document_type):
     errors = []
     for item in bodies:
         instance: WarehouseItems = item.pop("instance")
         
-
-        if instance and instance.document_customer and instance.document_customer.id != document_instance.id:
+        related_document = getattr(instance, document_type)
+        if instance and related_document and related_document.id != document_instance.id:
             errors.append(
                 {
                     "id": instance.id,
@@ -16,7 +16,7 @@ def save_document_bodies(bodies: list[WarehouseItems], document_instance: Docume
             )
 
         elif instance:
-            instance.document_customer = document_instance
+            setattr(instance, document_type, document_instance)
             instance.empty_date = item.get("empty_date", None)
             instance.custom_status = item.get("custom_status", None)
             instance.save()

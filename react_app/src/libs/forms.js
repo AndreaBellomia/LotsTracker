@@ -41,7 +41,7 @@ export class ManageFormDocument {
   
     append(item) {
       const formBody = this.form.body;
-      if (formBody.some((existingItem) => "id" in Object.keys(formBody))) {
+      if (formBody.some((existingItem) => Object.keys(existingItem).includes("id"))) {
         if (!formBody.some((existingItem) => existingItem.id === item.id)) {
           this.setForm({ ...this.form, body: [...formBody, item] });
         }
@@ -78,10 +78,6 @@ export class ManageFormDocument {
         body: data
       }
       
-      
-      
-
-
     }
   }
   
