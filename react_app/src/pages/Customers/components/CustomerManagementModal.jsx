@@ -47,7 +47,7 @@ export default function CustomerList({ modalStatus: modalStatus, fetchId: fetchI
                 setFormValues({ ...res.data });
             });
         } catch (error) {
-            console.log("error");
+            console.error(error);
         }
     };
 
@@ -66,7 +66,7 @@ export default function CustomerList({ modalStatus: modalStatus, fetchId: fetchI
                     manageFetchError(error, formErrors, setFormErrors);
                 });
         } catch (error) {
-            console.log("error");
+            console.error(error);
         }
     };
 

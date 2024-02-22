@@ -35,12 +35,11 @@ export default function () {
   useEffect(() => {
     try {
       new CustomerApiDocument().getDocumentsList(pageSelected, search, orderBy).then((response) => {
-        console.log(response.data)
         setTableData(response.data.results);
         setPages(response.data.num_pages);
       });
     } catch (error) {
-      console.log('error');
+      console.error(error);
     }
   }, [pageSelected, orderBy, search]);
 

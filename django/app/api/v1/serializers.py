@@ -41,7 +41,7 @@ class DocumentBaseSerializer(serializers.ModelSerializer):
 
 class DocumentCustomerSerializer(DocumentBaseSerializer):
     status = serializers.ReadOnlyField(source="document_status")
-    
+
     class Meta(DocumentBaseSerializer.Meta):
         model = DocumentCustomer
         type = "customer"

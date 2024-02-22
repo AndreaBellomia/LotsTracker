@@ -26,7 +26,7 @@ export default function TableComponent({ addModalOpen, addModalId }) {
                 setPages(response.data.num_pages);
             });
         } catch (error) {
-            console.log("error");
+            console.error(error);
         }
     }, [pageSelected, orderBy, search]);
 

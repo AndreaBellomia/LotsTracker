@@ -35,7 +35,7 @@ export default function ArticlesListModal({ modalState: modaleState, tableChoice
             });
 
         } catch (error) {
-            console.log("error");
+            console.error(error);
         }
     }, [pageSelected, search]);
 

@@ -57,7 +57,6 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
   const GETapi = (id) => {
     try {
       new API().getDocument(id).then((res) => {
-        console.log(res)
         setFormCounterpart(res.data[counterpartKey]);
         setFormValues({
           [`${counterpartKey}_id`]: res.data[`${counterpartKey}_id`],
@@ -67,14 +66,13 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
         });
       });
     } catch (error) {
+      handlerSnackbar("Errore sconosciuto!", 'error')
       console.error(error);
     }
   };
 
   const POSTapi = () => {
     try {
-      console.log(formValues)
-      console.log(formManager.getSubmitForm(formValues))
       new API()
         .postDocument(formManager.getSubmitForm(formValues))
         .then((res) => {
@@ -85,7 +83,6 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
           if (!error.status === 400) {
             throw new Error('Error during request: ' + error);
           }
-          console.log(error);
 
           manageFetchError(error, formErrors, setFormErrors);
           if (error.response.data.detail) {
@@ -99,8 +96,6 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
 
   const PUTapi = () => {
     try {
-      console.log(formValues)
-      console.log(formManager.getSubmitForm(formValues))
       new API()
         .putDocument(id, formManager.getSubmitForm(formValues))
         .then((res) => {

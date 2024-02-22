@@ -110,7 +110,6 @@ export default function ManageLott() {
                         throw new Error("Error during request: " + error);
                     }
                     manageFetchError(error, formErrors, setFormErrors);
-                    console.log(error);
                 });
         } catch (error) {
             console.error(error);

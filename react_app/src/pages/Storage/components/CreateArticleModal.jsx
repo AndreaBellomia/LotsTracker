@@ -47,7 +47,7 @@ export default function StorageArticleModal({ modalStatus: modalStatus, fetchId:
                 setFormValue({ ...res.data });
             });
         } catch (error) {
-            console.log("error");
+            console.error(error);
         }
     };
 
