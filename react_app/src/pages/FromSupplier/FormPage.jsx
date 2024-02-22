@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material';
 import { FromSupplierApiDocument } from '@/libs/axios.js';
 
 
-import SupplierCard from '../../components/forms/FormSupplierCard.jsx';
+import SupplierCard from '@/components/forms/FormSupplierCard.jsx';
 import CreateItemModal from './components/CreateItemModal.jsx';
 
 

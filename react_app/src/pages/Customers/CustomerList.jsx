@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import SupplierTable from "../components/Tables/SupplierTable.jsx";
-import SupplierList from "../components/Modals/SupplierList.jsx";
+import CustomerTable from "./components/CustomerTable.jsx";
+import CustomerManagementModal from "./components/CustomerManagementModal.jsx";
 
 export default function Dashboard() {
     const [addModalStatusId, setAddModalStatusId] = useState(undefined);
@@ -13,12 +13,12 @@ export default function Dashboard() {
 
     return (
         <>
-            <SupplierTable
+            <CustomerTable
                 addModalOpen={handleOpen}
                 addModalId={setAddModalStatusId}
                 key={addModalStatus}
             />
-            <SupplierList
+            <CustomerManagementModal
                 modalStatus={[addModalStatus, setAddModalStatus]}
                 fetchId={[addModalStatusId, setAddModalStatusId]}
             />

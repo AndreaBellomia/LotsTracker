@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CustomerApi, { manageFetchError } from "@/libs/axios.js";
+import { manageFetchError, SupplierApi } from "@/libs/axios.js";
 import {
     Button,
     IconButton,
@@ -15,6 +15,7 @@ import ModalBox from "@/layout/components/ModalBox.jsx";
 import { manageHandlerInput } from "@/libs/forms.js";
 
 import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function CustomerList({ modalStatus: modalStatus, fetchId: fetchId }) {
     /* State */
@@ -43,7 +44,7 @@ export default function CustomerList({ modalStatus: modalStatus, fetchId: fetchI
     /* Fetch API */
     const GETapi = (id) => {
         try {
-            new CustomerApi().getCustomer(id).then((res) => {
+            new SupplierApi().getSupplier(id).then((res) => {
                 setFormValues({ ...res.data });
             });
         } catch (error) {
@@ -53,8 +54,8 @@ export default function CustomerList({ modalStatus: modalStatus, fetchId: fetchI
 
     const POSTapi = () => {
         try {
-            new CustomerApi()
-                .postCustomer(formValues)
+            new SupplierApi()
+                .postSupplier(formValues)
                 .then((response) => {
                     setOpen(false);
                 })
@@ -72,8 +73,8 @@ export default function CustomerList({ modalStatus: modalStatus, fetchId: fetchI
 
     const PUTapi = () => {
         try {
-            new CustomerApi()
-                .putCustomer(id, formValues)
+            new SupplierApi()
+                .putSupplier(id, formValues)
                 .then((_) => {
                     handleClose();
                 })

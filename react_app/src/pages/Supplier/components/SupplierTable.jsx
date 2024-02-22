@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Link, Paper, Grid, Button, Box, Stack, Chip, Pagination, IconButton } from "@mui/material";
+import { Paper, Grid, Button, Box, Pagination, IconButton } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 
-import SupplierApi from "@/libs/axios";
+import { SupplierApi } from "@/libs/axios";
 import InputSearch from "@/components/InputSearch.jsx";
-import Tables, { TableHeaderMixin, TableRowsMixin } from "../Tables.jsx";
+import Tables, { TableHeaderMixin, TableRowsMixin } from "@/components/Tables.jsx";
 
 export default function ({ addModalOpen, addModalId }) {
     const navigate = useNavigate();
@@ -26,7 +26,7 @@ export default function ({ addModalOpen, addModalId }) {
                 setPages(response.data.num_pages);
             });
         } catch (error) {
-            console.log("error");
+            console.error(error);
         }
     }, [pageSelected, orderBy, search]);
 

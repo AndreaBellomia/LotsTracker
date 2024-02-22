@@ -5,9 +5,9 @@ import { Link, Paper, Grid, Button, Box, Stack, Chip, Pagination, IconButton } f
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 
-import CustomerApi from "@/libs/axios";
+import { CustomerApi } from "@/libs/axios";
 import InputSearch from "@/components/InputSearch.jsx";
-import Tables, { TableHeaderMixin, TableRowsMixin } from "../Tables.jsx";
+import Tables, { TableHeaderMixin, TableRowsMixin } from "@/components/Tables.jsx";
 
 export default function TableComponent({ addModalOpen, addModalId }) {
     const navigate = useNavigate();

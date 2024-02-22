@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SelectSupplierModal from '../Modals/SelectSupplierModal.jsx';
+import SelectSupplierModal from '@/components/Modals/SelectSupplierModal.jsx';
 
 import { Edit } from '@mui/icons-material';
 import { Box, Typography, Paper, IconButton } from '@mui/material';

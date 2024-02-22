@@ -3,20 +3,15 @@ import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom
 
 import AsideNavbar from "@/layout/components/AsideNavbar.jsx";
 
-import {
-    Dashboard,
-    CustomerList,
-    SupplierList,
-} from "@/pages";
+import Dashboard from "@/pages/Dashboard/Dashboard.jsx";
 
 import StorageList from "@/pages/Storage/TableListPage.jsx"
 
+import CustomerTableList from "@/pages/Customers/CustomerList.jsx"
 import CustomerDocumentTableList from "@/pages/Customers/TableListPage.jsx";
 import CustomerDocumentFrom from "@/pages/Customers/FormPage.jsx";
 
-
-import StorageItemsList from "@/pages/Lotti/TableListPage.jsx";
-import ManageLott from "@/pages/Lotti/FormPage.jsx";
+import SupplierTableList from "@/pages/Supplier/SupplierTableList.jsx";
 
 import FromSupplierItemsList from "@/pages/FromSupplier/TableListPage.jsx";
 import FromSupplierDocumentFrom from "@/pages/FromSupplier/FormPage.jsx";
@@ -26,6 +21,9 @@ import ToSupplierItemsList from "@/pages/ToSupplier/TableListPage.jsx";
 import ToSupplierDocumentFrom from "@/pages/ToSupplier/FormPage.jsx";
 
 
+import StorageItemsList from "@/pages/Lotti/TableListPage.jsx";
+import ManageLott from "@/pages/Lotti/FormPage.jsx";
+
 
 export default function Router() {
     return (
@@ -34,7 +32,7 @@ export default function Router() {
                 <Routes>
                     <Route path="/" element={<AsideNavbar />}>
                         <Route index element={<Dashboard />} />
-                        <Route path="clienti" element={<CustomerList />} />
+                        <Route path="clienti" element={<CustomerTableList />} />
                         
 
                         <Route path="magazzino" element={<StorageList />} />
@@ -61,7 +59,7 @@ export default function Router() {
                             <Route path="documenti/scarico/crea" element={<ToSupplierDocumentFrom />} />
                             <Route path="documenti/scarico/modifica/:id" element={<ToSupplierDocumentFrom />} />
 
-                            <Route index element={<SupplierList />} />
+                            <Route index element={<SupplierTableList />} />
                         </Route>
                     </Route>
                 </Routes>

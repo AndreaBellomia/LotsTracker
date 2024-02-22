@@ -5,9 +5,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 
-import { CustomerApiDocument } from '../../../libs/axios.js';
-import InputSearch from '../../../components/InputSearch.jsx';
-import Tables, { TableHeaderMixin, TableRowsMixin } from '../../../components/Tables.jsx';
+import { CustomerApiDocument } from '@/libs/axios.js';
+import InputSearch from '@/components/InputSearch.jsx';
+import Tables, { TableHeaderMixin, TableRowsMixin } from '@/components/Tables.jsx';
 
 function renderStatus(status) {
   switch (status) {
