@@ -4,6 +4,21 @@ const BASE_URL = '/api/v1/';
 
 const VALID_URLS = [];
 
+export function manageFetchError(error, formError, setFormError) {
+  const newErrors = {};
+
+  if (error.response.data) {
+    Object.keys(error.response.data).forEach((key) => {
+      newErrors[key] = error.response.data[key];
+    });
+  }
+
+  setFormError({
+    ...formError,
+    ...newErrors,
+  });
+}
+
 class FetchApi {
   constructor() {
     this.client = axios.create({
@@ -192,19 +207,4 @@ export class ItemsApi extends FetchApi {
       })
     );
   }
-}
-
-export function manageFetchError(error, formError, setFormError) {
-  const newErrors = {};
-
-  if (error.response.data) {
-    Object.keys(error.response.data).forEach((key) => {
-      newErrors[key] = error.response.data[key];
-    });
-  }
-
-  setFormError({
-    ...formError,
-    ...newErrors,
-  });
 }
