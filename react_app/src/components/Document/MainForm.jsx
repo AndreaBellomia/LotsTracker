@@ -57,6 +57,7 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
   const GETapi = (id) => {
     try {
       new API().getDocument(id).then((res) => {
+        console.log(res)
         setFormCounterpart(res.data[counterpartKey]);
         setFormValues({
           [`${counterpartKey}_id`]: res.data[`${counterpartKey}_id`],
@@ -98,6 +99,8 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
 
   const PUTapi = () => {
     try {
+      console.log(formValues)
+      console.log(formManager.getSubmitForm(formValues))
       new API()
         .putDocument(id, formManager.getSubmitForm(formValues))
         .then((res) => {

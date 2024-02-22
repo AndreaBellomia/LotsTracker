@@ -62,17 +62,26 @@ export class ManageFormDocument {
       const formValues = this.form
       const formBody = this.form.body;
 
-      if (formBody.some((existingItem) => "id" in Object.keys(formBody))) {
-        return {
-          ...formValues,
-          body : formValues.body.map((item) => Object({ id: item.id }))
+      const data = formBody.map(element => {
+        if (Object.keys(element).includes("id")) {
+          
+          return {
+            id: element.id
+          }
+        } else {
+          return { item_type_id: element.item_type.id, batch_code: element.batch_code }
         }
-      } else {
-        return {
-          ...formValues,
-          body : formValues.body.map((item) => Object({ item_type_id: item.item_type.id, batch_code: item.batch_code }))
-        }
+      })
+
+      return {
+        ...formValues,
+        body: data
       }
+      
+      
+      
+
+
     }
   }
   
