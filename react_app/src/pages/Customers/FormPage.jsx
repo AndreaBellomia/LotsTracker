@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material';
 
 import { CustomerApi } from '@/libs/axios.js';
 
-import SelectItemModal from '@/components/Modals/SelectItem.jsx';
+import SelectItemModal from './components/SelectItem.jsx';
 import MainForm from '@/components/Document/MainForm.jsx';
 
 import CustomerCard from './components/FormCustomCard.jsx';

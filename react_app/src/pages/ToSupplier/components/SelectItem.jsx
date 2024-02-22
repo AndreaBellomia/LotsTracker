@@ -13,10 +13,10 @@ import {
     Pagination,
     
 } from "@mui/material";
-import ModalBox from "../../layout/components/ModalBox.jsx";
-import InputSearch from "../InputSearch.jsx";
+import ModalBox from "@/layout/components/ModalBox.jsx";
+import InputSearch from "@/components/InputSearch.jsx";
 
-import FetchApi from "../../libs/axios.js";
+import FetchApi from "@/libs/axios.js";
 
 export default function ArticlesListModal({ modalState: modaleState, tableChoices: tableChoices, type: type }) {
     const [open, setOpen] = modaleState;
@@ -28,12 +28,10 @@ export default function ArticlesListModal({ modalState: modaleState, tableChoice
 
     useEffect(() => {
         try {
-
             new FetchApi().getWarehouseItemsToReturn(pageSelected, search, " ").then((response) => {
                 setTableData(response.data.results);
                 setPages(response.data.num_pages)
             });
-
         } catch (error) {
             console.log("error");
         }
