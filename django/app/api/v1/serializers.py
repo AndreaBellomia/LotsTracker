@@ -1,5 +1,6 @@
 import logging
 from django.db import transaction, IntegrityError
+from django.core.exceptions import ImproperlyConfigured
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 from django.db.models import Q
@@ -18,11 +19,39 @@ from app.api.v1.utilities import save_document_bodies
 log = logging.getLogger(__name__)
 
 
-class WarehouseItemsRegistrySerializer(serializers.ModelSerializer):
-    # detail_url = serializers.HyperlinkedIdentityField(
-    #     view_name="warehouse-registry-detail", source="id"
-    # )
+class DocumentBaseSerializer(serializers.ModelSerializer):
+    counterpart = serializers.SerializerMethodField()
+    counterpart_code = serializers.SerializerMethodField()
 
+    def get_counterpart(self, obj):
+        return getattr(obj, self.Meta.type).company_name
+
+    def get_counterpart_code(self, obj):
+        return getattr(obj, self.Meta.type).external_code
+
+    class Meta:
+        exclude = ["created_at", "updated_at"]
+
+
+class DocumentCustomerSerializer(DocumentBaseSerializer):
+    class Meta(DocumentBaseSerializer.Meta):
+        model = DocumentCustomer
+        type = "customer"
+
+
+class DocumentFromSupplierSerializer(DocumentBaseSerializer):
+    class Meta:
+        model = DocumentFromSupplier
+        type = "supplier"
+
+
+class DocumentToSupplierSerializer(DocumentBaseSerializer):
+    class Meta:
+        model = DocumentToSupplier
+        type = "supplier"
+
+
+class WarehouseItemsRegistrySerializer(serializers.ModelSerializer):
     available_count = serializers.ReadOnlyField()
 
     class Meta:
@@ -33,16 +62,16 @@ class WarehouseItemsRegistrySerializer(serializers.ModelSerializer):
         ]
 
 
-class WarehouseItemsDocumentSerializerMixin(serializers.ModelSerializer):
+class DocumentItemBaseSerializer(serializers.ModelSerializer):
 
     item_type = WarehouseItemsRegistrySerializer(read_only=True)
 
     def to_internal_value(self, data):
         validated_data = super().to_internal_value(data)
-        id = data.get("id", None)
-
         try:
-            validated_data["instance"] = WarehouseItems.objects.filter(pk=id).first()
+            validated_data["instance"] = WarehouseItems.objects.filter(
+                pk=data.get("id", None)
+            ).first()
         except:
             validated_data["instance"] = None
 
@@ -64,14 +93,7 @@ class DocumentSerializerBase(serializers.ModelSerializer):
     document_details = serializers.IntegerField(read_only=True)
 
 
-#####
-# Customer
-#####
 class CustomerRegistrySerializer(serializers.ModelSerializer):
-    detail_url = serializers.HyperlinkedIdentityField(
-        view_name="customer-detail", source="id"
-    )
-
     class Meta:
         model = CustomerRegistry
         fields = "__all__"
@@ -84,39 +106,27 @@ class CustomerRegistrySerializer(serializers.ModelSerializer):
         ]
 
 
-class DocumentCustomerSerializer(DocumentSerializerBase):
-    customer = serializers.StringRelatedField(
-        source="customer.company_name", read_only=True
-    )
-    customer_code = serializers.StringRelatedField(
-        source="customer.external_code", read_only=True
-    )
-
-    detail_url = serializers.HyperlinkedIdentityField(
-        view_name="customers-documents-detail", source="id"
-    )
-
+class SupplierRegistrySerializer(serializers.ModelSerializer):
     class Meta:
-        model = DocumentCustomer
-        exclude = ["created_at", "updated_at"]
+        model = SupplierRegistry
+        fields = "__all__"
+
+
+class WarehouseItemsDocumentCustomerSerializer(DocumentItemBaseSerializer):
+    class Meta(DocumentItemBaseSerializer.Meta):
+        read_only_fields = [
+            "item_type_description",
+            "item_type_code",
+            "status",
+            "batch_code",
+            "item_type",
+        ]
+        extra_kwargs = {
+            "custom_status": {"write_only": True},
+        }
 
 
 class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
-
-    class WarehouseItemsDocumentCustomerSerializer(
-        WarehouseItemsDocumentSerializerMixin
-    ):
-        class Meta(WarehouseItemsDocumentSerializerMixin.Meta):
-            read_only_fields = [
-                "item_type_description",
-                "item_type_code",
-                "status",
-                "batch_code",
-                "item_type",
-            ]
-            extra_kwargs = {
-                "custom_status": {"write_only": True},
-            }
 
     status = serializers.StringRelatedField(source="document_status", read_only=True)
     body = WarehouseItemsDocumentCustomerSerializer(many=True, source="warehouse_items")
@@ -188,7 +198,9 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
             if len(body_items) == 0:
                 raise serializers.ValidationError({"detail": "Body can't be empty"})
 
-            error_messages = save_document_bodies(body_items, instance, "document_customer")
+            error_messages = save_document_bodies(
+                body_items, instance, "document_customer"
+            )
             if len(error_messages) != 0:
                 raise serializers.ValidationError({"body": error_messages})
         return super().update(instance, validated_data)
@@ -198,58 +210,7 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
         exclude = ["created_at", "updated_at"]
 
 
-####
-# Supplier
-####
-
-
-class SupplierRegistrySerializer(serializers.ModelSerializer):
-    detail_url = serializers.HyperlinkedIdentityField(
-        view_name="suppliers-detail", source="id"
-    )
-
-    class Meta:
-        model = SupplierRegistry
-        fields = "__all__"
-
-
-class DocumentFromSupplierSerializer(DocumentSerializerBase):
-    supplier = serializers.StringRelatedField(
-        source="supplier.company_name", read_only=True
-    )
-    supplier_code = serializers.StringRelatedField(
-        source="supplier.external_code", read_only=True
-    )
-
-    detail_url = serializers.HyperlinkedIdentityField(
-        view_name="suppliers-documents-from-detail", source="id"
-    )
-
-    class Meta:
-        model = DocumentFromSupplier
-        exclude = ["created_at", "updated_at"]
-
-
-class DocumentToSupplierSerializer(DocumentSerializerBase):
-    supplier = serializers.StringRelatedField(
-        source="supplier.company_name", read_only=True
-    )
-    supplier_code = serializers.StringRelatedField(
-        source="supplier.external_code", read_only=True
-    )
-
-    detail_url = serializers.HyperlinkedIdentityField(
-        view_name="suppliers-documents-to-detail", source="id"
-    )
-
-    class Meta:
-        model = DocumentToSupplier
-        exclude = ["created_at", "updated_at"]
-
-
-class WarehouseItemsDocumentSupplierFromSerializer(
-    WarehouseItemsDocumentSerializerMixin
-):
+class WarehouseItemsDocumentSupplierFromSerializer(DocumentItemBaseSerializer):
 
     item_type_id = serializers.PrimaryKeyRelatedField(
         queryset=WarehouseItemsRegistry.objects.all(),
@@ -274,7 +235,7 @@ class WarehouseItemsDocumentSupplierFromSerializer(
 
         return super().validate(attrs)
 
-    class Meta(WarehouseItemsDocumentSerializerMixin.Meta):
+    class Meta(DocumentItemBaseSerializer.Meta):
         read_only_fields = [
             "item_type_description",
             "item_type_code",
@@ -302,7 +263,7 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
         body_items = validated_data.pop("warehouse_items")
 
         with transaction.atomic():
-            
+
             if self.Meta.model.objects.filter(
                 year=validated_data["date"].year, number=validated_data["number"]
             ).exists():
@@ -312,7 +273,7 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
                         "number": "Document already exist for this year",
                     }
                 )
-            
+
             try:
                 instance = super().create(validated_data)
             except Exception as e:
@@ -320,8 +281,7 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     {"detail": "Error creating document."}
                 )
-                
-            
+
             if len(body_items) == 0:
                 raise serializers.ValidationError({"detail": "Body can't be empty"})
 
@@ -337,7 +297,7 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
     def update(self, instance: DocumentFromSupplier, validated_data):
         body_items = validated_data.pop("warehouse_items")
         with transaction.atomic():
-            
+
             if (
                 self.Meta.model.objects.exclude(id=instance.id)
                 .filter(
@@ -355,7 +315,7 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
 
             if len(body_items) == 0:
                 raise serializers.ValidationError({"detail": "Body can't be empty"})
-            
+
             body_items_id = []
             for item in body_items:
                 item_instance = item.get("instance")
@@ -389,8 +349,8 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
         exclude = ["created_at", "updated_at"]
 
 
-class WarehouseItemsDocumentSupplierToSerializer(WarehouseItemsDocumentSerializerMixin):
-    class Meta(WarehouseItemsDocumentSerializerMixin.Meta):
+class WarehouseItemsDocumentSupplierToSerializer(DocumentItemBaseSerializer):
+    class Meta(DocumentItemBaseSerializer.Meta):
         read_only_fields = [
             "item_type_description",
             "item_type_code",
@@ -412,7 +372,7 @@ class DocumentToSupplierDetailSerializer(serializers.ModelSerializer):
     supplier_id = serializers.PrimaryKeyRelatedField(
         queryset=SupplierRegistry.objects.all(), source="supplier", write_only=False
     )
-    
+
     def create(self, validated_data):
         body_items = validated_data.pop("warehouse_items")
 
@@ -442,7 +402,9 @@ class DocumentToSupplierDetailSerializer(serializers.ModelSerializer):
             if len(body_items) == 0:
                 raise serializers.ValidationError({"detail": "Body can't be empty"})
 
-            error_messages = save_document_bodies(body_items, instance, "document_to_supplier")
+            error_messages = save_document_bodies(
+                body_items, instance, "document_to_supplier"
+            )
             if len(error_messages) != 0:
                 raise serializers.ValidationError({"body": error_messages})
 
@@ -453,7 +415,7 @@ class DocumentToSupplierDetailSerializer(serializers.ModelSerializer):
 
         with transaction.atomic():
             for item in instance.warehouse_items.all():
-                item.document_to_supplier=None
+                item.document_to_supplier = None
                 item.save()
 
             if (
@@ -474,7 +436,9 @@ class DocumentToSupplierDetailSerializer(serializers.ModelSerializer):
             if len(body_items) == 0:
                 raise serializers.ValidationError({"detail": "Body can't be empty"})
 
-            error_messages = save_document_bodies(body_items, instance, "document_to_supplier")
+            error_messages = save_document_bodies(
+                body_items, instance, "document_to_supplier"
+            )
             if len(error_messages) != 0:
                 raise serializers.ValidationError({"body": error_messages})
         return super().update(instance, validated_data)
@@ -482,11 +446,6 @@ class DocumentToSupplierDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentToSupplier
         exclude = ["created_at", "updated_at"]
-
-
-####
-# Warehouse
-####
 
 
 class WarehouseItemsCustomerEntrySerializer(serializers.Serializer):
@@ -537,9 +496,6 @@ class WarehouseItemsSerializer(serializers.ModelSerializer):
     empty_date = serializers.DateField(required=False, allow_null=True)
 
     id = serializers.IntegerField(read_only=True)
-    # detail_url = serializers.HyperlinkedIdentityField(
-    #     view_name="warehouse-items-detail", source="id"
-    # )
 
     class Meta:
         model = WarehouseItems

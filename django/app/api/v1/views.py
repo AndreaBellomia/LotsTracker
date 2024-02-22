@@ -110,7 +110,6 @@ class DocumentCustomerListApiView(ListAPIView):
         queryset = DocumentCustomerQuery.document_customer_list()
         return queryset
 
-
 class DocumentCustomerDetailApiView(RetrieveUpdateAPIView):
     serializer_class = DocumentCustomerDetailSerializer
     lookup_field = "pk"
