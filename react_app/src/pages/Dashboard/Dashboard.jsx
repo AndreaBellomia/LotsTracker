@@ -4,8 +4,11 @@ import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
+
+import { snack } from "@/components/Snackbar.jsx"
 
 function Copyright(props) {
     return (
@@ -33,7 +36,13 @@ export default function Dashboard() {
                             flexDirection: "column",
                             height: 240,
                         }}
-                    ></Paper>
+                    >
+
+                        <Button onClick={() => {snack.error("foo")}} >Test</Button>
+                        <Button onClick={() => {snack.info("foo")}} >Test</Button>
+                        <Button onClick={() => {snack.regular("foo")}} >Test</Button>
+                        <Button onClick={() => {snack.warning("foo")}} >Test</Button>
+                    </Paper>
                 </Grid>
                 {/* Recent Deposits */}
                 <Grid item xs={12} md={4} lg={3}>
