@@ -107,7 +107,7 @@ urlpatterns = [
         name="customers-warehouse-list",
     ),
     path(
-        "warehouse/items/return/",
+        "warehouse/return/items",
         views.WarehouseItemsReturnApiView.as_view(),
         name="customers-warehouse-return",
     )

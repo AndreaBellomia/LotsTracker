@@ -98,14 +98,24 @@ export default function TablesMixin({ orderBy: orderByProp = null, headers: head
   }
 
   function renderTableBody(body, index) {
+
+    const getAccessoValue = (key, body, accessor) => {
+      const subAccess =  accessor.split("__")
+
+      if (subAccess.length > 1) {
+        const getValue = (obj, keyList) => keyList.reduce((a, k) => (a && a[k] !== 'undefined') ? a[k] : undefined, obj);
+        return renderFunctions[key] ? renderFunctions[key](getValue(body, subAccess), body) : body[accessor];
+      }
+      return renderFunctions[key] ? renderFunctions[key](body[accessor], body) : body[accessor];
+    }
+
     return (
       <TableRow key={index}>
         {headers.map((header, rowIndex) => {
           const { key, accessor, align } = header;
-          const content = renderFunctions[key] ? renderFunctions[key](body[accessor], body) : body[accessor];
           return (
             <TableCell component="th" scope="row" key={key} align={align}>
-              {content}
+              {getAccessoValue(key, body, accessor)}
             </TableCell>
           );
         })}

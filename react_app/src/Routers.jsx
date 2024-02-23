@@ -20,6 +20,7 @@ import ToSupplierItemsList from '@/pages/ToSupplier/TableListPage.jsx';
 import ToSupplierDocumentFrom from '@/pages/ToSupplier/FormPage.jsx';
 
 import StorageItemsList from '@/pages/Lotti/TableListPage.jsx';
+import ReturnItemsList from '@/pages/Lotti/TableReturnPage.jsx';
 import ManageLott from '@/pages/Lotti/FormPage.jsx';
 
 export default function Router() {
@@ -35,6 +36,7 @@ export default function Router() {
 
             <Route path="lotti" element={<Outlet />}>
               <Route path="crea" element={<ManageLott />} />
+              <Route path="riconsegna" element={<ReturnItemsList />} />
               <Route path="modifica/:id" element={<ManageLott />} />
               <Route index element={<StorageItemsList />} />
             </Route>

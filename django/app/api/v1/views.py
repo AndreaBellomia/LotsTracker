@@ -384,7 +384,7 @@ class WarehouseItemsReturnApiView(ListAPIView):
         "item_type__internal_code",
     ]
     
-    ordering_fields = ["document_customer__customer__company_name", "document_customer__customer__external_code", "batch_code", "days_left"]
+    ordering_fields = ["document_customer__customer__company_name", "document_customer__customer__external_code", "batch_code", "days_left", "document_customer__date"]
     
     def get_queryset(self):
         queryset = WarehouseItemsQuery.warehouse_items_return()

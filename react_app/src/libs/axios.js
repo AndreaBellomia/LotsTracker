@@ -207,4 +207,14 @@ export class ItemsApi extends FetchApi {
       })
     );
   }
+
+  async getItemsReturnLists(page = 1, search = '', order_by = '') {
+    return await this.client.get(
+      this.buildFilteredUrl(`warehouse/return/items?format=json&page=${page}`, {
+        search: search,
+        ordering: order_by,
+      })
+    );
+  }
+
 }
