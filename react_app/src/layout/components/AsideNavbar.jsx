@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, NavLink, Link } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 import { styled } from '@mui/material/styles';
 import {
@@ -15,21 +15,28 @@ import {
   ListItemText,
   CssBaseline,
   Container,
+  Link
 } from '@mui/material';
+
+
 import Box from '@mui/material/Box';
 
 import {
   ChevronRight,
-  QrCodeScanner,
   Person,
-  Inventory,
-  DocumentScanner,
-  Engineering,
-  Category,
+  Settings,
+  FolderRounded,
+  WidgetsRounded,
+  QrCodeScannerRounded,
+  FactoryRounded,
+  JoinFullRounded,
+  LocalShippingRounded,
+  FileUploadRounded
 } from '@mui/icons-material';
 
+
 const drawerWidth = 240;
-const drawerClosedWidth = 60;
+const drawerClosedWidth = 70;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -52,36 +59,16 @@ const closedMixin = (theme) => ({
   // },
 });
 
-const DrawerHeader = styled('div')(({ theme }) => ({
+const DrawerHeader = styled('div')(({ theme, open }) => ({
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'flex-end',
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
+  justifyContent: 'center',
 
-const CustomAppBar = styled(AppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  marginLeft: drawerClosedWidth,
-  width: `calc(100% - ${drawerClosedWidth}px)`,
-  zIndex: theme.zIndex.drawer + 1,
-  backgroundColor: 'transparent',
-  boxShadow: 'none',
-  color: 'black',
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
   ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
+    justifyContent: 'end'
   }),
+  // necessary for content to be below app bar
+  // ...theme.mixins.toolbar,
 }));
 
 const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
@@ -89,6 +76,7 @@ const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'ope
   flexShrink: 0,
   whiteSpace: 'nowrap',
   boxSizing: 'border-box',
+  border: 0,
   ...(open && {
     ...openedMixin(theme),
     '& .MuiDrawer-paper': openedMixin(theme),
@@ -97,6 +85,8 @@ const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'ope
     ...closedMixin(theme),
     '& .MuiDrawer-paper': closedMixin(theme),
   }),
+
+
 }));
 
 const CustomChevronIcon = styled(ChevronRight, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
@@ -116,6 +106,8 @@ const CustomListItem = styled(ListItem, { shouldForwardProp: (prop) => prop !== 
   display: 'block',
   borderRadius: '.5rem',
   marginBottom: 5,
+  color: theme.palette.text.secondary,
+  textDecoration: "none",
 
   ...(active && {
     backgroundColor: 'rgba(255, 255, 255, 0.04)',
@@ -131,77 +123,109 @@ export default function AsideNavbar() {
 
   const listItems = [
     {
-      url: 'lotti',
+      url: '/lotti',
       name: 'Lotti',
-      icon: <QrCodeScanner />,
+      icon: <QrCodeScannerRounded />,
     },
     {
-      url: 'magazzino',
+      url: '/lotti/riconsegna',
+      name: 'Rientro lotti',
+      icon: <JoinFullRounded />,
+    },
+    {
+      url: '/magazzino',
       name: 'Magazzino',
-      icon: <Category />,
+      icon: <WidgetsRounded />,
     },
     {
-      url: 'documenti',
-      name: 'Doc. di consegna',
-      icon: <DocumentScanner />,
+      url: '/documenti',
+      name: 'Doc. di vendita',
+      icon: <FolderRounded />,
     },
     {
-      url: 'fornitori/documenti/carico',
-      name: 'Doc. di carico',
-      icon: <DocumentScanner />,
+      url: '/fornitori/documenti/carico',
+      name: 'Carico di magazzino',
+      icon: <LocalShippingRounded />,
     },
     {
-      url: 'fornitori/documenti/scarico',
+      url: '/fornitori/documenti/scarico',
       name: 'Doc. di reso',
-      icon: <DocumentScanner />,
+      icon: <FileUploadRounded />,
     },
     {
-      url: 'clienti',
+      url: '/clienti',
       name: 'Clienti',
       icon: <Person />,
     },
     {
-      url: 'fornitori',
+      url: '/fornitori',
       name: 'Fornitori',
-      icon: <Engineering />,
+      icon: <FactoryRounded />,
     },
+
   ];
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <CustomDrawer variant="permanent" open={open}>
-        <DrawerHeader>
+      <CustomDrawer variant="permanent" open={open} PaperProps={{ sx : { borderRadius: 0, backgroundColor: " white", border: 0 } }}>
+        <DrawerHeader open={open} >
           <IconButton onClick={handleDrawerToggle}>
             <CustomChevronIcon open={open} />
           </IconButton>
         </DrawerHeader>
         <List>
           {listItems.map((element, index) => (
-            <Link to={element.url} key={index}>
-              <CustomListItem disablePadding sx={{ color: 'white' }}>
+            <Link href={element.url} key={index} sx={{ textDecoration: "none", marginBottom: 5}}>
+              <CustomListItem disablePadding>
                 <ListItemButton
                   sx={{
                     justifyContent: open ? 'initial' : 'center',
                     px: 2,
-                    py: 0.5,
+                    py: 1,
+                    borderRadius: '5px'
                   }}
                 >
                   <ListItemIcon
                     sx={{
                       minWidth: 0,
                       mr: open ? 2 : 'auto',
-                      justifyContent: 'center',
-                      color: 'white',
+                      justifyContent: 'center'
                     }}
                   >
                     <>{element.icon}</>
                   </ListItemIcon>
-                  <ListItemText primary={element.name} sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText primary={element.name} sx={{ opacity: open ? 1 : 0 }} primaryTypographyProps={{ variant: "button" }} />
                 </ListItemButton>
               </CustomListItem>
             </Link>
           ))}
+        </List>
+
+        <List sx={{ bottom: 0, marginTop: "auto" }}>
+          <Link href="/admin" sx={{ textDecoration: "none", marginBottom: 5}}>
+              <CustomListItem disablePadding>
+                <ListItemButton
+                  sx={{
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2,
+                    py: 1,
+                    borderRadius: '5px'
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 2 : 'auto',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <Settings />
+                  </ListItemIcon>
+                  <ListItemText primary="Admin" sx={{ opacity: open ? 1 : 0 }} primaryTypographyProps={{ variant: "button" }} />
+                </ListItemButton>
+              </CustomListItem>
+            </Link>
         </List>
       </CustomDrawer>
       <Box id="main-content" component="div" sx={{ p: 3, mt: 5, width: { sm: `100%` } }}>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { snack } from '@/components/Snackbar.jsx';
 
-import { Paper, Grid, Button, Box, Stack, Chip, Pagination, IconButton } from '@mui/material';
+import { Paper, Grid, Button, Box, Stack, Chip, Pagination, IconButton, Typography } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -76,39 +76,41 @@ export default function () {
 
   return (
     <>
-      <Grid container spacing={3}>
-        <Grid item xs={6} md={4} lg={4}>
-          <InputSearch setterValue={setSearch} />
-        </Grid>
-        <Grid item xs={1} md={4} lg={4}></Grid>
-        <Grid item xs={5} md={4} lg={4}>
-          <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-            <Link to="crea">
-              <Button variant="contained" size="medium" color="grey">
-                <AddIcon />
-                <Box mr={1} />
-                Aggiungi
-              </Button>
-            </Link>
-          </Box>
-        </Grid>
-        <Grid item xs={12}>
-          <Paper elevation={5}>
-            <Tables headers={headers} bodis={bodis} orderBy={[orderBy, setOrderBy]}></Tables>
-          </Paper>
-        </Grid>
-        <Grid item xs={12}>
-          <Box mt="2" />
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3, alignItems: "center" }}>
+        <Typography variant="h4" color="initial">Documenti di reso a fornitore</Typography>
+        <Link to="crea">
+          <Button variant="contained" size="medium" color="grey">
+            <AddIcon />
+            <Box mr={1} />
+            Aggiungi
+          </Button>
+        </Link>
+      </Box>
 
-          <Pagination
-            count={Number(pages)}
-            color="primary"
-            onChange={(e, page) => {
-              setPageSelected(page);
-            }}
-          />
+      <Paper elevation={5}>
+        <Grid container>
+          <Grid item xs={6} md={4} lg={4}>
+            <Box sx={{ p: 2 }}>
+              <InputSearch setterValue={setSearch} />
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <Tables headers={headers} bodis={bodis} orderBy={[orderBy, setOrderBy]}></Tables>
+          </Grid>
+          <Grid item xs={12}>
+            <Box sx={{ p: '1rem', display: 'flex', justifyContent: 'end' }}>
+              <Pagination
+                count={Number(pages)}
+                color="grey"
+                shape="rounded"
+                onChange={(e, page) => {
+                  setPageSelected(page);
+                }}
+              />
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
+      </Paper>
     </>
   );
 }
