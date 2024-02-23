@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { snack } from "@/components/Snackbar.jsx"
-
+import { snack } from '@/components/Snackbar.jsx';
 
 import { Edit } from '@mui/icons-material';
 import { Box, Typography, Paper, IconButton } from '@mui/material';

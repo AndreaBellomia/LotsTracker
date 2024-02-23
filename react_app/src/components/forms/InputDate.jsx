@@ -2,8 +2,6 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { DatePicker } from '@/layout/components';
 
-
-
 export default function ({ value, error, handler }) {
   return (
     <>
@@ -16,5 +14,5 @@ export default function ({ value, error, handler }) {
         value={value ? dayjs(value) : null}
       />
     </>
-  )
+  );
 }

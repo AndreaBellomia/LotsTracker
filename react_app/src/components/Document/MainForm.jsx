@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { snack } from "@/components/Snackbar.jsx"
+import { snack } from '@/components/Snackbar.jsx';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Done } from '@mui/icons-material';
@@ -19,7 +19,7 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
   const [formErrors, setFormErrors] = useState({});
   const [formValues, setFormValues] = useState({
     body: [],
-    [`${counterpartKey}_id`] : undefined,
+    [`${counterpartKey}_id`]: undefined,
     date: undefined,
     number: undefined,
   });
@@ -60,7 +60,7 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
         });
       });
     } catch (error) {
-      snack.error("Errore sconosciuto!")
+      snack.error('Errore sconosciuto!');
       console.error(error);
     }
   };
@@ -71,7 +71,7 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
         .postDocument(formManager.getSubmitForm(formValues))
         .then((res) => {
           navigate(-1);
-          snack.success("Documento creato correttamente")
+          snack.success('Documento creato correttamente');
         })
         .catch((error) => {
           if (!error.status === 400) {
@@ -80,11 +80,11 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
 
           manageFetchError(error, formErrors, setFormErrors);
           if (error.response.data.detail) {
-            snack.error(error.response.data.detail)
+            snack.error(error.response.data.detail);
           }
         });
     } catch (error) {
-      snack.error("Errore sconosciuto!")
+      snack.error('Errore sconosciuto!');
       console.error(error);
     }
   };
@@ -95,7 +95,7 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
         .putDocument(id, formManager.getSubmitForm(formValues))
         .then((res) => {
           navigate(-1);
-          snack.success("Documento aggiornato correttamente")
+          snack.success('Documento aggiornato correttamente');
         })
         .catch((error) => {
           if (!error.status === 400) {
@@ -105,11 +105,11 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
           manageFetchError(error, formErrors, setFormErrors);
 
           if (error.response.data.detail) {
-            snack.error(error.response.data.detail)
+            snack.error(error.response.data.detail);
           }
         });
     } catch (error) {
-      snack.error("Errore sconosciuto!")
+      snack.error('Errore sconosciuto!');
       console.error(error);
     }
   };
@@ -128,7 +128,12 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
             </FormControl>
             <FormControl sx={{ width: '100%', mt: 2 }}>
               <FormLabel>Numero documento</FormLabel>
-              <InputText name="number" value={formValues.number} error={formErrors.number} handler={HandlerInput.handleInputChange} />
+              <InputText
+                name="number"
+                value={formValues.number}
+                error={formErrors.number}
+                handler={HandlerInput.handleInputChange}
+              />
             </FormControl>
           </Box>
         </Grid>
@@ -136,12 +141,7 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
 
       <Box mt={4} />
 
-      <FormTable
-        formValues={formValues.body}
-        formErrors={formErrors}
-        formManager={formManager}
-        Modal={TableModal}
-      />
+      <FormTable formValues={formValues.body} formErrors={formErrors} formManager={formManager} Modal={TableModal} />
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 4 }}>
         <Button variant="outlined" color="error" onClick={() => navigate(-1)}>

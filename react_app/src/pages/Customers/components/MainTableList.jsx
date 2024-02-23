@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { snack } from "@/components/Snackbar.jsx"
+import { snack } from '@/components/Snackbar.jsx';
 
 import { Paper, Grid, Button, Box, Stack, Chip, Pagination, IconButton } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
@@ -16,11 +16,11 @@ function renderStatus(status) {
     case 'Open':
       return <Chip label="Aperto" color="success" />;
     case 'Partial':
-      return <Chip label="Parziale" color="warning"/>;
+      return <Chip label="Parziale" color="warning" />;
     case 'Closed':
-      return <Chip label="Chiuso" color="info"/>;
+      return <Chip label="Chiuso" color="info" />;
     default:
-      return <Chip label="Error" color="error"/>;
+      return <Chip label="Error" color="error" />;
   }
 }
 
@@ -41,7 +41,7 @@ export default function () {
         setPages(response.data.num_pages);
       });
     } catch (error) {
-      snack.error("Error sconosciuto")
+      snack.error('Error sconosciuto');
       console.error(error);
     }
   }, [pageSelected, orderBy, search]);

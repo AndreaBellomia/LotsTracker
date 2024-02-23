@@ -7,7 +7,7 @@ import { Box, Typography, Paper, IconButton } from '@mui/material';
 export default function ({ state: state, formErrors: formErrors }) {
   const [modal, setModal] = useState(false);
   const [value, setter] = state;
-  
+
   return (
     <>
       <SelectSupplierModal modalState={[modal, setModal]} tableChoices={(item) => setter(item)} />

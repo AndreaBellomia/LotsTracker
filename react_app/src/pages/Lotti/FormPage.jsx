@@ -1,153 +1,150 @@
-import React, { useEffect, useState } from "react";
-import { snack } from "@/components/Snackbar.jsx"
+import React, { useEffect, useState } from 'react';
+import { snack } from '@/components/Snackbar.jsx';
 
-import { useParams, useNavigate } from "react-router-dom";
-import { Container } from "@mui/material";
+import { useParams, useNavigate } from 'react-router-dom';
+import { Container } from '@mui/material';
 
-import { manageFetchError, LottiApi } from "@/libs/axios.js";
+import { manageFetchError, LottiApi } from '@/libs/axios.js';
 
-import ManageLottForm from "./components/ManageLott.jsx";
-import SelectArticleList from "./components/SelectArticleList.jsx";
+import ManageLottForm from './components/ManageLott.jsx';
+import SelectArticleList from './components/SelectArticleList.jsx';
 
 export default function ManageLott() {
-    const navigate = useNavigate();
-    const { id } = useParams();
+  const navigate = useNavigate();
+  const { id } = useParams();
 
-    const [formErrors, setFormErrors] = useState({});
-    const [formValue, setFormValue] = useState({
-        empty_date: null,
-        batch_code: "",
-        custom_status: "",
-        item_type: "",
-        document_from_supplier: "",
-        document_to_supplier: "",
-        document_customer: "",
-        status: "",
+  const [formErrors, setFormErrors] = useState({});
+  const [formValue, setFormValue] = useState({
+    empty_date: null,
+    batch_code: '',
+    custom_status: '',
+    item_type: '',
+    document_from_supplier: '',
+    document_to_supplier: '',
+    document_customer: '',
+    status: '',
+  });
+
+  const [listModal, setListModal] = useState(false);
+  const [articleChoice, setArticleChoice] = useState({});
+  const [customerDocument, setCustomerDocument] = useState({
+    number: undefined,
+    date: undefined,
+    id: undefined,
+  });
+  const [additionalInfo, setAdditionalInfo] = useState({
+    customerName: '',
+    customerCode: '',
+  });
+
+  useEffect(() => {
+    if (id) {
+      GETapi(id);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    setFormValue({
+      ...formValue,
+      item_type_id: articleChoice.id,
     });
+  }, [articleChoice]);
 
-    const [listModal, setListModal] = useState(false);
-    const [articleChoice, setArticleChoice] = useState({});
-    const [customerDocument, setCustomerDocument] = useState({
-        number: undefined,
-        date: undefined,
-        id: undefined,
-    });
-    const [additionalInfo, setAdditionalInfo] = useState({
-        customerName: "",
-        customerCode: "",
-    });
-
-    useEffect(() => {
-        if (id) {
-            GETapi(id);
-        }
-    }, [id]);
-
-    useEffect(() => {
+  // Apis support
+  const GETapi = (id) => {
+    try {
+      new LottiApi().getWarehouseItemsLott(id).then((res) => {
         setFormValue({
-            ...formValue,
-            item_type_id: articleChoice.id,
+          empty_date: res.data.empty_date,
+          batch_code: res.data.batch_code,
+          custom_status: res.data.custom_status,
+          item_type_id: res.data.item_type.id,
+          item_type_id: res.data.item_type.id,
+          document_from_supplier: '',
+          document_to_supplier: '',
+          document_customer: '',
+          status: res.data.status,
         });
-    }, [articleChoice]);
 
-    // Apis support
-    const GETapi = (id) => {
-        try {
-            new LottiApi().getWarehouseItemsLott(id).then((res) => {
-                setFormValue({
-                    empty_date: res.data.empty_date,
-                    batch_code: res.data.batch_code,
-                    custom_status: res.data.custom_status,
-                    item_type_id: res.data.item_type.id,
-                    item_type_id: res.data.item_type.id,
-                    document_from_supplier: "",
-                    document_to_supplier: "",
-                    document_customer: "",
-                    status: res.data.status,
-                });
+        setArticleChoice(res.data.item_type);
 
-                setArticleChoice(res.data.item_type);
+        setCustomerDocument({
+          ...customerDocument,
+          ...res.data.document_customer,
+        });
+        setAdditionalInfo({
+          customerName: res.data.customer_company_name,
+          customerCode: res.data.customer_company_code,
+        });
+      });
+    } catch (error) {
+      snack.error('Error sconosciuto');
+      console.error(error);
+    }
+  };
 
-                setCustomerDocument({
-                    ...customerDocument,
-                    ...res.data.document_customer,
-                });
-                setAdditionalInfo({
-                    customerName: res.data.customer_company_name,
-                    customerCode: res.data.customer_company_code,
-                });
-            });
-        } catch (error) {
-            snack.error("Error sconosciuto")
-            console.error(error);
-        }
-    };
+  const POSTapi = () => {
+    try {
+      new LottiApi()
+        .postWarehouseItemsLott(formValue)
+        .then((res) => {
+          navigate('/lotti');
+        })
+        .catch((error) => {
+          if (!error.status === 400) {
+            throw new Error('Error during request: ' + error);
+          }
+          snack.error(error.response.data.detail);
+          manageFetchError(error, formErrors, setFormErrors);
+        });
+    } catch (error) {
+      snack.error('Error sconosciuto');
+      console.error(error);
+    }
+  };
 
-    const POSTapi = () => {
-        try {
-            new LottiApi()
-                .postWarehouseItemsLott(formValue)
-                .then((res) => {
-                    navigate("/lotti");
-                })
-                .catch((error) => {
-                    if (!error.status === 400) {
-                        throw new Error("Error during request: " + error);
-                    }
-                    snack.error(error.response.data.detail)
-                    manageFetchError(error, formErrors, setFormErrors);
-                });
-        } catch (error) {
-            snack.error("Error sconosciuto")
-            console.error(error);
-        }
-    };
+  const PUTapi = () => {
+    try {
+      new LottiApi()
+        .putWarehouseItemsLott(id, formValue)
+        .then((res) => {
+          navigate('/lotti');
+        })
+        .catch((error) => {
+          if (!error.status === 400) {
+            throw new Error('Error during request: ' + error);
+          }
+          snack.error(error.response.data.detail);
+          manageFetchError(error, formErrors, setFormErrors);
+        });
+    } catch (error) {
+      snack.error('Error sconosciuto');
+      console.error(error);
+    }
+  };
 
-    const PUTapi = () => {
-        try {
-            new LottiApi()
-                .putWarehouseItemsLott(id, formValue)
-                .then((res) => {
-                    navigate("/lotti");
-                })
-                .catch((error) => {
-                    if (!error.status === 400) {
-                        throw new Error("Error during request: " + error);
-                    }
-                    snack.error(error.response.data.detail)
-                    manageFetchError(error, formErrors, setFormErrors);
-                });
-        } catch (error) {
-            snack.error("Error sconosciuto")
-            console.error(error);
-        }
-    };
+  const saveCommitForm = () => {
+    if (id) {
+      PUTapi();
+    } else {
+      POSTapi();
+    }
+  };
 
-    const saveCommitForm = () => {
-        if (id) {
-            PUTapi();
-        } else {
-            POSTapi();
-        }
-    };
+  return (
+    <>
+      <Container maxWidth="md">
+        <ManageLottForm
+          fields={[formValue, setFormValue]}
+          errors={[formErrors, setFormErrors]}
+          article={[articleChoice, setListModal]}
+          customerDocument={[customerDocument, undefined]}
+          additionalInfo={additionalInfo}
+          submit={saveCommitForm}
+        />
+      </Container>
 
-    return (
-        <>
-            <Container maxWidth="md">
-                <ManageLottForm
-                    fields={[formValue, setFormValue]}
-                    errors={[formErrors, setFormErrors]}
-                    article={[articleChoice, setListModal]}
-                    customerDocument={[customerDocument, undefined]}
-                    additionalInfo={additionalInfo}
-                    submit={saveCommitForm}
-                />
-            </Container>
-
-            <SelectArticleList
-                modalState={[listModal, setListModal]}
-                tableChoices={setArticleChoice}
-            />
-        </>
-    );
+      <SelectArticleList modalState={[listModal, setListModal]} tableChoices={setArticleChoice} />
+    </>
+  );
 }

@@ -31,7 +31,7 @@ export class Snack {
   constructor(options = {}) {
     this.options = {
       autoHideDuration: 3000,
-      ...options
+      ...options,
     };
   }
 
