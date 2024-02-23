@@ -14,6 +14,7 @@ import {
   TableBody,
   TableCell,
   Tooltip,
+  Box
 } from '@mui/material';
 
 const CustomTableRow = styled(TableRow)(({ theme, sx }) => ({
@@ -44,10 +45,19 @@ function generateTableRow(row, index, errors, handler) {
     <Tooltip title={(error && error.message) || ''} key={index} followCursor>
       <CustomTableRow sx={{ ...sxError }}>
         <TableCell component="th" scope="row">
-          {row.item_type.description}
+          {row.batch_code}
         </TableCell>
-        <TableCell align="right">{row.item_type.internal_code}</TableCell>
-        <TableCell align="right">{row.batch_code}</TableCell>
+        <TableCell align="right">
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography variant="subtitle1" sx={{ mb: 0.3 }}>
+            {row.item_type.description}
+          </Typography>
+          <Typography variant="subtitle2" color="text.disabled" fontWeight="600">
+            {row.item_type.internal_code}
+          </Typography>
+        </Box>
+        </TableCell>
+        <TableCell align="right">{row.days_left}</TableCell>
         <TableCell align="right">
           <IconButton onClick={() => handler(id)}>
             <RemoveCircle color="error" />
@@ -70,13 +80,13 @@ export default function ({ formState, formErrors }) {
 
   return (
     <>
-      <TableContainer component={Paper} sx={{ height: 300, overflowY: 'auto' }}>
+      <TableContainer component={Paper} sx={{ height: 350, overflowY: 'auto' }}>
         <Table sx={{ minWidth: 650 }} stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
               <TableCell>Lotto</TableCell>
               <TableCell align="right">Articolo</TableCell>
-              <TableCell align="right">Giorni</TableCell>
+              <TableCell align="right">Giorni dalla consegna</TableCell>
               <TableCell align="right"></TableCell>
             </TableRow>
           </TableHead>

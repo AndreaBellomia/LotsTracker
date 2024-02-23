@@ -75,9 +75,9 @@ export default function TableComponent({ formState }) {
     }),
     new TableHeaderMixin({
       key: 'days_left',
-      label: 'Giorni',
+      label: 'Giorni dalla consegna',
       orderable: true,
-      align: 'right',
+      align: 'center',
       sxTh: { width: '10%' },
     }),
     new TableHeaderMixin({ key: 'id', label: '', align: 'center', sxTh: { width: '3rem' } }),

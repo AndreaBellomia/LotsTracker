@@ -65,17 +65,23 @@ export default function ArticlesListModal({ modalState: modaleState, tableChoice
           sx={{
             width: '700px !important',
             position: 'relative',
-            top: '50%',
+            top: '25%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
             p: 3,
             overflow: 'hidden',
           }}
         >
+          <Typography variant="h4" color="initial">
+            Crea lotto
+          </Typography>
+
+          <Box sx={{ my: 2 }} />
+
           <FormControl sx={{ width: '100%' }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} lg={6} sx={{ display: 'flex', flexDirection: 'column' }}>
-                <FormLabel>Descrizione</FormLabel>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column' }}>
+                <FormLabel>Lotto</FormLabel>
                 <InputText
                   name="batch_code"
                   value={formValues.batch_code}
@@ -83,15 +89,15 @@ export default function ArticlesListModal({ modalState: modaleState, tableChoice
                   handler={handlerInput}
                 />
               </Grid>
-              <Grid item xs={12} lg={6} sx={{ display: 'flex', flexDirection: 'column' }}>
-                <FormLabel>Descrizione</FormLabel>
+              <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column' }}>
+                <FormLabel>Articolo</FormLabel>
                 <Autocomplete
                   value={formValues.item_type}
                   onChange={handlerAutocomplete}
                   name="item_type"
                   options={itemTypes}
                   getOptionLabel={(option) => `${option.internal_code} | ${option.description}`}
-                  renderInput={(params) => <TextField {...params} label="Movie" />}
+                  renderInput={(params) => <TextField {...params} />}
                 />
               </Grid>
             </Grid>

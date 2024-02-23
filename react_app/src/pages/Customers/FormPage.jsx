@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Container } from '@mui/material';
 
 import { CustomerApiDocument } from '@/libs/axios.js';
 
@@ -12,6 +12,8 @@ import CustomerCard from './components/FormCustomCard.jsx';
 export default function ManageDocument() {
   return (
     <>
+    <Container >
+
       <Typography variant="h4">Documento di consegna</Typography>
 
       <Box mt={4} />
@@ -22,6 +24,7 @@ export default function ManageDocument() {
         CounterpartCard={CustomerCard}
         TableModal={SelectItemModal}
       />
+    </Container>
     </>
   );
 }

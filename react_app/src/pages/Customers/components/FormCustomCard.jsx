@@ -20,30 +20,35 @@ export default function ({ state: state, formErrors: formErrors }) {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
+          justifyContent: "space-between"
         }}
       >
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Typography variant="h5">Cliente</Typography>
-          <IconButton
-            onClick={() => {
-              setModal(true);
-            }}
-            color="primary"
-          >
-            <Edit />
-          </IconButton>
-        </Box>
-
         <Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Typography variant="h5">Cliente</Typography>
+            <IconButton
+              onClick={() => {
+                setModal(true);
+              }}
+              color="primary"
+            >
+              <Edit />
+            </IconButton>
+          </Box>
+
           <Typography variant="p" color="text.secondary">
             {value.company_name || '--'}
           </Typography>
+        </Box>
+
+        <Box>
+
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
             <Typography variant="body2" color="text.secondary">
-              {value.vat_number || '--'}
+              {value.vat_number || ''}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {value.external_code || '--'}
+              {value.external_code || ''}
             </Typography>
           </Box>
         </Box>

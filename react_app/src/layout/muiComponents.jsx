@@ -1,5 +1,7 @@
 import palette from './palette.jsx';
 
+import { outlinedInputClasses } from '@mui/material/OutlinedInput';
+
 const components = {
   MuiDrawer: {
     styleOverrides: {
@@ -136,6 +138,10 @@ const components = {
         border: '1px solid #919EAB',
       },
     },
+
+    defaultProps: {
+      notched: false,
+    },
   },
 
   MuiTableSortLabel: {
@@ -198,6 +204,19 @@ const components = {
     },
 
     variants: [],
+  },
+
+  MuiAutocomplete: {
+    styleOverrides: {
+      root: {
+        [`& .${outlinedInputClasses.root}`]: {
+          padding: '.282rem .5rem',
+        },
+        [`& .${outlinedInputClasses.input}`]: {
+          padding: '.282rem .5rem',
+        },
+      },
+    },
   },
 };
 

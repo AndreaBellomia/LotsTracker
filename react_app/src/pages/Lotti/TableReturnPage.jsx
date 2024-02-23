@@ -56,7 +56,10 @@ export default function () {
     <>
       <Paper elevation={5}>
         <Box sx={{ p: '1rem', display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <Typography variant="h4" color="initial">Lotti da rientrare</Typography>
+          <Box>
+            <Typography variant="h4" color="initial">Lotti da rientrare</Typography>
+            <Typography variant="subtitle" color="text.secondary" fontWeight={600}>Totale giorni: {formValues.body.reduce((acc, current) => acc + current.days_left, 0)} giorni/o</Typography>
+          </Box>
           <Button variant="contained" size="medium" color="grey" onClick={POSTapi}>Rientra</Button>
         </Box>
       <ReturnTableForm formState={[formValues, setFromValues]} formErrors={formErrors}/>

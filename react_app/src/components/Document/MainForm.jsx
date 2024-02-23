@@ -3,7 +3,7 @@ import { snack } from '@/components/Snackbar.jsx';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Done } from '@mui/icons-material';
-import { FormControl, Grid, FormLabel, Button, Box } from '@mui/material';
+import { FormControl, Grid, FormLabel, Button, Box, Paper } from '@mui/material';
 import { manageFetchError } from '@/libs/axios.js';
 import { manageHandlerInput, ManageFormDocument } from '@/libs/forms.js';
 
@@ -121,6 +121,7 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
           <CounterpartCard state={[formCounterpart, setFormCounterpart]} formErrors={formErrors} />
         </Grid>
         <Grid item xs={12} md={6} lg={6}>
+        <Paper elevation={5} sx={{ p : 2 }}>
           <Box>
             <FormControl sx={{ width: '100%' }}>
               <FormLabel>Data documento</FormLabel>
@@ -136,12 +137,15 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
               />
             </FormControl>
           </Box>
+          </Paper>
         </Grid>
       </Grid>
 
       <Box mt={4} />
 
-      <FormTable formValues={formValues.body} formErrors={formErrors} formManager={formManager} Modal={TableModal} />
+      <Paper elevation={5}>
+        <FormTable formValues={formValues.body} formErrors={formErrors} formManager={formManager} Modal={TableModal} />
+      </Paper>
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 4 }}>
         <Button variant="outlined" color="error" onClick={() => navigate(-1)}>

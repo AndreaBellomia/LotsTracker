@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Container } from '@mui/material';
 import { FromSupplierApiDocument } from '@/libs/axios.js';
 
 import SupplierCard from '@/components/forms/FormSupplierCard.jsx';
@@ -11,16 +11,18 @@ import MainForm from '@/components/Document/MainForm.jsx';
 export default function ManageDocument() {
   return (
     <>
-      <Typography variant="h4">Carico magazzino</Typography>
+      <Container>
+        <Typography variant="h4">Carico magazzino</Typography>
 
-      <Box mt={4} />
+        <Box mt={4} />
 
-      <MainForm
-        counterpartKey="supplier"
-        API={FromSupplierApiDocument}
-        CounterpartCard={SupplierCard}
-        TableModal={CreateItemModal}
-      />
+        <MainForm
+          counterpartKey="supplier"
+          API={FromSupplierApiDocument}
+          CounterpartCard={SupplierCard}
+          TableModal={CreateItemModal}
+        />
+      </Container>
     </>
   );
 }
