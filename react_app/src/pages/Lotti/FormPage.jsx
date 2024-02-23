@@ -9,6 +9,30 @@ import { manageFetchError, LottiApi } from '@/libs/axios.js';
 import ManageLottForm from './components/ManageLott.jsx';
 import SelectArticleList from './components/SelectArticleList.jsx';
 
+
+
+function buildPostForm (formValues) {
+  const { item_type, document_customer, document_from_supplier, document_to_supplier, ...rest } = formValues;
+
+  const outputObject = { ...rest };
+
+  if (item_type) {
+    outputObject.item_type_id = item_type.id;
+  }
+  if (document_customer) {
+    outputObject.document_customer_id = document_customer.id;
+  }
+  if (document_from_supplier) {
+    outputObject.document_from_supplier_id = document_from_supplier.id;
+  }
+  if (document_to_supplier) {
+    outputObject.document_to_supplier_id = document_to_supplier.id;
+  }
+
+  return outputObject;
+}
+
+
 export default function ManageLott() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -26,16 +50,6 @@ export default function ManageLott() {
   });
 
   const [listModal, setListModal] = useState(false);
-  const [articleChoice, setArticleChoice] = useState({});
-  const [customerDocument, setCustomerDocument] = useState({
-    number: undefined,
-    date: undefined,
-    id: undefined,
-  });
-  const [additionalInfo, setAdditionalInfo] = useState({
-    customerName: '',
-    customerCode: '',
-  });
 
   useEffect(() => {
     if (id) {
@@ -43,12 +57,6 @@ export default function ManageLott() {
     }
   }, [id]);
 
-  useEffect(() => {
-    setFormValue({
-      ...formValue,
-      item_type_id: articleChoice.id,
-    });
-  }, [articleChoice]);
 
   // Apis support
   const GETapi = (id) => {
@@ -58,24 +66,13 @@ export default function ManageLott() {
           empty_date: res.data.empty_date,
           batch_code: res.data.batch_code,
           custom_status: res.data.custom_status,
-          item_type_id: res.data.item_type.id,
-          item_type_id: res.data.item_type.id,
-          document_from_supplier: '',
-          document_to_supplier: '',
-          document_customer: '',
+          item_type: res.data.item_type,
+          document_from_supplier: res.data.document_from_supplier,
+          document_to_supplier: res.data.document_to_supplier,
+          document_customer: res.data.document_customer,
           status: res.data.status,
         });
 
-        setArticleChoice(res.data.item_type);
-
-        setCustomerDocument({
-          ...customerDocument,
-          ...res.data.document_customer,
-        });
-        setAdditionalInfo({
-          customerName: res.data.customer_company_name,
-          customerCode: res.data.customer_company_code,
-        });
       });
     } catch (error) {
       snack.error('Error sconosciuto');
@@ -106,7 +103,7 @@ export default function ManageLott() {
   const PUTapi = () => {
     try {
       new LottiApi()
-        .putWarehouseItemsLott(id, formValue)
+        .putWarehouseItemsLott(id, buildPostForm(formValue))
         .then((res) => {
           navigate('/lotti');
         })
@@ -131,20 +128,25 @@ export default function ManageLott() {
     }
   };
 
+  const handlerItemModal = (obj) => {
+    setFormValue({
+      ...formValue,
+      item_type : obj
+    })
+  }
+
   return (
     <>
       <Container maxWidth="md">
         <ManageLottForm
           fields={[formValue, setFormValue]}
           errors={[formErrors, setFormErrors]}
-          article={[articleChoice, setListModal]}
-          customerDocument={[customerDocument, undefined]}
-          additionalInfo={additionalInfo}
+          article={setListModal}
           submit={saveCommitForm}
         />
       </Container>
 
-      <SelectArticleList modalState={[listModal, setListModal]} tableChoices={setArticleChoice} />
+      <SelectArticleList modalState={[listModal, setListModal]} tableChoices={handlerItemModal} />
     </>
   );
 }

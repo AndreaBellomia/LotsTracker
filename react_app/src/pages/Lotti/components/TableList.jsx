@@ -43,10 +43,10 @@ function renderCustomer(value, render) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Typography variant="subtitle1" sx={{ mb: 0.3 }}>
-        {value}
+        {value && value.counterpart}
       </Typography>
       <Typography variant="subtitle2" color="text.disabled" fontWeight="600">
-        {render.customer_company_code}
+        {value && value.counterpart_code}
       </Typography>
     </Box>
   );
@@ -69,7 +69,7 @@ export default function TableComponent() {
       sxTh: { maxWidth: '5rem' },
     }),
     new TableHeaderMixin({ key: 'item_type', label: 'Articolo' }),
-    new TableHeaderMixin({ key: 'customer_company_name', label: 'Cliente', align: 'right' }),
+    new TableHeaderMixin({ key: 'document_customer', label: 'Cliente', align: 'right' }),
     new TableHeaderMixin({
       key: 'status',
       label: 'Stato',
@@ -88,7 +88,7 @@ export default function TableComponent() {
     ),
     status: (value) => renderStatus(value),
     item_type: (value, render) => renderItemType(value, render),
-    customer_company_name: (value, render) => renderCustomer(value, render),
+    document_customer: (value, render) => renderCustomer(value, render),
     id: (value) => (
       <IconButton
         onClick={() => {

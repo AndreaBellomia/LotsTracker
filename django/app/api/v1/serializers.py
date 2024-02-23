@@ -492,15 +492,13 @@ class WarehouseItemsSerializer(serializers.ModelSerializer):
 
     document_customer = DocumentCustomerSerializer(read_only=True)
     document_customer_id = serializers.IntegerField(write_only=True, required=False)
+    
+    document_from_supplier = DocumentFromSupplierSerializer(read_only=True)
+    document_from_supplier_id = serializers.IntegerField(write_only=True, required=False)
+    
+    document_to_supplier = DocumentToSupplierSerializer(read_only=True)
+    document_to_supplier_id = serializers.IntegerField(write_only=True, required=False)
 
-    customer_company_name = serializers.CharField(read_only=True)
-    customer_company_code = serializers.CharField(read_only=True)
-    document_customer_code = serializers.CharField(read_only=True)
-    document_customer_date = serializers.CharField(read_only=True)
-    supplier_from_company_name = serializers.CharField(read_only=True)
-    supplier_from_company_code = serializers.CharField(read_only=True)
-    document_to_supplier_name = serializers.CharField(read_only=True)
-    document_to_supplier_code = serializers.CharField(read_only=True)
     empty_date = serializers.DateField(required=False, allow_null=True)
 
     id = serializers.IntegerField(read_only=True)

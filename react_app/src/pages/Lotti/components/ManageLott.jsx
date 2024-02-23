@@ -30,31 +30,15 @@ const statusChoices = [
   { label: 'Ritornato F.', value: 'R' },
 ];
 
-export default function CreateLottForm({
-  fields: fields,
-  errors: errors,
-  article: article,
-  customerDocument: customerDocument,
-  additionalInfo: additionalInfo,
-  submit: submit,
-}) {
+export default function CreateLottForm({ fields: fields, errors: errors, article: article, submit: submit }) {
   const { id } = useParams();
 
   const [formValue, setFormValue] = fields;
   const [formErrors, setFormErrors] = errors;
-  const [articleChoice, articleModal] = article;
-  const [customerDocumentChoice, customerDocumentModal] = customerDocument;
+  const articleModal = article;
+
   const submitForm = submit;
   const HandlerInput = new manageHandlerInput(formValue, setFormValue, setFormErrors);
-
-  const handleInputDatepickerChange = (e) => {
-    const date = e.$d;
-    setFormValue({
-      ...formValue,
-      empty_date: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
-    });
-    setFormErrors({});
-  };
 
   return (
     <>
@@ -89,14 +73,14 @@ export default function CreateLottForm({
 
               <Box>
                 <Typography variant="p" color="text.secondary">
-                  {articleChoice.description || '--'}
+                  {(formValue.item_type && formValue.item_type.description) || '--'}
                 </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="body2" color="text.secondary">
-                    {articleChoice.internal_code || '--'}
+                    {(formValue.item_type && formValue.item_type.internal_code) || '--'}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {articleChoice.external_code || '--'}
+                    {(formValue.item_type && formValue.item_type.external_code) || '--'}
                   </Typography>
                 </Box>
               </Box>
@@ -118,11 +102,11 @@ export default function CreateLottForm({
                 <Typography variant="h5">Cliente</Typography>
 
                 <Typography variant="p" color="text.secondary">
-                  {additionalInfo.customerName || '--'}
+                  {(formValue.document_customer && formValue.document_customer.counterpart) || '--'}
                 </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="body2" color="text.secondary">
-                    {additionalInfo.customerCode || '--'}
+                    {(formValue.document_customer && formValue.document_customer.counterpart_code) || '--'}
                   </Typography>
                 </Box>
               </Paper>
@@ -195,22 +179,26 @@ export default function CreateLottForm({
                 <Grid item xs={4} sx={{ display: 'flex', flexDirection: 'column' }}>
                   <ButtonDocumentBig
                     icon={AssignmentReturnedOutlined}
-                    description="-- del --"
+                    description={`${formValue.document_from_supplier ? formValue.document_from_supplier.number : '--'} del ${formValue.document_from_supplier ? formValue.document_from_supplier.date : '--'}`}
                     title="documento d'ingresso"
                   />
                 </Grid>
                 <Grid item xs={4} sx={{ display: 'flex', flexDirection: 'column' }}>
                   <ButtonDocumentBig
                     icon={Sell}
-                    description={`${customerDocumentChoice.number ?? '--'} del ${customerDocumentChoice.date ?? '--'}`}
+                    description={`${formValue.document_customer ? formValue.document_customer.number : '--'} del ${formValue.document_customer ? formValue.document_customer.date : '--'}`}
                     onClick={() => {
-                      console.log(customerDocumentChoice.id ?? '--');
+                      console.log(formValue.document_customer);
                     }}
                     title="Documento di vendita"
                   />
                 </Grid>
                 <Grid item xs={4} sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <ButtonDocumentBig icon={Output} description="-- del --" title="documento d'uscita" />
+                  <ButtonDocumentBig
+                    icon={Output}
+                    description={`${formValue.document_to_supplier ? formValue.document_to_supplier.number : '--'} del ${formValue.document_to_supplier ? formValue.document_to_supplier.date : '--'}`}
+                    title="documento d'uscita"
+                  />
                 </Grid>
               </Grid>
             </Grid>
