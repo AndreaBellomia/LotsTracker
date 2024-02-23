@@ -104,6 +104,7 @@ export default function TableComponent() {
   useEffect(() => {
     try {
       new ItemsApi().getWarehouseItemsList(pageSelected, search, orderBy).then((response) => {
+        console.log(response.data.results)
         setTableData(response.data.results);
         setPages(response.data.num_pages);
       });

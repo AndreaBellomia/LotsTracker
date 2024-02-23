@@ -510,7 +510,19 @@ class WarehouseItemsSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
-        extra_kwargs = {
-            "document_from_supplier": {"write_only": True},
-            "document_to_supplier": {"write_only": True},
-        }
+
+class WarehouseItemsReturnSerializer(WarehouseItemsSerializer):
+    
+    days_left = serializers.IntegerField()
+    
+    document_from_supplier = None
+    document_from_supplier_id = None
+    document_to_supplier = None
+    document_to_supplier_id = None
+
+    class Meta(WarehouseItemsSerializer.Meta):
+        model = WarehouseItems
+        exclude = [
+            "created_at",
+            "updated_at",
+        ]

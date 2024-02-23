@@ -1,4 +1,6 @@
 from django.db.models import Case, When, Value, CharField, Count, F, Sum, IntegerField
+from django.db.models.functions import ExtractDay, Coalesce
+from django.utils import timezone as tz
 
 from app.core.models import (
     CustomerRegistry,
@@ -190,6 +192,26 @@ class WarehouseItemsQuery:
                 document_to_supplier_code=F(
                     "document_to_supplier__supplier__external_code"
                 ),
+            )
+        )
+        return base_queryset
+
+    @staticmethod
+    def warehouse_items_return():
+        today = tz.now().date()
+        base_queryset = (
+            WarehouseItems.objects.filter(
+                status=WarehouseItems.WarehouseItemsStatus.BOOKED
+            )
+            .select_related(
+                "document_customer__customer",
+                "document_customer",
+                "item_type",
+            )
+            .annotate(
+                days_left=Coalesce(
+                    ExtractDay(today - F("document_customer__date")), Value(0)
+                )
             )
         )
         return base_queryset

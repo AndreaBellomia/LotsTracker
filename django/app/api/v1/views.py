@@ -18,6 +18,7 @@ from app.api.v1.serializers import (
     SupplierRegistrySerializer,
     DocumentCustomerSerializer,
     DocumentCustomerDetailSerializer,
+    WarehouseItemsReturnSerializer,
     WarehouseItemsSerializer,
     WarehouseItemsRegistrySerializer,
     DocumentFromSupplierSerializer,
@@ -110,6 +111,7 @@ class DocumentCustomerListApiView(ListAPIView):
         queryset = DocumentCustomerQuery.document_customer_list()
         return queryset
 
+
 class DocumentCustomerDetailApiView(RetrieveUpdateAPIView):
     serializer_class = DocumentCustomerDetailSerializer
     lookup_field = "pk"
@@ -163,11 +165,13 @@ class WarehouseItemsStatusApiView(ListCreateAPIView):
 
     def get_queryset(self):
         status = self.kwargs["status"].split(",")
-        
+
         for st in status:
             if not st in WarehouseItems.WarehouseItemsStatus.values:
-                raise NotFound(f"invalid status value {st}, the valid status are: [{WarehouseItems.WarehouseItemsStatus.values}]")
-            
+                raise NotFound(
+                    f"invalid status value {st}, the valid status are: [{WarehouseItems.WarehouseItemsStatus.values}]"
+                )
+
         queryset = WarehouseItemsQuery.warehouse_items_available_list(status)
         return queryset
 
@@ -223,7 +227,7 @@ class DocumentFromSupplierListApiView(ListAPIView):
         "supplier__company_name",
         "supplier__external_code",
         "date",
-        "number"
+        "number",
     ]
     ordering_fields = [
         "supplier__company_name",
@@ -353,7 +357,9 @@ class CustomerWarehouseItemsApiView(ListAPIView):
         "document_to_supplier__date",
         "empty_date",
         "batch_code",
-        "item_type__description" "item_type__internal_code" "status",
+        "item_type__description",
+        "item_type__internal_code",
+        "status",
     ]
     ordering_fields = ["empty_date", "batch_code", "item_type__internal_code", "status"]
 
@@ -365,26 +371,21 @@ class CustomerWarehouseItemsApiView(ListAPIView):
         return queryset
 
 
-class WarehouseItemsBatchCodeApiView(ListAPIView):
+class WarehouseItemsReturnApiView(ListAPIView):
     pagination_class = BasicPaginationController
-    serializer_class = WarehouseItemsSerializer
+    serializer_class = WarehouseItemsReturnSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = [
         "document_customer__customer__company_name",
-        "document_from_supplier__supplier__company_name",
-        "document_to_supplier__supplier__company_name",
-        "document_customer__date",
-        "document_from_supplier__date",
-        "document_to_supplier__date",
-        "empty_date",
+        "document_customer__customer__vat_number",
+        "document_customer__customer__external_code",
         "batch_code",
-        "item_type__description" "item_type__internal_code" "status",
+        "item_type__description",
+        "item_type__internal_code",
     ]
-    ordering_fields = ["empty_date", "batch_code", "item_type__internal_code", "status"]
-
+    
+    ordering_fields = ["document_customer__customer__company_name", "document_customer__customer__external_code", "batch_code", "days_left"]
+    
     def get_queryset(self):
-        batch_code = self.kwargs["batch_code"]
-        queryset = WarehouseItemsQuery.warehouse_items_list().filter(
-            batch_code__contains=batch_code
-        )
+        queryset = WarehouseItemsQuery.warehouse_items_return()
         return queryset
