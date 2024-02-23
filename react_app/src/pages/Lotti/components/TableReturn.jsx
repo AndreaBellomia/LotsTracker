@@ -137,7 +137,7 @@ export default function TableComponent({ formState }) {
       snack.error('Error sconosciuto');
       console.error(error);
     }
-  }, [pageSelected, orderBy, search]);
+  }, [pageSelected, orderBy, search, formValues]);
 
   return (
     <>

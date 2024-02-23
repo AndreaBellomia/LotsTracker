@@ -383,9 +383,56 @@ class WarehouseItemsReturnApiView(ListAPIView):
         "item_type__description",
         "item_type__internal_code",
     ]
-    
-    ordering_fields = ["document_customer__customer__company_name", "document_customer__customer__external_code", "batch_code", "days_left", "document_customer__date"]
-    
+
+    ordering_fields = [
+        "document_customer__customer__company_name",
+        "document_customer__customer__external_code",
+        "batch_code",
+        "days_left",
+        "document_customer__date",
+    ]
+
     def get_queryset(self):
         queryset = WarehouseItemsQuery.warehouse_items_return()
         return queryset
+
+    def post(self, request, *args, **kwargs):
+        body = self.request.data.get("body")
+
+        if not body:
+            return Response(
+                {"detail": "Items must be included in the body"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        ids = [x["id"] for x in body]
+        query = WarehouseItems.objects.filter(id__in=ids)
+
+        not_found_ids = set(ids) ^ set(query.values_list("id", flat=True))
+        if not_found_ids:
+            Response(
+                {"detail": "One or more element not found"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        query = query.filter(status=WarehouseItems.WarehouseItemsStatus.BOOKED)
+        wrong_status = set(ids) ^ set(query.values_list("id", flat=True))
+
+        errors = []
+        for item in WarehouseItems.objects.filter(id__in=wrong_status):
+            errors.append(
+                {"id": item.id, "message": f"Status must be BOOKED not {item.status}"}
+            )
+
+        if len(errors) > 0:
+            return Response(
+                {"body": errors},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        with transaction.atomic():
+            for item in query:
+                item.empty_date = tz.now()
+                item.save()
+
+        return Response(status=status.HTTP_200_OK)

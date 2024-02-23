@@ -216,5 +216,8 @@ export class ItemsApi extends FetchApi {
       })
     );
   }
+  async postItemsReturnLists(body) {
+    return await this.client.post('warehouse/return/items', { ...body });
+  }
 
 }
