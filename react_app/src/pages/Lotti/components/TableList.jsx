@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { snack } from "@/components/Snackbar.jsx"
+
 import { Link, useNavigate } from "react-router-dom";
 import {
     Paper,
@@ -118,6 +120,7 @@ export default function TableComponent() {
                     setPages(response.data.num_pages);
                 });
         } catch (error) {
+            snack.error("Error sconosciuto")
             console.error(error);
         }
     }, [pageSelected, orderBy, search]);

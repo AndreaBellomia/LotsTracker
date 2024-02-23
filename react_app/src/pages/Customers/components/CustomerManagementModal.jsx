@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { snack } from "@/components/Snackbar.jsx"
+
 import { manageFetchError, CustomerApi } from "@/libs/axios.js";
 import {
     Button,
@@ -47,6 +49,7 @@ export default function CustomerList({ modalStatus: modalStatus, fetchId: fetchI
                 setFormValues({ ...res.data });
             });
         } catch (error) {
+            snack.error("Error sconosciuto")
             console.error(error);
         }
     };
@@ -63,9 +66,12 @@ export default function CustomerList({ modalStatus: modalStatus, fetchId: fetchI
                         throw new Error("Error during request: " + error);
                     }
 
+                    snack.error(error.response.data.detail)
+
                     manageFetchError(error, formErrors, setFormErrors);
                 });
         } catch (error) {
+            snack.error("Error sconosciuto")
             console.error(error);
         }
     };
@@ -81,9 +87,12 @@ export default function CustomerList({ modalStatus: modalStatus, fetchId: fetchI
                     if (!error.status === 400) {
                         throw new Error("Error during request: " + error);
                     }
+
+                    snack.error(error.response.data.detail)
                     manageFetchError(error, formErrors, setFormErrors);
                 });
         } catch (error) {
+            snack.error("Error sconosciuto")
             console.error(error);
         }
     };

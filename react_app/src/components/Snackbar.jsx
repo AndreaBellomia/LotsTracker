@@ -2,6 +2,8 @@ import * as React from 'react';
 import { SnackbarProvider } from 'notistack';
 import { useSnackbar } from 'notistack';
 
+export const SNACK_EVENT_NAME = 'dispatchSnack';
+
 export default function _({ children }) {
   return <SnackbarProvider maxSnack={3}>{children}</SnackbarProvider>;
 }
@@ -12,7 +14,7 @@ export function SnackProvider() {
     const handlerEvent = (event) => {
       enqueueSnackbar(event.detail.message, {
         variant: event.detail.type,
-        ...event.detail.options
+        ...event.detail.options,
       });
     };
 
@@ -25,13 +27,12 @@ export function SnackProvider() {
   return null;
 }
 
-export const SNACK_EVENT_NAME = 'dispatchSnack';
-
 export class Snack {
-  constructor() {
+  constructor(options = {}) {
     this.options = {
-      autoHideDuration : 3000
-    }
+      autoHideDuration: 3000,
+      ...options
+    };
   }
 
   triggerEvent(detail) {
@@ -49,7 +50,7 @@ export class Snack {
     const detail = {
       message: message,
       type: 'error',
-      options : this.options
+      options: this.options,
     };
 
     this.triggerEvent(detail);
@@ -59,7 +60,7 @@ export class Snack {
     const detail = {
       message: message,
       type: 'success',
-      options : this.options
+      options: this.options,
     };
 
     this.triggerEvent(detail);
@@ -69,7 +70,7 @@ export class Snack {
     const detail = {
       message: message,
       type: 'warning',
-      options : this.options
+      options: this.options,
     };
 
     this.triggerEvent(detail);
@@ -79,7 +80,7 @@ export class Snack {
     const detail = {
       message: message,
       type: 'info',
-      options : this.options
+      options: this.options,
     };
 
     this.triggerEvent(detail);
@@ -89,7 +90,7 @@ export class Snack {
     const detail = {
       message: message,
       type: '',
-      options : this.options
+      options: this.options,
     };
 
     this.triggerEvent(detail);

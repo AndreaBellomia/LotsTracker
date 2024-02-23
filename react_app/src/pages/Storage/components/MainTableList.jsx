@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { snack } from "@/components/Snackbar.jsx"
+
 import { Link, Paper, Grid, Button, Box, Stack, Chip, Typography, IconButton } from "@mui/material";
 
 import { ItemsTypeApi } from "@/libs/axios.js";
@@ -31,6 +33,7 @@ export default function TableComponent({ addModalOpen, addModalId }) {
                 .getItemsList(search, orderBy)
                 .then((response) => setTableData(response.data));
         } catch (error) {
+            snack.error("Error sconosciuto")
             console.error(error);
         }
     }, [orderBy, search]);

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { snack } from "@/components/Snackbar.jsx"
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSnackbar } from 'notistack';
 
-import { Link } from 'react-router-dom';
 import { Done } from '@mui/icons-material';
 import { FormControl, Grid, FormLabel, Button, Box } from '@mui/material';
 import { manageFetchError } from '@/libs/axios.js';
@@ -15,7 +14,6 @@ import InputText from '@/components/forms/InputText.jsx';
 export default function ManageDocument({ counterpartKey, API, CounterpartCard, TableModal }) {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { enqueueSnackbar } = useSnackbar();
 
   const [formCounterpart, setFormCounterpart] = useState({});
   const [formErrors, setFormErrors] = useState({});
@@ -42,10 +40,6 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
     });
   }, [formCounterpart]);
 
-  const handlerSnackbar = (msg, variant) => {
-    msg && enqueueSnackbar(msg, { variant });
-  };
-
   const handlerSubmit = () => {
     if (id) {
       PUTapi();
@@ -66,7 +60,7 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
         });
       });
     } catch (error) {
-      handlerSnackbar("Errore sconosciuto!", 'error')
+      snack.error("Errore sconosciuto!")
       console.error(error);
     }
   };
@@ -77,7 +71,7 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
         .postDocument(formManager.getSubmitForm(formValues))
         .then((res) => {
           navigate(-1);
-          handlerSnackbar('Documento creato correttamente');
+          snack.success("Documento creato correttamente")
         })
         .catch((error) => {
           if (!error.status === 400) {
@@ -86,10 +80,11 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
 
           manageFetchError(error, formErrors, setFormErrors);
           if (error.response.data.detail) {
-            handlerSnackbar(error.response.data.detail, 'error');
+            snack.error(error.response.data.detail)
           }
         });
     } catch (error) {
+      snack.error("Errore sconosciuto!")
       console.error(error);
     }
   };
@@ -100,7 +95,7 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
         .putDocument(id, formManager.getSubmitForm(formValues))
         .then((res) => {
           navigate(-1);
-          handlerSnackbar('Documento aggiornato correttamente');
+          snack.success("Documento aggiornato correttamente")
         })
         .catch((error) => {
           if (!error.status === 400) {
@@ -110,10 +105,11 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
           manageFetchError(error, formErrors, setFormErrors);
 
           if (error.response.data.detail) {
-            handlerSnackbar(error.response.data.detail, 'error');
+            snack.error(error.response.data.detail)
           }
         });
     } catch (error) {
+      snack.error("Errore sconosciuto!")
       console.error(error);
     }
   };

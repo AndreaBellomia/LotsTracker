@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { snack } from "@/components/Snackbar.jsx"
+
 
 import {
     Modal,
@@ -33,6 +35,7 @@ export default function ArticlesListModal({ modalState: modaleState, tableChoice
                 setPages(response.data.num_pages)
             });
         } catch (error) {
+            snack.error("Error sconosciuto")
             console.error(error);
         }
     }, [pageSelected, search]);

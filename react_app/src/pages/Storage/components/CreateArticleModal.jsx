@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { snack } from "@/components/Snackbar.jsx"
+
 import CloseIcon from "@mui/icons-material/Close";
 import {
     Button,
@@ -47,6 +49,7 @@ export default function StorageArticleModal({ modalStatus: modalStatus, fetchId:
                 setFormValue({ ...res.data });
             });
         } catch (error) {
+            snack.error("Error sconosciuto")
             console.error(error);
         }
     };
@@ -62,9 +65,11 @@ export default function StorageArticleModal({ modalStatus: modalStatus, fetchId:
                     if (!error.status === 400) {
                         throw new Error("Error during request: " + error);
                     }
+                    snack.error(error.response.data.detail)
                     manageFetchError(error, formErrors, setFormErrors);
                 });
         } catch (error) {
+            snack.error("Error sconosciuto")
             console.error(error);
         }
     };
@@ -80,9 +85,11 @@ export default function StorageArticleModal({ modalStatus: modalStatus, fetchId:
                     if (!error.status === 400) {
                         throw new Error("Error during request: " + error);
                     }
+                    snack.error(error.response.data.detail)
                     manageFetchError(error, formErrors, setFormErrors);
                 });
         } catch (error) {
+            snack.error("Error sconosciuto")
             console.error(error);
         }
     };

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { snack } from "@/components/Snackbar.jsx"
+
 import { useNavigate } from "react-router-dom";
 import { Paper, Grid, Button, Box, Pagination, IconButton } from "@mui/material";
 
@@ -26,6 +28,7 @@ export default function ({ addModalOpen, addModalId }) {
                 setPages(response.data.num_pages);
             });
         } catch (error) {
+            snack.error("Error sconosciuto")
             console.error(error);
         }
     }, [pageSelected, orderBy, search]);
