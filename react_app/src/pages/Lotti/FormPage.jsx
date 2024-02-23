@@ -9,9 +9,7 @@ import { manageFetchError, LottiApi } from '@/libs/axios.js';
 import ManageLottForm from './components/ManageLott.jsx';
 import SelectArticleList from './components/SelectArticleList.jsx';
 
-
-
-function buildPostForm (formValues) {
+function buildPostForm(formValues) {
   const { item_type, document_customer, document_from_supplier, document_to_supplier, ...rest } = formValues;
 
   const outputObject = { ...rest };
@@ -31,7 +29,6 @@ function buildPostForm (formValues) {
 
   return outputObject;
 }
-
 
 export default function ManageLott() {
   const navigate = useNavigate();
@@ -57,7 +54,6 @@ export default function ManageLott() {
     }
   }, [id]);
 
-
   // Apis support
   const GETapi = (id) => {
     try {
@@ -72,7 +68,6 @@ export default function ManageLott() {
           document_customer: res.data.document_customer,
           status: res.data.status,
         });
-
       });
     } catch (error) {
       snack.error('Error sconosciuto');
@@ -131,9 +126,9 @@ export default function ManageLott() {
   const handlerItemModal = (obj) => {
     setFormValue({
       ...formValue,
-      item_type : obj
-    })
-  }
+      item_type: obj,
+    });
+  };
 
   return (
     <>
