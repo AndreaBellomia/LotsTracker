@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { snack } from '@/components/Snackbar.jsx';
 
 import { Link, useNavigate } from 'react-router-dom';
-import { Paper, Grid, Button, Box, Stack, Chip, Pagination, Typography, IconButton } from '@mui/material';
-
-import EditIcon from '@mui/icons-material/Edit';
+import { Paper, Grid, Button, Box, Stack, Chip, Pagination, Typography, IconButton, Checkbox } from '@mui/material';
 
 import { ItemsApi } from '@/libs/axios.js';
 import InputSearch from '@/components/InputSearch.jsx';
@@ -49,12 +47,14 @@ function renderCustomer(value, render) {
   );
 }
 
-export default function TableComponent() {
+export default function TableComponent({ formState }) {
   const [tableData, setTableData] = useState([]);
   const [orderBy, setOrderBy] = useState('-days_left');
   const [search, setSearch] = useState('');
   const [pageSelected, setPageSelected] = useState(1);
   const [pages, setPages] = useState('');
+
+  const [formValues, setFormValues] = formState;
 
   const headers = [
     new TableHeaderMixin({
@@ -83,6 +83,25 @@ export default function TableComponent() {
     new TableHeaderMixin({ key: 'id', label: '', align: 'center', sxTh: { width: '3rem' } }),
   ];
 
+  function handlerFormBody(event, value) {
+    if (event.target.checked && !formValues.body.some((obj) => obj.id === value.id)) {
+      setFormValues({
+        body: [...formValues.body, value],
+      });
+    } else {
+      setFormValues({
+        body: formValues.body.filter((e) => e.id !== value.id),
+      });
+    }
+  }
+
+  function checkItemInForm(value) {
+    if (formValues.body.some((obj) => obj.id === value)) {
+      return true;
+    }
+    return false;
+  }
+
   const bodis = new TableRowsMixin(tableData, {
     batch_code: (value) => (
       <Typography variant="subtitle1" fontWeight="600">
@@ -94,21 +113,18 @@ export default function TableComponent() {
     document_customer: (value, render) => renderCustomer(value, render),
     date: (value, render) => (
       <Typography variant="subtitle1" fontWeight="600">
-        {value
-          ? new Date(value).toLocaleString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' })
-          : '--'}
+        {value ? new Date(value).toLocaleString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '--'}
       </Typography>
     ),
-    id: (value) => (
-      <IconButton
-        onClick={() => {
-          navigate(`modifica/${value}`);
-        }}
-        color="primary"
-      >
-        <EditIcon />
-      </IconButton>
-    ),
+    id: (value, render) => {
+      return (
+        <Checkbox
+          checked={checkItemInForm(value)}
+          onChange={(event) => handlerFormBody(event, render)}
+          color="default"
+        />
+      );
+    },
   });
 
   useEffect(() => {
