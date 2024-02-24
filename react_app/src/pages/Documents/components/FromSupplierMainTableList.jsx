@@ -64,7 +64,7 @@ export default function () {
     id: (value) => (
       <IconButton
         onClick={() => {
-          navigate(`modifica/${value}`);
+          navigate(`/documenti/carico/modifica/${value}`);
         }}
         color="primary"
       >
