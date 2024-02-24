@@ -138,7 +138,7 @@ export default function AsideNavbar() {
       icon: <WidgetsRounded />,
     },
     {
-      url: '/documenti/0',
+      url: '/documenti/lista/consegna',
       name: 'Documenti',
       icon: <FolderRounded />,
     },

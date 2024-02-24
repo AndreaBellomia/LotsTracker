@@ -17,10 +17,12 @@ import {
   MenuItem,
 } from '@mui/material';
 
-import { AssignmentReturnedOutlined, Sell, Edit, Output } from '@mui/icons-material';
+import { Edit } from '@mui/icons-material';
 
-import { DatePicker, ButtonDocumentBig } from '@/layout/components/index.js';
+import { DatePicker } from '@/layout/components/index.js';
 import { manageHandlerInput } from '@/libs/forms.js';
+
+import StepBar from "./FromStepBar.jsx"
 
 const statusChoices = [
   { label: '--', value: '' },
@@ -171,43 +173,12 @@ export default function CreateLottForm({ fields: fields, errors: errors, article
           </Grid>
         </Paper>
 
-        <Box mt={3} />
-        {id ? (
-          <Grid container spacing={2}>
-            <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Grid container spacing={2}>
-                <Grid item xs={4} sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <ButtonDocumentBig
-                    icon={AssignmentReturnedOutlined}
-                    description={`${formValue.document_from_supplier ? formValue.document_from_supplier.number : '--'} del ${formValue.document_from_supplier ? formValue.document_from_supplier.date : '--'}`}
-                    title="documento d'ingresso"
-                  />
-                </Grid>
-                <Grid item xs={4} sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <ButtonDocumentBig
-                    icon={Sell}
-                    description={`${formValue.document_customer ? formValue.document_customer.number : '--'} del ${formValue.document_customer ? formValue.document_customer.date : '--'}`}
-                    onClick={() => {
-                      console.log(formValue.document_customer);
-                    }}
-                    title="Documento di vendita"
-                  />
-                </Grid>
-                <Grid item xs={4} sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <ButtonDocumentBig
-                    icon={Output}
-                    description={`${formValue.document_to_supplier ? formValue.document_to_supplier.number : '--'} del ${formValue.document_to_supplier ? formValue.document_to_supplier.date : '--'}`}
-                    title="documento d'uscita"
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        ) : (
-          <></>
-        )}
+        <Box mt={6} />
+        
+          {id && <StepBar formValue={formValue} />}
 
-        <Box my={2} />
+        <Box mt={8} />
+
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Link to="/lotti">

@@ -190,17 +190,20 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
         </Button>
 
         <Box sx={{ display: 'flex' }}>
-          <Button
-            variant="contained"
-            size="medium"
-            color="error"
-            onClick={() => setConfirmModalState(true)}
-            sx={{ mr: 2 }}
-          >
-            <Delete />
-            <Box mr={1} />
-            Elimina
-          </Button>
+          {id && (
+            <Button
+              variant="contained"
+              size="medium"
+              color="error"
+              onClick={() => setConfirmModalState(true)}
+              sx={{ mr: 2 }}
+            >
+              <Delete />
+              <Box mr={1} />
+              Elimina
+            </Button>
+          )}
+
           <Button variant="contained" size="medium" color="grey" onClick={handlerSubmit}>
             <Done />
             <Box mr={1} />
