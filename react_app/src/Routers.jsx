@@ -28,7 +28,6 @@ export default function Router() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<AsideNavbar />}>
-
             {/* <Route path="test" element={<Test />} /> */}
             <Route index element={<Dashboard />} />
             <Route path="clienti" element={<CustomerTableList />} />
@@ -52,11 +51,12 @@ export default function Router() {
               <Route path="scarico/crea" element={<ToSupplierDocumentFrom />} />
               <Route path="scarico/modifica/:id" element={<ToSupplierDocumentFrom />} />
 
-              <Route path=":page/" element={<DocumentsListRouterPage />} />
+              <Route path="lista/consegna" element={<DocumentsListRouterPage type="customer" />} />
+              <Route path="lista/carico" element={<DocumentsListRouterPage type="fromSupplier" />} />
+              <Route path="lista/scarico" element={<DocumentsListRouterPage type="toSupplier" />} />
             </Route>
 
             <Route path="fornitori" element={<Outlet />}>
-
               <Route index element={<SupplierTableList />} />
             </Route>
           </Route>
