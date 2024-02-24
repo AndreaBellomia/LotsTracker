@@ -173,7 +173,9 @@ class DocumentCustomerDetailSerializer(serializers.ModelSerializer):
             if len(body_items) == 0:
                 raise serializers.ValidationError({"detail": "Body can't be empty"})
 
-            error_messages = save_document_bodies(body_items, instance)
+            error_messages = save_document_bodies(
+                body_items, instance, "document_customer"
+            )
             if len(error_messages) != 0:
                 raise serializers.ValidationError({"body": error_messages})
 
@@ -492,10 +494,12 @@ class WarehouseItemsSerializer(serializers.ModelSerializer):
 
     document_customer = DocumentCustomerSerializer(read_only=True)
     document_customer_id = serializers.IntegerField(write_only=True, required=False)
-    
+
     document_from_supplier = DocumentFromSupplierSerializer(read_only=True)
-    document_from_supplier_id = serializers.IntegerField(write_only=True, required=False)
-    
+    document_from_supplier_id = serializers.IntegerField(
+        write_only=True, required=False
+    )
+
     document_to_supplier = DocumentToSupplierSerializer(read_only=True)
     document_to_supplier_id = serializers.IntegerField(write_only=True, required=False)
 
@@ -512,9 +516,9 @@ class WarehouseItemsSerializer(serializers.ModelSerializer):
 
 
 class WarehouseItemsReturnSerializer(WarehouseItemsSerializer):
-    
+
     days_left = serializers.IntegerField()
-    
+
     document_from_supplier = None
     document_from_supplier_id = None
     document_to_supplier = None

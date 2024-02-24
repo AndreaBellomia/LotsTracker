@@ -2,14 +2,15 @@ from rest_framework import filters, status
 from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateAPIView,
+    RetrieveUpdateDestroyAPIView,
     CreateAPIView,
     ListAPIView,
 )
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, ValidationError
 from django.db import transaction
-from django.db.models import Case, When, Value, CharField, Count, F
+from django.db.models import Q
 from django.utils import timezone as tz
 
 from app.api.v1.paginations import BasicPaginationController
@@ -112,13 +113,29 @@ class DocumentCustomerListApiView(ListAPIView):
         return queryset
 
 
-class DocumentCustomerDetailApiView(RetrieveUpdateAPIView):
+class DocumentCustomerDetailApiView(RetrieveUpdateDestroyAPIView):
     serializer_class = DocumentCustomerDetailSerializer
     lookup_field = "pk"
 
     def get_queryset(self):
         queryset = DocumentCustomerQuery.document_customer_detail(self.kwargs["pk"])
         return queryset
+
+    def perform_destroy(self, instance: DocumentCustomer):
+        if instance.warehouse_items.filter(
+            ~Q(status=WarehouseItems.WarehouseItemsStatus.BOOKED)
+            | Q(document_to_supplier__isnull=False)
+            | Q(empty_date__isnull=False)
+        ).exists():
+            raise ValidationError({"detail": "Can't delete partially closed documents"})
+
+        with transaction.atomic():
+            items = instance.warehouse_items.all()
+            for item in items:
+                item.document_customer = None
+                item.save()
+
+            instance.delete()
 
 
 class WarehouseItemsApiView(ListCreateAPIView):
@@ -246,13 +263,30 @@ class DocumentFromSupplierListApiView(ListAPIView):
         return queryset
 
 
-class DocumentFromSupplierDetailApiView(RetrieveUpdateAPIView):
+class DocumentFromSupplierDetailApiView(RetrieveUpdateDestroyAPIView):
     serializer_class = DocumentFromSupplierDetailSerializer
     lookup_field = "pk"
 
     def get_queryset(self):
         queryset = DocumentFromSupplierQuery.document_from_supplier_list()
         return queryset
+    
+    def perform_destroy(self, instance: DocumentCustomer):
+        if instance.warehouse_items.filter(
+            ~Q(status=WarehouseItems.WarehouseItemsStatus.AVAILABLE)
+            | Q(document_to_supplier__isnull=False)
+            | Q(document_customer__isnull=False)
+            | Q(empty_date__isnull=False)
+        ).exists():
+            raise ValidationError({"detail": "Can't delete partially closed documents"})
+        
+        with transaction.atomic():
+            items = instance.warehouse_items.all()
+            for item in items:
+                item.document_from_supplier = None
+                item.save()
+
+            instance.delete()
 
 
 class DocumentToSupplierCreateApiView(CreateAPIView):
@@ -290,13 +324,22 @@ class DocumentToSupplierListApiView(ListAPIView):
         return queryset
 
 
-class DocumentToSupplierDetailApiView(RetrieveUpdateAPIView):
+class DocumentToSupplierDetailApiView(RetrieveUpdateDestroyAPIView):
     serializer_class = DocumentToSupplierDetailSerializer
     lookup_field = "pk"
 
     def get_queryset(self):
         queryset = DocumentToSupplierQuery.document_to_supplier_list()
         return queryset
+    
+    def perform_destroy(self, instance: DocumentCustomer):
+        with transaction.atomic():
+            items = instance.warehouse_items.all()
+            for item in items:
+                item.document_to_supplier = None
+                item.save()
+
+            instance.delete()
 
 
 class WarehouseItemsCustomerEntryApiView(APIView):
@@ -410,7 +453,7 @@ class WarehouseItemsReturnApiView(ListAPIView):
 
         not_found_ids = set(ids) ^ set(query.values_list("id", flat=True))
         if not_found_ids:
-            Response(
+            return Response(
                 {"detail": "One or more element not found"},
                 status=status.HTTP_401_UNAUTHORIZED,
             )

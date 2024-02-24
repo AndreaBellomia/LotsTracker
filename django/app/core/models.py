@@ -205,7 +205,7 @@ class WarehouseItems(AbstractBaseModel):
     )
     document_customer = models.ForeignKey(
         DocumentCustomer,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name="warehouse_items",
         null=True,
         blank=True,

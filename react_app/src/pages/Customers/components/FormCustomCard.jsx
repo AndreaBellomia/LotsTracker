@@ -37,7 +37,7 @@ export default function ({ state: state, formErrors: formErrors }) {
           </Box>
 
           <Typography variant="p" color="text.secondary">
-            {value.company_name || '--'}
+            {value && value.company_name || '--'}
           </Typography>
         </Box>
 
@@ -45,10 +45,10 @@ export default function ({ state: state, formErrors: formErrors }) {
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
             <Typography variant="body2" color="text.secondary">
-              {value.vat_number || ''}
+              {value && value.vat_number || ''}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {value.external_code || ''}
+              {value && value.external_code || ''}
             </Typography>
           </Box>
         </Box>

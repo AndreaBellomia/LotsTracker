@@ -104,7 +104,12 @@ class DocumentApi extends FetchApi {
   }
 
   async putDocument(id, body) {
-    return await this.client.put(`${this.formGetUrl}/${id}`, { ...body });
+    return await this.client.put(`${this.formPutUrl}/${id}`, { ...body });
+  }
+
+  async deleteDocument(id) {
+    console.log(`${this.formDeleteUrl}/${id}`)
+    return await this.client.delete(`${this.formDeleteUrl}/${id}`);
   }
 }
 
@@ -117,6 +122,7 @@ export class CustomerApiDocument extends DocumentApi {
     this.formGetUrl = 'customers/documents/detail';
     this.formPostUrl = 'customers/documents/create';
     this.formPutUrl = this.formGetUrl;
+    this.formDeleteUrl = this.formGetUrl;
   }
 }
 
@@ -128,6 +134,7 @@ export class FromSupplierApiDocument extends DocumentApi {
     this.formGetUrl = 'suppliers/documents/from/detail';
     this.formPostUrl = 'suppliers/documents/from/create';
     this.formPutUrl = this.formGetUrl;
+    this.formDeleteUrl = this.formGetUrl;
   }
 }
 
@@ -139,6 +146,7 @@ export class ToSupplierApiDocument extends DocumentApi {
     this.formGetUrl = 'suppliers/documents/to/detail';
     this.formPostUrl = 'suppliers/documents/to/create';
     this.formPutUrl = this.formGetUrl;
+    this.formDeleteUrl = this.formGetUrl;
   }
 }
 
