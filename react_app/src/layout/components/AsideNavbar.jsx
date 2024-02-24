@@ -30,7 +30,7 @@ import {
   FactoryRounded,
   JoinFullRounded,
   DashboardRounded,
-  FileUploadRounded,
+  LogoutRounded,
 } from '@mui/icons-material';
 
 const drawerWidth = 240;
@@ -224,6 +224,33 @@ export default function AsideNavbar() {
                   primary="Admin"
                   sx={{ opacity: open ? 1 : 0 }}
                   primaryTypographyProps={{ variant: 'button' }}
+                />
+              </ListItemButton>
+            </CustomListItem>
+          </Link>
+          <Link href="/accounts/logout/" sx={{ textDecoration: 'none', marginBottom: 5 }}>
+            <CustomListItem disablePadding>
+              <ListItemButton
+                sx={{
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2,
+                  py: 1,
+                  borderRadius: '5px',
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 2 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <LogoutRounded color="error" />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Log Out"
+                  sx={{ opacity: open ? 1 : 0 }}
+                  primaryTypographyProps={{ variant: 'button', color: 'error' }}
                 />
               </ListItemButton>
             </CustomListItem>
