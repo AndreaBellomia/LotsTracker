@@ -138,19 +138,9 @@ export default function AsideNavbar() {
       icon: <WidgetsRounded />,
     },
     {
-      url: '/documenti',
-      name: 'Doc. di vendita',
+      url: '/documenti/0',
+      name: 'Documenti',
       icon: <FolderRounded />,
-    },
-    {
-      url: '/fornitori/documenti/carico',
-      name: 'Carico di magazzino',
-      icon: <LocalShippingRounded />,
-    },
-    {
-      url: '/fornitori/documenti/scarico',
-      name: 'Doc. di reso',
-      icon: <FileUploadRounded />,
     },
     {
       url: '/clienti',

@@ -78,7 +78,7 @@ export default function () {
     <>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3, alignItems: "center" }}>
         <Typography variant="h4" color="initial">Documenti di reso a fornitore</Typography>
-        <Link to="crea">
+        <Link to="/documenti/scarico/crea">
           <Button variant="contained" size="medium" color="grey">
             <AddIcon />
             <Box mr={1} />

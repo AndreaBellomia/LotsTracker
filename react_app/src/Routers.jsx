@@ -8,20 +8,19 @@ import Dashboard from '@/pages/Dashboard/Dashboard.jsx';
 import StorageList from '@/pages/Storage/TableListPage.jsx';
 
 import CustomerTableList from '@/pages/Customers/CustomerList.jsx';
-import CustomerDocumentTableList from '@/pages/Customers/TableListPage.jsx';
 import CustomerDocumentFrom from '@/pages/Customers/FormPage.jsx';
 
 import SupplierTableList from '@/pages/Supplier/SupplierTableList.jsx';
 
-import FromSupplierItemsList from '@/pages/FromSupplier/TableListPage.jsx';
 import FromSupplierDocumentFrom from '@/pages/FromSupplier/FormPage.jsx';
 
-import ToSupplierItemsList from '@/pages/ToSupplier/TableListPage.jsx';
 import ToSupplierDocumentFrom from '@/pages/ToSupplier/FormPage.jsx';
 
 import StorageItemsList from '@/pages/Lotti/TableListPage.jsx';
 import ReturnItemsList from '@/pages/Lotti/TableReturnPage.jsx';
 import ManageLott from '@/pages/Lotti/FormPage.jsx';
+
+import DocumentsListRouterPage from '@/pages/Documents/DocumentListPageMain.jsx';
 
 export default function Router() {
   return (
@@ -29,6 +28,8 @@ export default function Router() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<AsideNavbar />}>
+
+            {/* <Route path="test" element={<Test />} /> */}
             <Route index element={<Dashboard />} />
             <Route path="clienti" element={<CustomerTableList />} />
 
@@ -44,17 +45,17 @@ export default function Router() {
             <Route path="documenti" element={<Outlet />}>
               <Route path="crea" element={<CustomerDocumentFrom />} />
               <Route path="modifica/:id" element={<CustomerDocumentFrom />} />
-              <Route index element={<CustomerDocumentTableList />} />
+
+              <Route path="carico/crea" element={<FromSupplierDocumentFrom />} />
+              <Route path="carico/modifica/:id" element={<FromSupplierDocumentFrom />} />
+
+              <Route path="scarico/crea" element={<ToSupplierDocumentFrom />} />
+              <Route path="scarico/modifica/:id" element={<ToSupplierDocumentFrom />} />
+
+              <Route path=":page/" element={<DocumentsListRouterPage />} />
             </Route>
 
             <Route path="fornitori" element={<Outlet />}>
-              <Route path="documenti/carico" element={<FromSupplierItemsList />} />
-              <Route path="documenti/carico/crea" element={<FromSupplierDocumentFrom />} />
-              <Route path="documenti/carico/modifica/:id" element={<FromSupplierDocumentFrom />} />
-
-              <Route path="documenti/scarico" element={<ToSupplierItemsList />} />
-              <Route path="documenti/scarico/crea" element={<ToSupplierDocumentFrom />} />
-              <Route path="documenti/scarico/modifica/:id" element={<ToSupplierDocumentFrom />} />
 
               <Route index element={<SupplierTableList />} />
             </Route>
