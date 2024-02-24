@@ -25,9 +25,13 @@ export default function CustomDatePicker(props) {
             trulyAnError: otherProps.error,
             helperText: otherProps.helperText,
           },
+          actionBar: { actions: ['clear'] },
         }}
         value={otherProps.value}
         name={otherProps.name}
+        localeText={{
+          clearButtonLabel: 'CANCELLA',
+        }}
       />
     </LocalizationProvider>
   );
