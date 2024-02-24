@@ -7,3 +7,4 @@
 **/**/erros_dump.csv
 **/**/.devcontainer
 **/frontend-*.js
+**/staticfiles/

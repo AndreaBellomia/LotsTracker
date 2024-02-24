@@ -24,6 +24,7 @@ from django.urls import re_path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("accounts/", include("django.contrib.auth.urls")),
     path("api/v1/", include("app.api.v1.urls")),
     re_path(r"^(?!api|admin|accounts).*$", views.MainView.as_view()),
 ]
