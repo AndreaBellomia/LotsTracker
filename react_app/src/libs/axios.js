@@ -189,11 +189,12 @@ export class ItemsTypeApi extends FetchApi {
 }
 
 export class ItemsApi extends FetchApi {
-  async getWarehouseItemsList(page = 1, search = '', order_by = '') {
+  async getWarehouseItemsList(page = 1, search = '', order_by = '', state='') {
     return await this.client.get(
       this.buildFilteredUrl(`warehouse/items?format=json&page=${page}`, {
         search: search,
         ordering: order_by,
+        statuses: state,
       })
     );
   }

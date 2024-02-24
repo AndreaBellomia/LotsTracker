@@ -45,6 +45,7 @@ from app.api.v1.querys import (
     DocumentToSupplierQuery,
     WarehouseItemsRegistryQuery,
 )
+from app.api.v1.filters import StatusFilter
 
 
 class SupplierRegistryApiView(ListCreateAPIView):
@@ -141,7 +142,7 @@ class DocumentCustomerDetailApiView(RetrieveUpdateDestroyAPIView):
 class WarehouseItemsApiView(ListCreateAPIView):
     pagination_class = BasicPaginationController
     serializer_class = WarehouseItemsSerializer
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter, StatusFilter]
     search_fields = [
         "document_customer__customer__company_name",
         "document_from_supplier__supplier__company_name",
@@ -156,6 +157,8 @@ class WarehouseItemsApiView(ListCreateAPIView):
         "status",
     ]
     ordering_fields = ["empty_date", "batch_code", "item_type__internal_code", "status"]
+
+    status_field = "status"
 
     def get_queryset(self):
         queryset = WarehouseItemsQuery.warehouse_items_list()
@@ -270,7 +273,7 @@ class DocumentFromSupplierDetailApiView(RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         queryset = DocumentFromSupplierQuery.document_from_supplier_list()
         return queryset
-    
+
     def perform_destroy(self, instance: DocumentCustomer):
         if instance.warehouse_items.filter(
             ~Q(status=WarehouseItems.WarehouseItemsStatus.AVAILABLE)
@@ -279,7 +282,7 @@ class DocumentFromSupplierDetailApiView(RetrieveUpdateDestroyAPIView):
             | Q(empty_date__isnull=False)
         ).exists():
             raise ValidationError({"detail": "Can't delete partially closed documents"})
-        
+
         with transaction.atomic():
             items = instance.warehouse_items.all()
             for item in items:
@@ -331,7 +334,7 @@ class DocumentToSupplierDetailApiView(RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         queryset = DocumentToSupplierQuery.document_to_supplier_list()
         return queryset
-    
+
     def perform_destroy(self, instance: DocumentCustomer):
         with transaction.atomic():
             items = instance.warehouse_items.all()

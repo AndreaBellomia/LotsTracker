@@ -8,6 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { ItemsApi } from '@/libs/axios.js';
 import InputSearch from '@/components/InputSearch.jsx';
+import StatusFilter from '@/components/StatusFilter.jsx';
 import Tables, { TableHeaderMixin, TableRowsMixin } from '@/components/Tables.jsx';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -58,6 +59,7 @@ export default function TableComponent() {
   const [tableData, setTableData] = useState([]);
   const [orderBy, setOrderBy] = useState('');
   const [search, setSearch] = useState('');
+  const [state, setState] = useState('A,B,E');
   const [pageSelected, setPageSelected] = useState(1);
   const [pages, setPages] = useState('');
 
@@ -103,8 +105,7 @@ export default function TableComponent() {
 
   useEffect(() => {
     try {
-      new ItemsApi().getWarehouseItemsList(pageSelected, search, orderBy).then((response) => {
-        console.log(response.data.results)
+      new ItemsApi().getWarehouseItemsList(pageSelected, search, orderBy, state).then((response) => {
         setTableData(response.data.results);
         setPages(response.data.num_pages);
       });
@@ -112,7 +113,7 @@ export default function TableComponent() {
       snack.error('Error sconosciuto');
       console.error(error);
     }
-  }, [pageSelected, orderBy, search]);
+  }, [pageSelected, orderBy, search, state]);
 
   return (
     <>
@@ -132,9 +133,14 @@ export default function TableComponent() {
         <Grid item xs={12}>
           <Paper elevation={5}>
             <Grid container>
-              <Grid item xs={6} md={4} lg={4}>
+              <Grid item xs={6} md={3} lg={3}>
                 <Box sx={{ p: '1rem' }}>
                   <InputSearch setterValue={setSearch} />
+                </Box>
+              </Grid>
+              <Grid item xs={6} md={3} lg={3}>
+                <Box sx={{ p: '1rem' }}>
+                  <StatusFilter state={[state, setState]} />
                 </Box>
               </Grid>
             </Grid>

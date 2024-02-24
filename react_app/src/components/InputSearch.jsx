@@ -1,50 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import { InputBase } from '@mui/material';
+import { InputBase, TextField, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.grey[200], 0.5),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.grey[200], 0.5),
-  },
-  marginRight: theme.spacing(0),
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(0),
-    width: 'auto',
-  },
-}));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: theme.palette.text.secondary,
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: theme.palette.text.primary,
-  width: '100%',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
-
-export default function InputSearch({ setterValue, placeholder = 'Search…' }) {
+export default function InputSearch({ setterValue, placeholder = 'Cerca...' }) {
   const [debouncedInput, setDebouncedInput] = useState('');
 
   useEffect(() => {
@@ -58,15 +18,13 @@ export default function InputSearch({ setterValue, placeholder = 'Search…' }) 
   }, [debouncedInput]);
 
   return (
-    <Search>
-      <SearchIconWrapper>
-        <SearchIcon />
-      </SearchIconWrapper>
-      <StyledInputBase
-        placeholder={placeholder}
-        inputProps={{ 'aria-label': 'search' }}
-        onInput={(value) => setDebouncedInput(value.target.value)}
+
+      <TextField id="outlined-basic" placeholder={placeholder} variant="outlined" onInput={(value) => setDebouncedInput(value.target.value)}
+      sx={{ width: "100%" }}
+      InputProps={{
+        startAdornment: <SearchIcon />,
+      }}
+      
       />
-    </Search>
   );
 }
