@@ -1,14 +1,26 @@
 import * as React from 'react';
-import { styled, createTheme } from '@mui/material/styles';
-import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 
-import { snack } from '@/components/Snackbar.jsx';
+import {
+  ChevronRight,
+  Person,
+  Settings,
+  FolderRounded,
+  WidgetsRounded,
+  QrCodeScannerRounded,
+  FactoryRounded,
+  JoinFullRounded,
+  LocalShippingRounded,
+  FileUploadRounded
+} from '@mui/icons-material';
+
+import { useNavigate } from 'react-router-dom';
+
+import BigIconButton from '@/components/BigIconButton.jsx'
+import DocumentsCustomerTables from '@/pages/Documents/components/CustomerMainTableList.jsx'
 
 function Copyright(props) {
   return (
@@ -24,66 +36,36 @@ function Copyright(props) {
 }
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
   return (
     <>
       <Grid container spacing={3}>
-        {/* Chart */}
-        <Grid item xs={12} md={8} lg={9}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              height: 240,
-            }}
-          >
-            <Button
-              onClick={() => {
-                snack.error('foo');
-              }}
-            >
-              Test
-            </Button>
-            <Button
-              onClick={() => {
-                snack.info('foo');
-              }}
-            >
-              Test
-            </Button>
-            <Button
-              onClick={() => {
-                snack.regular('foo');
-              }}
-            >
-              Test
-            </Button>
-            <Button
-              onClick={() => {
-                snack.warning('foo');
-              }}
-            >
-              Test
-            </Button>
-          </Paper>
+        <Grid item xs={12} md={8} lg={10}>
+          <DocumentsCustomerTables minima={true} />
         </Grid>
-        {/* Recent Deposits */}
-        <Grid item xs={12} md={4} lg={3}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              height: 240,
-            }}
-          ></Paper>
+
+        <Grid item xs={12} md={4} lg={2}>
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              <BigIconButton onClick={() => navigate(`/lotti/riconsegna`)} IconProps={JoinFullRounded}/>
+            </Grid>
+            <Grid item xs={6}>
+              <BigIconButton onClick={() => navigate(`/documenti/scarico/crea`)} IconProps={FolderRounded}/>
+            </Grid>
+            <Grid item xs={6}>
+              <BigIconButton onClick={() => navigate(`/magazzino`)} IconProps={WidgetsRounded}/>
+            </Grid>
+            <Grid item xs={6}>
+              <BigIconButton onClick={() => navigate(`/clienti`)} IconProps={Person}/>
+            </Grid>
+          </Grid>
         </Grid>
-        {/* Recent Orders */}
-        <Grid item xs={12}>
+
+        {/* <Grid item xs={12}>
           <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}></Paper>
-        </Grid>
+        </Grid> */}
       </Grid>
-      <Copyright sx={{ pt: 4 }} />
     </>
   );
 }

@@ -15,9 +15,8 @@ import {
   ListItemText,
   CssBaseline,
   Container,
-  Link
+  Link,
 } from '@mui/material';
-
 
 import Box from '@mui/material/Box';
 
@@ -30,10 +29,9 @@ import {
   QrCodeScannerRounded,
   FactoryRounded,
   JoinFullRounded,
-  LocalShippingRounded,
-  FileUploadRounded
+  DashboardRounded,
+  FileUploadRounded,
 } from '@mui/icons-material';
-
 
 const drawerWidth = 240;
 const drawerClosedWidth = 70;
@@ -65,7 +63,7 @@ const DrawerHeader = styled('div')(({ theme, open }) => ({
   justifyContent: 'center',
 
   ...(open && {
-    justifyContent: 'end'
+    justifyContent: 'end',
   }),
   // necessary for content to be below app bar
   // ...theme.mixins.toolbar,
@@ -85,8 +83,6 @@ const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'ope
     ...closedMixin(theme),
     '& .MuiDrawer-paper': closedMixin(theme),
   }),
-
-
 }));
 
 const CustomChevronIcon = styled(ChevronRight, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
@@ -107,7 +103,7 @@ const CustomListItem = styled(ListItem, { shouldForwardProp: (prop) => prop !== 
   borderRadius: '.5rem',
   marginBottom: 5,
   color: theme.palette.text.secondary,
-  textDecoration: "none",
+  textDecoration: 'none',
 
   ...(active && {
     backgroundColor: 'rgba(255, 255, 255, 0.04)',
@@ -122,6 +118,11 @@ export default function AsideNavbar() {
   };
 
   const listItems = [
+    {
+      url: '/',
+      name: 'Dashboard',
+      icon: <DashboardRounded />,
+    },
     {
       url: '/lotti',
       name: 'Lotti',
@@ -152,70 +153,81 @@ export default function AsideNavbar() {
       name: 'Fornitori',
       icon: <FactoryRounded />,
     },
-
   ];
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <CustomDrawer variant="permanent" open={open} PaperProps={{ sx : { borderRadius: 0, backgroundColor: " white", border: 0 } }}>
-        <DrawerHeader open={open} >
+      <CustomDrawer
+        variant="permanent"
+        open={open}
+        PaperProps={{ sx: { borderRadius: 0, backgroundColor: ' white', border: 0 } }}
+      >
+        <DrawerHeader open={open}>
           <IconButton onClick={handleDrawerToggle}>
             <CustomChevronIcon open={open} />
           </IconButton>
         </DrawerHeader>
         <List>
           {listItems.map((element, index) => (
-            <Link href={element.url} key={index} sx={{ textDecoration: "none", marginBottom: 5}}>
+            <Link href={element.url} key={index} sx={{ textDecoration: 'none', marginBottom: 5 }}>
               <CustomListItem disablePadding>
                 <ListItemButton
                   sx={{
                     justifyContent: open ? 'initial' : 'center',
                     px: 2,
                     py: 1,
-                    borderRadius: '5px'
+                    borderRadius: '5px',
                   }}
                 >
                   <ListItemIcon
                     sx={{
                       minWidth: 0,
                       mr: open ? 2 : 'auto',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
                     }}
                   >
                     <>{element.icon}</>
                   </ListItemIcon>
-                  <ListItemText primary={element.name} sx={{ opacity: open ? 1 : 0 }} primaryTypographyProps={{ variant: "button" }} />
+                  <ListItemText
+                    primary={element.name}
+                    sx={{ opacity: open ? 1 : 0 }}
+                    primaryTypographyProps={{ variant: 'button' }}
+                  />
                 </ListItemButton>
               </CustomListItem>
             </Link>
           ))}
         </List>
 
-        <List sx={{ bottom: 0, marginTop: "auto" }}>
-          <Link href="/admin" sx={{ textDecoration: "none", marginBottom: 5}}>
-              <CustomListItem disablePadding>
-                <ListItemButton
+        <List sx={{ bottom: 0, marginTop: 'auto' }}>
+          <Link href="/admin" sx={{ textDecoration: 'none', marginBottom: 5 }}>
+            <CustomListItem disablePadding>
+              <ListItemButton
+                sx={{
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2,
+                  py: 1,
+                  borderRadius: '5px',
+                }}
+              >
+                <ListItemIcon
                   sx={{
-                    justifyContent: open ? 'initial' : 'center',
-                    px: 2,
-                    py: 1,
-                    borderRadius: '5px'
+                    minWidth: 0,
+                    mr: open ? 2 : 'auto',
+                    justifyContent: 'center',
                   }}
                 >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 2 : 'auto',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    <Settings />
-                  </ListItemIcon>
-                  <ListItemText primary="Admin" sx={{ opacity: open ? 1 : 0 }} primaryTypographyProps={{ variant: "button" }} />
-                </ListItemButton>
-              </CustomListItem>
-            </Link>
+                  <Settings />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Admin"
+                  sx={{ opacity: open ? 1 : 0 }}
+                  primaryTypographyProps={{ variant: 'button' }}
+                />
+              </ListItemButton>
+            </CustomListItem>
+          </Link>
         </List>
       </CustomDrawer>
       <Box id="main-content" component="div" sx={{ p: 3, mt: 5, width: { sm: `100%` } }}>

@@ -24,7 +24,7 @@ function renderStatus(status) {
   }
 }
 
-export default function () {
+export default function ({ minima }) {
   const navigate = useNavigate();
 
   const [tableData, setTableData] = useState([]);
@@ -47,17 +47,17 @@ export default function () {
   }, [pageSelected, orderBy, search]);
 
   const headers = [
-    new TableHeaderMixin({ key: 'id', label: '', orderable: true }),
-    new TableHeaderMixin({ key: 'number', label: 'Numero', align: 'right', orderable: true }),
+    new TableHeaderMixin({ key: 'id', label: '', orderable: !minima }),
+    new TableHeaderMixin({ key: 'number', label: 'Numero', align: 'right', orderable: !minima }),
     new TableHeaderMixin({
       key: 'counterpart',
       label: 'Cliente',
       align: 'right',
-      orderable: true,
+      orderable: !minima,
     }),
-    new TableHeaderMixin({ key: 'date', label: 'Data', align: 'right', orderable: true }),
-    new TableHeaderMixin({ key: 'year', label: 'Anno', align: 'right', orderable: true }),
-    new TableHeaderMixin({ key: 'status', label: 'Stato', align: 'right', orderable: true }),
+    new TableHeaderMixin({ key: 'date', label: 'Data', align: 'right', orderable: !minima }),
+    new TableHeaderMixin({ key: 'year', label: 'Anno', align: 'right', orderable: !minima }),
+    new TableHeaderMixin({ key: 'status', label: 'Stato', align: 'right', orderable: !minima }),
   ];
 
   const bodis = new TableRowsMixin(tableData, {
@@ -76,42 +76,50 @@ export default function () {
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3, alignItems: 'center' }}>
-        <Typography variant="h4" color="initial">
-          Documenti di consegna
-        </Typography>
-        <Link to="/documenti/crea">
-          <Button variant="contained" size="medium" color="grey">
-            <AddIcon />
-            <Box mr={1} />
-            Aggiungi
-          </Button>
-        </Link>
-      </Box>
-      <Paper elevation={5}>
-        <Grid container>
-          <Grid item xs={6} md={4} lg={4}>
-            <Box sx={{ p: 2 }}>
-              <InputSearch setterValue={setSearch} />
-            </Box>
-          </Grid>
-          <Grid item xs={12}>
-            <Tables headers={headers} bodis={bodis} orderBy={[orderBy, setOrderBy]}></Tables>
-          </Grid>
-          <Grid item xs={12}>
-            <Box sx={{ p: '1rem', display: 'flex', justifyContent: 'end' }}>
-              <Pagination
-                count={Number(pages)}
-                color="grey"
-                shape="rounded"
-                onChange={(e, page) => {
-                  setPageSelected(page);
-                }}
-              />
-            </Box>
-          </Grid>
-        </Grid>
-      </Paper>
+      {minima ? (
+        <Paper elevation={5}>
+          <Tables headers={headers} bodis={bodis} orderBy={[orderBy, setOrderBy]}></Tables>
+        </Paper>
+      ) : (
+        <>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3, alignItems: 'center' }}>
+            <Typography variant="h4" color="initial">
+              Documenti di consegna
+            </Typography>
+            <Link to="/documenti/crea">
+              <Button variant="contained" size="medium" color="grey">
+                <AddIcon />
+                <Box mr={1} />
+                Aggiungi
+              </Button>
+            </Link>
+          </Box>
+          <Paper elevation={5}>
+            <Grid container>
+              <Grid item xs={6} md={4} lg={4}>
+                <Box sx={{ p: 2 }}>
+                  <InputSearch setterValue={setSearch} />
+                </Box>
+              </Grid>
+              <Grid item xs={12}>
+                <Tables headers={headers} bodis={bodis} orderBy={[orderBy, setOrderBy]}></Tables>
+              </Grid>
+              <Grid item xs={12}>
+                <Box sx={{ p: '1rem', display: 'flex', justifyContent: 'end' }}>
+                  <Pagination
+                    count={Number(pages)}
+                    color="grey"
+                    shape="rounded"
+                    onChange={(e, page) => {
+                      setPageSelected(page);
+                    }}
+                  />
+                </Box>
+              </Grid>
+            </Grid>
+          </Paper>
+        </>
+      )}
     </>
   );
 }
