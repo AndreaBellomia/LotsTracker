@@ -3,7 +3,6 @@ import { styled, alpha } from '@mui/material/styles';
 import { InputBase, TextField, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-
 export default function InputSearch({ setterValue, placeholder = 'Cerca...' }) {
   const [debouncedInput, setDebouncedInput] = useState('');
 
@@ -18,13 +17,15 @@ export default function InputSearch({ setterValue, placeholder = 'Cerca...' }) {
   }, [debouncedInput]);
 
   return (
-
-      <TextField id="outlined-basic" placeholder={placeholder} variant="outlined" onInput={(value) => setDebouncedInput(value.target.value)}
-      sx={{ width: "100%" }}
+    <TextField
+      id="outlined-basic"
+      placeholder={placeholder}
+      variant="outlined"
+      onInput={(value) => setDebouncedInput(value.target.value)}
+      sx={{ width: '100%' }}
       InputProps={{
         startAdornment: <SearchIcon />,
       }}
-      
-      />
+    />
   );
 }
