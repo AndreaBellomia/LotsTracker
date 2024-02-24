@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 import { Stack, Stepper, Step, StepLabel, Box, Typography } from '@mui/material';
 
@@ -74,30 +75,41 @@ function parseDate(date) {
 }
 
 export default function ({ formValue }) {
+  const navigate = useNavigate();
   const steps = [
     {
       label: 'Documento di carico',
       accessor: 'document_from_supplier',
       render: (value) => (value ? `Documento ${value.number} del ${parseDate(value.date)}` : '--'),
+      action : (id) => navigate(`/documenti/carico/modifica/${id}`)
     },
     {
       label: 'Consegna',
       accessor: 'document_customer',
       render: (value) => (value ? `Documento ${value.number} del ${parseDate(value.date)}` : '--'),
+      action : (id) => navigate(`/documenti/modifica/${id}`)
     },
     {
       label: 'Restituzione',
       accessor: 'empty_date',
       render: (value) => (value ? `Riconsegnato il ${parseDate(value)}` : '--'),
+      action : undefined
     },
     {
       label: 'Reso a fornitore',
       accessor: 'document_to_supplier',
       render: (value) => (value ? `Documento ${value.number} del ${parseDate(value.date)}` : '--'),
+      action : (id) => navigate(`/documenti/scarico/modifica/${id}`)
     },
   ];
 
   const [currentStep, setCurrentStep] = useState(0);
+
+  const handlerClick = (value, action) => {
+    if (typeof action === 'function') {
+      action(value.id)
+    }
+  }
 
   useEffect(() => {
     if (formValue.document_to_supplier) {
@@ -116,7 +128,7 @@ export default function ({ formValue }) {
       <Stack sx={{ width: '100%', position: "relative" }}>
         <Stepper alternativeLabel activeStep={currentStep} connector={<QontoConnector />}>
           {steps.map((obj, index) => (
-            <Step key={index}>
+            <Step key={index} onClick={() => handlerClick(formValue[obj.accessor], obj.action)} sx={{ cursor : obj.href ? "pointer" : "unset"}}>
               <StepLabel StepIconComponent={QontoStepIcon}>
                 {obj.label}
                 <Typography variant="subtitle2" color="initial" sx={{ height: 21 }}>
