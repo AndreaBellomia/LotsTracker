@@ -1,12 +1,14 @@
 import csv
 import logging
 import json
+import os
 
 import mysql.connector as connector
 
 from django.core.management.base import BaseCommand
 from django.db.utils import IntegrityError
 from django.utils import timezone as tz
+from django.conf import settings
 
 
 from app.core.models import (
@@ -45,7 +47,7 @@ class Command(BaseCommand):
 
         document_errors = []
 
-        log.debug("Connected to mysql database")
+        log.info("Connected to mysql database")
 
         _cursor = mysql_connection.cursor()
 
@@ -53,7 +55,7 @@ class Command(BaseCommand):
         rows = _cursor.fetchall()
 
         stat_time = tz.now()
-        log.debug("Starting generate customers...")
+        log.info("Starting generate customers...")
         for row in rows:
             try:
                 _, create = CustomerRegistry.objects.get_or_create(
@@ -81,15 +83,16 @@ class Command(BaseCommand):
         _cursor.execute("SELECT COUNT(id) FROM clienti")
         count = _cursor.fetchall()
 
-        log.debug(
+        log.info(
             "Generated %s on %s customers in %s seconds",
             CustomerRegistry.objects.all().count(),
             count[0][0],
             end_time,
         )
 
-        log.debug("Starting generate WarehouseItemsRegistry form fixture...")
-        with open("app/fixtures/magazzino.csv", newline="") as CSVfile:
+        log.info("Starting generate WarehouseItemsRegistry form fixture...")
+        csv_file_path = os.path.join(settings.BASE_DIR, "app", "fixtures", "magazzino.csv")
+        with open(csv_file_path, newline="") as CSVfile:
             reader = csv.DictReader(CSVfile, delimiter=",")
             for row in reader:
                 _, create = WarehouseItemsRegistry.objects.get_or_create(
@@ -98,9 +101,9 @@ class Command(BaseCommand):
                     description=row["Descrizione"],
                 )
 
-        log.debug("Generate all WarehouseItemsRegistry form fixture")
+        log.info("Generate all WarehouseItemsRegistry form fixture")
 
-        log.debug("Starting generate DocumentCustomer...")
+        log.info("Starting generate DocumentCustomer...")
         stat_time = tz.now()
 
         _cursor.execute("SELECT * FROM document")
@@ -227,7 +230,7 @@ class Command(BaseCommand):
         _cursor.execute("SELECT COUNT(id) FROM document")
         count = _cursor.fetchall()
 
-        log.debug(
+        log.info(
             "Generated generate %s of %s documents in %s seconds",
             DocumentCustomer.objects.all().count(),
             count[0][0],

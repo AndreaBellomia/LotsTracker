@@ -52,3 +52,34 @@ npm run dev # For developing
 Remeber start node js server and django server at the same time
 
 
+
+# Deploy
+
+DB required Postgres14
+
+### Download last release
+
+Checklist
+- Change secret key in django settings
+- Change debut variable to False
+- Change DB credentials
+
+### First start
+
+```bash
+python ./django/manage.py migrate
+python ./django/manage.py createsuperuser
+```
+
+### Migrate Data from old site
+update credentials in the core command
+
+```bash
+python ./django/manage.py db_migrate -database database_name
+```
+fix migrations problem and errors
+
+### Start server
+```bash
+python ./django/manage.py runserver
+```
