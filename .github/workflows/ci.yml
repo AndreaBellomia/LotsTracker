@@ -43,6 +43,7 @@ jobs:
           zip -r release_files.zip .
 
       - name: Generate Tag
+        id: generate_tag
         run: |
             TAG=$(date +'%Y%m%d-%H%M%S')
             echo "::set-output name=tag::$TAG"
