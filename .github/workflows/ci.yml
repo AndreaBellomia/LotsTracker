@@ -31,12 +31,12 @@ jobs:
           npm run twbuild
           python django/manage.py collectstatic --no-input
 
-      # - name: Remove unwanted files and folders
-      #   run: |
-      #     rm -rf /node_modules
-      #     rm -rf /react_app
-      #     rm -rf .babelrc
-      #     rm -rf .babelrc
+      - name: Remove unwanted files and folders
+        run: |
+          rm -rf /node_modules
+          rm -rf /react_app
+        #   rm -rf .babelrc
+        #   rm -rf .babelrc
 
       - name: Create release archive
         run: |
