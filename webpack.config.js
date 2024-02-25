@@ -13,9 +13,9 @@ module.exports = {
     }
   },
   output: {
-    path: path.resolve("./django/app/frontend/static/frontend/"),
+    path: path.resolve("./django/static/react/"),
     filename: "react-[name].js",
-    publicPath: "/static/frontend/",
+    publicPath: "/static/react/",
   },
   plugins: [
     new CleanWebpackPlugin(),
