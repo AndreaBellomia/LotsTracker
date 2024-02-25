@@ -1,0 +1,58 @@
+name: Generate deploy server
+
+on:
+  release:
+    types: [created]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+            
+            - name: Setup Node.js environment
+              uses: actions/setup-node@v2
+              with:
+                node-version: '14'
+            
+            - name: Install dependencies
+              run: npm install
+
+            - name: Build React app
+              run: npm run build
+            
+            - name: Build TailwindCss
+              run: npm run twbuild
+
+            - name: Install Python dependencies
+              run: |
+                pip install -r requirements.txt
+            
+            - name: Start Django server
+              run: | 
+                python django/manage.py runserver
+                sleep 10
+
+            - name: Run collectstatic
+              run: python django/manage.py collectstatic --no-input
+
+            # - name: Remove unwanted files and folders
+            #   run: |
+            #     rm -rf /node_modules
+            #     rm -rf /react_app
+            #     rm -rf .babelrc
+            #     rm -rf .babelrc
+
+            - name: Create release archive
+              run: |
+                zip -r release_files.zip .
+
+            - name: Upload release asset
+              uses: actions/upload-release-asset@v1
+              with:
+                upload_url: ${{ github.event.release.upload_url }}
+                asset_path: ./release_files.zip
+                asset_name: release_files.zip
+                asset_content_type: application/zip
