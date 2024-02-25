@@ -6,6 +6,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+        contents: write
 
     steps:
       - name: Checkout repository
@@ -19,28 +21,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build React app
-        run: npm run build
-
-      - name: Build TailwindCss
-        run: npm run twbuild
-
       - name: Install Python dependencies
         run: |
           pip install -r requirements.txt
 
-    #   - name: Start Django server
-    #     run: |
-    #       python django/manage.py runserver
-    #       sleep 10
-
-    #   - name: Start Django server
-    #     run: |
-    #       python django/manage.py runserver
-    #       sleep 10
-
-      - name: Run collectstatic
-        run: python django/manage.py collectstatic --no-input
+      - name: Build React app
+        run: | 
+          npm run build
+          npm run twbuild
+          python django/manage.py collectstatic --no-input
 
       # - name: Remove unwanted files and folders
       #   run: |
@@ -54,16 +43,17 @@ jobs:
           zip -r release_files.zip .
 
       - name: Create Release
+        id: create_release
         uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          name: Release PROD
           body: |
             Release LotTraker
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
