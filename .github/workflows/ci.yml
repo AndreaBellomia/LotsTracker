@@ -56,8 +56,14 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: release-${{ steps.vars.outputs.sha_short }}
+          release_name: Release prod
           files: release_files.zip
-          body: New release
+          body: | 
+            LotTraker releasd for prod
+            Commit: ${{ github.sha }} - ref: ${{ github.ref }}
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
