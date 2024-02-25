@@ -42,14 +42,19 @@ jobs:
         run: |
           zip -r release_files.zip .
 
+      - name: Generate Tag
+        run: |
+            TAG=$(date +'%Y%m%d-%H%M%S')
+            echo "::set-output name=tag::$TAG"
+
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          name: Release PROD
+          tag_name: ${{ steps.generate_tag.outputs.tag }}
+          name: Release ${{ steps.generate_tag.outputs.tag }}
           body: |
             Release LotTraker
           draft: false
