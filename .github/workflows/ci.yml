@@ -29,10 +29,15 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Start Django server
-        run: |
-          python django/manage.py runserver
-          sleep 10
+    #   - name: Start Django server
+    #     run: |
+    #       python django/manage.py runserver
+    #       sleep 10
+
+    #   - name: Start Django server
+    #     run: |
+    #       python django/manage.py runserver
+    #       sleep 10
 
       - name: Run collectstatic
         run: python django/manage.py collectstatic --no-input
