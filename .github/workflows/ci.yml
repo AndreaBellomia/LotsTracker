@@ -35,6 +35,17 @@ jobs:
         run: |
           rm -rf node_modules
           rm -rf react_app
+          rm -rf README.md
+          rm -rf .prettierrc
+          rm -rf postman.postman_collection.json
+          rm -rf django/webpack-stats.json
+          rm -rf package.json
+          rm -rf .babelrc
+          rm -rf .gitignore
+          rm -rf webpack.config.js
+          rm -rf package-lock.json
+          rm -rf tailwind.config.js
+          rm -rf .github
         #   rm -rf .babelrc
         #   rm -rf .babelrc
 
