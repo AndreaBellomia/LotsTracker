@@ -33,8 +33,8 @@ jobs:
 
       - name: Remove unwanted files and folders
         run: |
-          rm -rf /node_modules
-          rm -rf /react_app
+          rm -rf node_modules
+          rm -rf react_app
         #   rm -rf .babelrc
         #   rm -rf .babelrc
 
