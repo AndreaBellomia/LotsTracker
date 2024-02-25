@@ -1,97 +1,58 @@
+{% load static %}
 
-<!-- templates/registration/login.html -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-<style>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LotTracker - Login</title>
 
-  body {
-    background-color: #F9FAFB;
-  }
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+  </head>
+  <body class="bg-sky-50">
+    <div class="flex justify-center items-center h-screen relative">
+      <div class="bg-white p-6 rounded-lg relative max-w-[40rem] w-full md:w-8/12 lg:w-6/12">
+        <div class="text-center">
+          <h2 class="text-2xl font-semibold">Log In</h2>
+        </div>
 
-  .roboto-medium {
-    font-family: "Roboto", sans-serif;
-    font-weight: 500;
-    font-style: normal;
-  }
+        <br />
 
-  .roboto-bold {
-    font-family: "Roboto", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-  }
+        <form method="post">
+          {% csrf_token %}
+          <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900">Username</label>
+          <input
+            type="text"
+            name="{{ form.username.name }}"
+            id="{{ form.username.id_for_lable }}"
+            value="{{ form.username.value|default:'' }}"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block w-full p-2.5"
+            placeholder="Username"
+            required
+          />
+          <br />
+          <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
+          <input
+            type="text"
+            name="{{ form.password.name }}"
+            id="{{ form.password.id_for_lable }}"
+            value="{{ form.password.value|default:'' }}"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block w-full p-2.5"
+            placeholder="Password"
+            required
+          />
 
-  .center-container {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  }
-
-  .card {
-    background-color: white;
-    padding: 1rem ;
-    border-radius: .5rem;
-    box-shadow: 2px 5px 8px #C4CDD5;
-  }
-
-  input {
-    padding: 1rem 1rem;
-    border-radius: .5rem;
-    background-color: white;
-    border: 1px solid #DFE3E8 !important;
-    min-width: 500px;
-  }
-  input:focus {
-    border: 1px solid #637381 !important;
-    
-  }
-
-  .btn {
-    background-color: #00A76F;
-    padding: .75rem 2rem;
-    border: none;
-    border-radius: .5rem;
-    line-height: 1rem;
-    font-size: .875rem;
-    text-transform: capitalize;
-    color: white;
-    cursor: pointer;
-    box-shadow: 1px 2px 1px #C4CDD5;
-  }
-  .btn:hover {
-    background-color: #048e60;
-  }
-  .btn:active {
-    background-color: #037751;
-  }
-
-  .text-center {
-    text-align: center;
-  }
-
-</style>
-
-<div class="center-container ">
-  <div class="card">
-  <h2 class="roboto-bold ">Log In</h2>
-  <form method="post">
-    {% csrf_token %}
-      <label class="roboto-bold " for="{{ form.username.id_for_lable }}">Username</label>
-      <br>
-      {{ form.username }}
-      <br>
-      <br>
-      <label class="roboto-bold " for="{{ form.password.id_for_lable }}">Password</label>
-      <br>
-      {{ form.password }}
-
-      <br>
-      <br>
-      <div class="text-center">
-        <button type="submit" class="btn roboto-bold ">LOGIN</button>
+          <br />
+          <div class="text-center">
+            <button
+              type="submit"
+              class="text-white bg-emerald-600 hover:bg-emerald-700 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none"
+            >
+              LOGIN
+            </button>
+          </div>
+        </form>
       </div>
-    </form>
-  </div>
-</div>
+    </div>
+  </body>
+</html>

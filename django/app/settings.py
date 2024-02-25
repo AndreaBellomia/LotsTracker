@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = "0e15e027cdacea2946206f86725e53de9f283c01c8a0bb2a15a6f6548aab17718b32315e111cfa403e1bffc5c56aff6d1de9"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False if os.environ.get('DEBUG', True) == 'prod' else True
+DEBUG = True
 # DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
@@ -166,6 +166,9 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/static/"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media-serve")
 MEDIA_URL = "/media/"

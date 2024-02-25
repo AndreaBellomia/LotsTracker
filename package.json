@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "webpack --config webpack.config.js --watch --mode development",
     "build": "webpack --config webpack.config.js --mode production",
-    "prettier" : "npx prettier --write 'react_app/src/**/*.jsx'"
+    "prettier": "npx prettier --write 'react_app/src/**/*.jsx'",
+    "twdev" : "npx tailwindcss -i ./django/tailwind.css -o ./django/static/css/main.css --watch",
+    "twbuild" : "npx tailwindcss -i ./django/tailwind.css -o ./django/static/css/main.css --minify"
   },
   "keywords": [],
   "author": "",
@@ -34,6 +36,7 @@
     "prettier": "3.2.5",
     "react-router-dom": "^6.0.0",
     "style-loader": "^3.3.1",
+    "tailwindcss": "^3.4.1",
     "webpack": "^5.75.0",
     "webpack-bundle-tracker": "^1.8.0",
     "webpack-cli": "^5.0.1"
