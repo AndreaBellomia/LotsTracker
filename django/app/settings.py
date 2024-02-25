@@ -118,9 +118,11 @@ WSGI_APPLICATION = "app.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+DB_ENGINE = os.environ.get("DB_USER", "django")
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "django.db.backends.sqlite3",
         "NAME": "django",
         "USER": os.environ.get("DB_USER", "django"),
         "PASSWORD": os.environ.get("DB_PASSWORD", "django123"),
