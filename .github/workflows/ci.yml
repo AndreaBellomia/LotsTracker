@@ -46,6 +46,9 @@ jobs:
           rm -rf package-lock.json
           rm -rf tailwind.config.js
           rm -rf .github
+          rm -rf .git
+          rm -rf django/tailwind.css
+          rm -rf django/docker
         #   rm -rf .babelrc
         #   rm -rf .babelrc
 
