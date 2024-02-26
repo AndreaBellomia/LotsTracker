@@ -1,8 +1,7 @@
-# Django-REST React
-Pre-configured django 4.2.1 project with restframewrk and React.
-This configuration uses Webpack to supply static files to Django at development time
-Thus being able to use Django's SessionAuth avoiding Atuh via Token
+# LotTracker GEstionale
+Management software for tracking rental lots
 
+### DEV info
 ## Prerequisites
 required `python 3.11`
 
@@ -106,10 +105,10 @@ stop server after run
 6) Create admin user
 ```bash
 linux / macos
-python3 manage.py createsuperadmin
+python3 manage.py createsuperuser
 
 windows
-python manage.py createsuperadmin
+python manage.py createsuperuser
 ```
 
 7) Run server
