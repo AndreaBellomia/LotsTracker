@@ -92,14 +92,17 @@ class Command(BaseCommand):
 
         log.info("Starting generate WarehouseItemsRegistry form fixture...")
         csv_file_path = os.path.join(settings.BASE_DIR, "app", "fixtures", "magazzino.csv")
-        with open(csv_file_path, newline="") as CSVfile:
-            reader = csv.DictReader(CSVfile, delimiter=",")
-            for row in reader:
-                _, create = WarehouseItemsRegistry.objects.get_or_create(
-                    external_code=row["Codice"],
-                    internal_code=row["Codice"],
-                    description=row["Descrizione"],
-                )
+        try:
+            with open(csv_file_path, newline="") as CSVfile:
+                reader = csv.DictReader(CSVfile, delimiter=",")
+                for row in reader:
+                    _, create = WarehouseItemsRegistry.objects.get_or_create(
+                        external_code=row["Codice"],
+                        internal_code=row["Codice"],
+                        description=row["Descrizione"],
+                    )
+        except:
+            log.errors("magazzino.csv not provided  or malformed. Will generate a temp Items")
 
         log.info("Generate all WarehouseItemsRegistry form fixture")
 
