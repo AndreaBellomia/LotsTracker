@@ -14,6 +14,25 @@ are permitted provided that the following conditions are met:
   without specific prior written permission.
 - Redistribution of this software in source or binary forms shall be 
   free of all charges or fees to the recipient of this software.
+- This software may contain errors or defects and may not be suitable for all uses. 
+  Use of the software is at your own risk, and the copyright holder and contributors are not liable for any direct, 
+  indirect, incidental, special, exemplary, or consequential damages arising from the use of this software, 
+  even if advised of the possibility of such damages.
+- The user understands and agrees that the software is provided "as is" without any express or implied warranty of performance, 
+  quality, reliability, fitness for a particular purpose, or non-infringement.
+- Additionally, the user understands and agrees that any decisions based on the use of this software are 
+  entirely at their own risk, and the copyright holder and contributors are not liable for any losses or 
+  damages resulting from such decisions.
+- Commercial use of this software is permitted, including integration into commercial products or services. 
+  However, the sale of the software, either in its original form or modified, is prohibited. 
+  This means that selling the software or profiting from its distribution, directly or indirectly, 
+  without specific written permission from the copyright holder, is not allowed.
+- Any commercial use of the software must comply with the terms of this license, and it must be made clear 
+  that the software itself is freely available and cannot be subject to commercial transactions. 
+  The user is responsible for ensuring that the commercial use of the software complies with applicable laws and regulations.
+- The copyright holder reserves the right to require a separate license agreement for commercial use 
+  of the software if deemed necessary, and this disclaimer does not imply any automatic right for commercial 
+  use without such written authorization.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
