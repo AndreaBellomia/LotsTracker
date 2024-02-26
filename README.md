@@ -53,33 +53,82 @@ Remeber start node js server and django server at the same time
 
 
 
-# Deploy
+# Installation
+For quick installation of LotTracker we need:
 
-DB required Postgres14
+Python: `3.11`
+pip `23.0.1`
 
-### Download last release
+installed in your machine.
 
-Checklist
-- Change secret key in django settings
-- Change debut variable to False
-- Change DB credentials
+## Installation checklist 
 
-### First start
-
+1) Download last release zip `release_files.zip`
+   
+2) Generate new secrets
 ```bash
-python ./django/manage.py migrate
-python ./django/manage.py createsuperuser
+linux / macos
+python3 -c 'import secrets; print(secrets.token_hex(50))'
+
+windows
+python -c 'import secrets; print(secrets.token_hex(50))'
+```
+this secrets  need for settings file
+
+3) Edit django configuration 
+- Update DEBUG Mode 
+folder: `django/app/settings.py`
+
+```python
+DEBUG=True -> DEBUG=False
+SECRET_KEY=... -> SECRET_KEY=new generated secrets
+
+# Optional 
+## Settings db
 ```
 
-### Migrate Data from old site
-update credentials in the core command
+4) Install dependencies
+```bash
+pip install -r requirements.txt
 
+```
+
+5) Generate db
+```bash
+linux / macos
+python3 manage.py migrate
+
+windows
+python manage.py migrate
+```
+stop server after run
+
+6) Create admin user
+```bash
+linux / macos
+python3 manage.py createsuperadmin
+
+windows
+python manage.py createsuperadmin
+```
+
+7) Run server
+```bash
+linux / macos
+python3 manage.py runserver
+
+windows
+python manage.py runserver
+```
+
+
+### Optional migrate old data MyGas
+Update db credentials in command core/management/management/commands/db_migrate
+
+Run command
 ```bash
 python ./django/manage.py db_migrate -database database_name
 ```
-fix migrations problem and errors
 
-### Start server
-```bash
-python ./django/manage.py runserver
-```
+fix eventually error generate in the csv file 
+

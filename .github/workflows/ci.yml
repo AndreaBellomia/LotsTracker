@@ -71,7 +71,7 @@ jobs:
           tag_name: ${{ steps.generate_tag.outputs.tag }}
           name: Release ${{ steps.generate_tag.outputs.tag }}
           body: |
-            Release LotTraker
+            Release LotTracker
           draft: false
           prerelease: false
 
