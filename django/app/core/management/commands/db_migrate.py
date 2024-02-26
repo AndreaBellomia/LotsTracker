@@ -102,7 +102,7 @@ class Command(BaseCommand):
                         description=row["Descrizione"],
                     )
         except:
-            log.errors("magazzino.csv not provided  or malformed. Will generate a temp Items")
+            log.error("magazzino.csv not provided  or malformed. Will generate a temp Items")
 
         log.info("Generate all WarehouseItemsRegistry form fixture")
 
