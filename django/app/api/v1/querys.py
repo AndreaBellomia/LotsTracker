@@ -1,4 +1,17 @@
-from django.db.models import Case, When, Value, CharField, Count, F, Sum, IntegerField
+from django.db.models import (
+    Case,
+    When,
+    Value,
+    CharField,
+    Count,
+    F,
+    Sum,
+    IntegerField,
+    Func,
+    ExpressionWrapper,
+    DurationField,
+    FloatField,
+)
 from django.db.models.functions import ExtractDay, Coalesce
 from django.utils import timezone as tz
 
@@ -107,6 +120,20 @@ class DocumentCustomerQuery:
         )
 
 
+# class ForceDate(Func):
+#     function = ''
+#     template = "%(expressions)s"
+#     def __init__(self, expression1, expression2, **extra):
+#         self.__expression1 = expression1
+#         self.__expression2 = expression2
+#         super(ForceDate, self).__init__(expression1, expression2, **extra)
+
+#     def as_sqlite(self, compiler, connection):
+#         self.function = 'julianday'
+#         self.template = '%(function)s(%(expressions)s) - %(function)s(%(expressions)s)'
+#         return super(ForceDate, self).as_sql(compiler, connection)
+
+
 class WarehouseItemsQuery:
 
     @staticmethod
@@ -198,7 +225,14 @@ class WarehouseItemsQuery:
 
     @staticmethod
     def warehouse_items_return():
-        today = tz.now().date()
+        difference_days = ExpressionWrapper(
+            Func(
+                Func(F("document_customer__date"), function="julianday")
+                - Func(tz.now(), function="julianday"),
+                function="abs",
+            ),
+            output_field=IntegerField(),
+        )
         base_queryset = (
             WarehouseItems.objects.filter(
                 status=WarehouseItems.WarehouseItemsStatus.BOOKED
@@ -208,11 +242,7 @@ class WarehouseItemsQuery:
                 "document_customer",
                 "item_type",
             )
-            .annotate(
-                days_left=Coalesce(
-                    ExtractDay(today - F("document_customer__date")), Value(0)
-                )
-            )
+            .annotate(days_left=difference_days)
         )
         return base_queryset
 

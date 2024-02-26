@@ -8,3 +8,4 @@
 **/**/.devcontainer
 **/frontend-*.js
 **/staticfiles/
+**/database.sqlite

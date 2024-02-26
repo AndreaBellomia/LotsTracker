@@ -122,8 +122,8 @@ DB_ENGINE = os.environ.get("DB_USER", "django")
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "django",
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "database.sqlite"),
         "USER": os.environ.get("DB_USER", "django"),
         "PASSWORD": os.environ.get("DB_PASSWORD", "django123"),
         "HOST": os.environ.get("DB_HOST", "localhost"),
