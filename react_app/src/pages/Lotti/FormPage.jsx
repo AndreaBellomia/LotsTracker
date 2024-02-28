@@ -78,7 +78,7 @@ export default function ManageLott() {
   const POSTapi = () => {
     try {
       new LottiApi()
-        .postWarehouseItemsLott(formValue)
+        .postWarehouseItemsLott(buildPostForm(formValue))
         .then((res) => {
           navigate('/lotti');
         })

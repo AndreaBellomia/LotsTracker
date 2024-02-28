@@ -38,6 +38,9 @@ export default function ArticlesListModal({ modalState: modaleState, tableChoice
             width: '600px !important',
             p: 0,
             overflow: 'hidden',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
           }}
         >
           <Box sx={{ p: 3 }}>
