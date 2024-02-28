@@ -1,7 +1,7 @@
 from app.core.models import DocumentCustomer, DocumentToSupplier, WarehouseItems
 
 
-def save_document_bodies(bodies: list[WarehouseItems], document_instance: DocumentCustomer | DocumentToSupplier, document_type):
+def save_document_bodies(bodies: list[WarehouseItems], document_instance, document_type):
     errors = []
     for item in bodies:
         instance: WarehouseItems = item.pop("instance")
