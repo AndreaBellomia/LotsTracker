@@ -307,7 +307,6 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
     def update(self, instance: DocumentFromSupplier, validated_data):
         body_items = validated_data.pop("warehouse_items")
         with transaction.atomic():
-
             if (
                 self.Meta.model.objects.exclude(id=instance.id)
                 .filter(
@@ -345,7 +344,7 @@ class DocumentFromSupplierDetailSerializer(serializers.ModelSerializer):
                 Q(document_to_supplier__isnull=False)
                 | Q(document_customer__isnull=False)
                 | Q(empty_date__isnull=False)
-                | ~Q(empty_date="")
+                # | ~Q(empty_date="")
             ).exists():
                 raise serializers.ValidationError(
                     {"detail": "You cannot delete objects linked to other documents"}

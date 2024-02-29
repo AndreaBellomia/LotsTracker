@@ -58,6 +58,7 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
     try {
       new API().getDocument(id).then((res) => {
         if (res.data[counterpartKey]) {
+          console.log(res.data)
           setFormCounterpart(res.data[counterpartKey]);
         }
 
@@ -67,6 +68,8 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
           number: res.data.number,
           body: res.data.body,
         });
+
+
       });
     } catch (error) {
       snack.error('Errore sconosciuto!');
@@ -99,6 +102,7 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
   };
 
   const PUTapi = () => {
+    console.log(formManager.getSubmitForm(formValues))
     try {
       new API()
         .putDocument(id, formManager.getSubmitForm(formValues))
