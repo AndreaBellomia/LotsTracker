@@ -18,14 +18,35 @@ export default function ArticlesListModal({ modalState: modaleState, tableChoice
   const [itemTypes, setItemTypes] = useState([]);
 
   const submitSelect = () => {
+    if (formValues.item_type === null || formValues.item_type === undefined) {
+      setFormErrors({
+        item_type: 'Il valore inserito non é valido',
+      });
+      return;
+    }
+    if (formValues.batch_code === null || formValues.batch_code === undefined) {
+      setFormErrors({
+        batch_code: 'Il valore inserito non é valido',
+      });
+      return;
+    }
+
     tableChoices(formValues);
     setFormErrors({});
     setFromValues({
-      item_type: null,
+      ...formValues,
+      batch_code: undefined,
     });
-    setOpen(false);
+    snack.info(`Lotto ${formValues.batch_code} aggiunto al documento`);
   };
 
+  const handlerClose = () => {
+    setFromValues({
+      item_type: null,
+    });
+    setFormErrors({});
+    setOpen(false);
+  };
   const handlerInput = (e) => {
     const { name, value } = e.target;
     setFromValues({
@@ -99,18 +120,23 @@ export default function ArticlesListModal({ modalState: modaleState, tableChoice
                   getOptionLabel={(option) => `${option.internal_code} | ${option.description}`}
                   renderInput={(params) => <TextField {...params} />}
                 />
+                {formErrors.item_type && (
+                  <Typography sx={{ ml: 2 }} variant="caption" color="error">
+                    {formErrors.item_type}
+                  </Typography>
+                )}
               </Grid>
             </Grid>
 
             <Box my={2} />
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Button onClick={() => setOpen(false)} variant="outlined" color="error">
-                Annulla
+              <Button onClick={handlerClose} variant="outlined" color="error">
+                Chiudi
               </Button>
 
-              <Button onClick={() => submitSelect()} variant="contained" color="grey">
-                Conferma
+              <Button onClick={submitSelect} variant="contained" color="grey">
+                Aggiungi
               </Button>
             </Box>
           </FormControl>
