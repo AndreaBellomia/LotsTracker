@@ -53,7 +53,7 @@ function generateBodyRow(row, index, errors, formManager) {
         <TableCell align="right"></TableCell>
         <TableCell align="right">
           <Typography variant="body2" fontWeight={600}>
-            {row.batch_code}{' '}
+            {row.batch_code}
           </Typography>
         </TableCell>
         <TableCell align="right">
@@ -76,10 +76,10 @@ function generateTableRow(row, index, errors, formManager) {
   const header = (
     <CustomHeaderTableRow key={index}>
       <TableCell component="th" scope="row" colSpan={2}>
-      {row.internal_code}
-      <Typography variant="body1" fontWeight={600}>
-        {row.description}
-      </Typography>
+        {row.internal_code || '--'}
+        <Typography variant="body1" fontWeight={600}>
+          {row.description || '--'}
+        </Typography>
       </TableCell>
       <TableCell component="th" scope="row"></TableCell>
     </CustomHeaderTableRow>
