@@ -102,7 +102,6 @@ export default function ManageDocument({ counterpartKey, API, CounterpartCard, T
   };
 
   const PUTapi = () => {
-    console.log(formManager.getSubmitForm(formValues))
     try {
       new API()
         .putDocument(id, formManager.getSubmitForm(formValues))

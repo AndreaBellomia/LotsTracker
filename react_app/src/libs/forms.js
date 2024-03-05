@@ -65,6 +65,12 @@ export class ManageFormDocument {
     this.setForm({ ...this.form, body: updatedValues });
   }
 
+  removeBatchCode(batch_code) {
+    const formBody = this.form.body;
+    const updatedValues = formBody.filter((item) => item.batch_code !== batch_code);
+    this.setForm({ ...this.form, body: updatedValues });
+  }
+
   getSubmitForm() {
     const formValues = this.form;
     const formBody = this.form.body;
