@@ -6,7 +6,6 @@
 **/**/magazzino.csv
 **/**/erros_dump.csv
 **/**/.devcontainer
-**/frontend-*.js
+**/react-frontend.js
 **/staticfiles/
 **/database.sqlite
-**/django/static/react/
