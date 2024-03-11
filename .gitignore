@@ -9,3 +9,4 @@
 **/react-frontend.js
 **/staticfiles/
 **/database.sqlite
+django/static/react/
