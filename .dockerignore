@@ -1,0 +1,36 @@
+# File da aggiungere a .gitignore — liste di pattern da escludere dal contesto Docker
+
+# Version control
+.git
+.gitignore
+
+# GitHub Actions (non necessario nell'immagine)
+.github
+
+# Dipendenze Node (ricostruite nello stage frontend)
+node_modules/
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# File ambiente (mai includere nell'immagine)
+.env
+data/
+media-serve/
+
+# Asset già generati (vengono ricostruiti nel Dockerfile)
+django/staticfiles/
+django/webpack-stats.json
+django/static/react/
+django/static/css/main.css
+
+# Database locale (rimane sul server host)
+django/database.sqlite
+
+# Documentazione e file di sviluppo
+*.md
+postman.postman_collection.json

@@ -10,3 +10,7 @@
 **/staticfiles/
 **/database.sqlite
 django/static/react/
+
+# Ambiente e dati produzione
+.env
+data/

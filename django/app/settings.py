@@ -20,13 +20,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "0e15e027cdacea2946206f86725e53de9f283c01c8a0bb2a15a6f6548aab17718b32315e111cfa403e1bffc5c56aff6d1de9"
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "0e15e027cdacea2946206f86725e53de9f283c01c8a0bb2a15a6f6548aab17718b32315e111cfa403e1bffc5c56aff6d1de9",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = False
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
 ]
@@ -118,16 +120,10 @@ WSGI_APPLICATION = "app.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DB_ENGINE = os.environ.get("DB_USER", "django")
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "database.sqlite"),
-        "USER": os.environ.get("DB_USER", "django"),
-        "PASSWORD": os.environ.get("DB_PASSWORD", "django123"),
-        "HOST": os.environ.get("DB_HOST", "localhost"),
-        "PORT": os.environ.get("DB_PORT", "5432"),
+        "NAME": os.environ.get("DB_PATH", os.path.join(BASE_DIR, "database.sqlite")),
     }
 }
 
@@ -172,7 +168,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media-serve")
+MEDIA_ROOT = os.environ.get("MEDIA_ROOT", os.path.join(os.path.dirname(BASE_DIR), "media-serve"))
 MEDIA_URL = "/media/"
 
 # Default primary key field type

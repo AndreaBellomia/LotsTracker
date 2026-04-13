@@ -1,0 +1,26 @@
+# docker-compose.yml — Avvio produzione LotsTracker
+#
+# PRIMA VOLTA: copiare .env.example in .env e configurarlo,
+#              poi eseguire scripts/setup.bat (Windows) o bash scripts/setup.sh
+#
+# AGGIORNAMENTO: eseguire scripts/update.bat (Windows) o bash scripts/update.sh
+
+services:
+  app:
+    image: ${IMAGE_NAME}:${IMAGE_TAG:-latest}
+    container_name: lotstracker
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: "False"
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-*}
+      # Percorso database SQLite dentro il container (mappato al volume ./data)
+      DB_PATH: /app/data/database.sqlite
+      # Percorso file media dentro il container (mappato al volume ./data/media)
+      MEDIA_ROOT: /app/data/media
+    volumes:
+      # Tutto il dato persistente rimane nella cartella ./data sul server host.
+      # Backup = copia della cartella ./data
+      - ./data:/app/data

@@ -1,86 +1,86 @@
-name: Generate deploy server
+name: Build and Push Docker Image
 
 on:
   workflow_dispatch:
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
     permissions:
-        contents: write
+      contents: write
+      packages: write
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v2
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          node-version: '20'
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies
-        run: npm install
+      - name: Generate release tag
+        id: tag
+        run: echo "value=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
 
-      - name: Install Python dependencies
-        run: |
-          pip install -r requirements.txt
+      - name: Extract Docker metadata (tags & labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=raw,value=${{ steps.tag.outputs.value }}
 
-      - name: Build React app
-        run: | 
-          npm run build
-          npm run twbuild
-          python django/manage.py collectstatic --no-input
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Remove unwanted files and folders
-        run: |
-          rm -rf node_modules
-          rm -rf react_app
-          rm -rf README.md
-          rm -rf .prettierrc
-          rm -rf postman.postman_collection.json
-          rm -rf django/webpack-stats.json
-          rm -rf package.json
-          rm -rf .babelrc
-          rm -rf .gitignore
-          rm -rf webpack.config.js
-          rm -rf package-lock.json
-          rm -rf tailwind.config.js
-          rm -rf .github
-          rm -rf .git
-          rm -rf django/tailwind.css
-          rm -rf django/docker
-        #   rm -rf .babelrc
-        #   rm -rf .babelrc
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Cache layer tra run successive per build più veloci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-      - name: Create release archive
-        run: |
-          zip -r release_files.zip .
-
-      - name: Generate Tag
-        id: generate_tag
-        run: |
-            TAG=$(date +'%Y%m%d-%H%M%S')
-            echo "::set-output name=tag::$TAG"
-
-      - name: Create Release
-        id: create_release
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.generate_tag.outputs.tag }}
-          name: Release ${{ steps.generate_tag.outputs.tag }}
+          tag_name: ${{ steps.tag.outputs.value }}
+          name: Release ${{ steps.tag.outputs.value }}
           body: |
-            Release LotTracker
+            ## LotsTracker — Release ${{ steps.tag.outputs.value }}
+
+            ### Immagine Docker disponibile su GHCR
+            ```
+            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:${{ steps.tag.outputs.value }}
+            ```
+
+            ### Deploy rapido sul server
+            1. Scaricare i file allegati a questa release
+            2. Prima volta: configurare `.env` (partire da `.env.example`) ed eseguire `scripts/setup.bat`
+            3. Aggiornamenti successivi: eseguire `scripts/update.bat`
+
+            Consultare `DEPLOY.md` per la documentazione completa.
+          files: |
+            docker-compose.yml
+            .env.example
+            scripts/setup.bat
+            scripts/setup.sh
+            scripts/update.bat
+            scripts/update.sh
+            DEPLOY.md
           draft: false
           prerelease: false
-
-      - name: Upload release asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./release_files.zip
-          asset_name: release_files.zip
-          asset_content_type: application/zip
